@@ -77,13 +77,36 @@ window.W = window.W || {}; W.views = W.views || {};
       UI.field('Travelling by', UI.select('mode', g.mode, ['', 'Flight', 'Train', 'Car', 'Bus', 'Not decided']))
     ]));
     body.appendChild(el('div', { class: 'grid-2' }, [
-      UI.field('Room', UI.input('room', g.room, { placeholder: 'e.g. 204' })),
+      UI.field('Flight / train number', UI.input('travelDetail', g.travelDetail, { placeholder: 'e.g. 6E 6521' })),
+      UI.field('Pickup arranged', UI.input('pickup', g.pickup, { placeholder: 'e.g. Innova at UDR 11:00, driver Kishan 98290 00001' }))
+    ]));
+
+    // Everything below shows up in the guest's own portal.
+    body.appendChild(UI.subhead
+      ? UI.subhead('Shown in their portal')
+      : el('h4', { text: 'Shown in their portal', style: 'margin:22px 0 4px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dark)' }));
+
+    body.appendChild(el('div', { class: 'grid-2' }, [
+      UI.field('Hotel', UI.input('hotel', g.hotel, { placeholder: 'e.g. Labh Garh Palace Resort' })),
+      UI.field('Room number', UI.input('room', g.room, { placeholder: 'e.g. 204' }))
+    ]));
+    body.appendChild(el('div', { class: 'grid-2' }, [
+      UI.field('Check-in', UI.input('checkIn', g.checkIn, { type: 'date' })),
+      UI.field('Check-out', UI.input('checkOut', g.checkOut, { type: 'date' }))
+    ]));
+    body.appendChild(el('div', { class: 'grid-2' }, [
+      UI.field('Reception table', UI.input('table', g.table, { placeholder: 'e.g. T-3' })),
       el('div', { style: 'padding-top:22px;display:flex;gap:16px;flex-wrap:wrap' }, [
+        UI.checkbox('needsRoom', g.needsRoom, 'Needs a room'),
         UI.checkbox('hostPaid', g.hostPaid, 'Room paid by us'),
         UI.checkbox('giftReceived', g.giftReceived, 'Gift received')
       ])
     ]));
-    body.appendChild(UI.field('Notes', el('textarea', { name: 'notes', text: g.notes || '' })));
+    body.appendChild(UI.field('A personal line for them (they will see this)',
+      el('textarea', { name: 'message', text: g.message || '',
+        placeholder: 'e.g. Dadi, your room is on the ground floor and there is a wheelchair at the mandap.' })));
+    body.appendChild(UI.field('Private notes (never shown to them)',
+      el('textarea', { name: 'notes', text: g.notes || '' })));
     return body;
   }
 
@@ -98,7 +121,11 @@ window.W = window.W || {}; W.views = W.views || {};
       phone: v('phone').trim(), email: v('email').trim(), diet: v('diet'), rsvp: v('rsvp'),
       inv: inv,
       arrival: v('arrival'), arrivalTime: v('arrivalTime'), departure: v('departure'), mode: v('mode'),
-      room: v('room').trim(), hostPaid: c('hostPaid'), giftReceived: c('giftReceived'),
+      travelDetail: v('travelDetail').trim(), pickup: v('pickup').trim(),
+      hotel: v('hotel').trim(), room: v('room').trim(),
+      checkIn: v('checkIn'), checkOut: v('checkOut'),
+      table: v('table').trim(), message: v('message').trim(),
+      needsRoom: c('needsRoom'), hostPaid: c('hostPaid'), giftReceived: c('giftReceived'),
       notes: v('notes').trim()
     };
   }
@@ -162,7 +189,11 @@ window.W = window.W || {}; W.views = W.views || {};
       [
         UI.btn('Add guest', function () { openGuest(null); }),
         UI.btn('Import CSV', openImport, 'ghost'),
-        UI.btn('Export CSV', function () { S.exportGuestsCSV(); U.toast('Guest list downloaded.'); }, 'ghost')
+        UI.btn('Export CSV', function () { S.exportGuestsCSV(); U.toast('Guest list downloaded.'); }, 'ghost'),
+        UI.btn('Export for Supabase', function () {
+          const n = S.exportSupabaseCSV();
+          if (n) U.toast(n + ' guests exported — import this in the Supabase table editor.');
+        }, 'ghost')
       ]));
 
     /* stats */

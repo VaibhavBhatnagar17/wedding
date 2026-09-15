@@ -1,10 +1,12 @@
 # Vaibhav & Mahak — Udaipur, February 2027
 
-Two things live in this folder:
+Three things live in this folder:
 
 1. **[`PLAN.md`](PLAN.md)** — the wedding plan. Budget, function sequence, décor, menus, venue shortlist, risks. Read this first.
-2. **A website** with two pages:
+2. **[`SETUP.md`](SETUP.md)** — how to put the site online and connect the guest database.
+3. **A website** with three pages:
    - **`index.html`** — the invitation. Share this with guests.
+   - **`guest.html`** — the personal portal. A guest enters their mobile number and sees their own room, schedule, pickup, table and photo albums.
    - **`planner.html`** — the private planning console. Guests, budget, vendors, rooms, travel desk, checklist.
 
 ## Running it
@@ -22,9 +24,42 @@ Then open <http://localhost:8899/index.html>.
 
 ## The invitation
 
-An opening curtain, the arch with your names, a live countdown, cards for all five functions, a full running order, travel and packing notes, and an RSVP form. Guests can add every function to their phone calendar in one tap and share the link.
+It opens on a pair of carved jharokha doors that swing apart onto the invitation
+— an arch card with your names in gold, marigold strands swaying overhead and
+petals drifting down. Below that: a live countdown, cards for all five
+functions, the full running order for all three days, travel and packing notes,
+and an RSVP form. Guests can add every function to their phone calendar in one
+tap.
 
-Append `?open=1` to skip the opening curtain — useful when sending a deep link, e.g. `index.html?open=1#rsvp`.
+Append `?open=1` to skip the doors — useful for deep links, e.g.
+`index.html?open=1#rsvp`. The doors also only appear once per browsing session.
+
+Everything honours `prefers-reduced-motion`: if a guest has asked their phone to
+stop animating things, the doors open instantly and nothing moves.
+
+## The guest portal
+
+`guest.html` asks for a mobile number and shows that guest — and only that
+guest — their own page:
+
+- the room number and hotel, and whether it is on you
+- only the functions they are actually invited to, with timings and dress code
+- their arrival, and the pickup you have arranged for them
+- their table at the reception
+- a personal line you have written for them
+- photo albums as the photographers deliver them
+- a wedding guide: what to wear, weather, what to pack, things to do in Udaipur
+- a form to correct their own headcount and food preference
+
+Out of the box this runs on the sample guests in `js/data.js` and says so in a
+banner. Connect Supabase (see **[`SETUP.md`](SETUP.md)**) and it runs on your
+real guest list, which you can edit in a web spreadsheet without redeploying.
+
+**About privacy.** A mobile number is a soft password: someone who knows a
+guest's number can see that guest's room number. That is the right trade for a
+wedding, but it is a trade — don't put anything genuinely sensitive in a guest's
+personal message. Guests can never list the guest list, and your private
+`notes` column is never sent to the browser.
 
 ## The planning console
 
@@ -56,13 +91,17 @@ Guests → *Import CSV*. Download the template first to see the expected columns
 
 One row per **family or party**, not per person — that is how caterers and hotels count, and it is what makes the headcount maths come out right.
 
-## Collecting RSVPs for real
+## Collecting RSVPs
 
-The invitation form currently saves replies in the guest's own browser, so you only see them if they replied on your device. In practice most RSVPs will arrive by phone and WhatsApp and you will enter them on the Guests screen — which is fine.
+With Supabase connected, replies from the invitation form land in the `rsvps`
+table, and if the number is already on your guest list their row is updated
+too. Without it, replies are saved in the guest's own browser — so in practice
+most RSVPs will arrive by phone and WhatsApp and you will type them into the
+Guests screen, which is fine.
 
-To collect them centrally, replace one function — `submitRsvp()` in `js/store.js` — with a `fetch()` to a Google Form, Google Sheet or Supabase endpoint. Nothing else needs to change.
-
-To turn on the "Send on WhatsApp" button, set `RSVP_WHATSAPP` at the top of `js/invite.js` to a number with country code and no `+` or spaces, e.g. `'919876543210'`.
+To turn on the "Send on WhatsApp" button, set `RSVP_WHATSAPP` at the top of
+`js/invite.js` to a number with country code and no `+` or spaces, e.g.
+`'919876543210'`.
 
 ## Changing the plan
 
@@ -72,14 +111,36 @@ If you change budget amounts, keep the total at ₹20,00,000 or the dashboard wi
 
 ## Publishing it
 
-It is a static site, so anything works: Netlify or Vercel (drag the folder in), GitHub Pages, or Cloudflare Pages.
+It is a static site with no build step, so anything works: GitHub Pages,
+Netlify, Vercel or Cloudflare Pages. Step-by-step instructions are in
+**[`SETUP.md`](SETUP.md)**.
 
 `planner.html` carries `noindex` so it stays out of search results, but **it is not password-protected** — anyone with the link can read it. If that matters, publish only `index.html` and its `assets/` and `js/` folders, and keep `planner.html` local.
 
 ## Tests
 
+Two layers, neither needing any installed packages.
+
 ```sh
+# 63 unit checks — no browser
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tools/smoke-test.js
+
+# 31 checks in a real headless Chrome
+python3 tools/cdp.py check
+
+# screenshots of every page, desktop and mobile, into /tmp/shots
+python3 tools/cdp.py shots
 ```
 
-47 checks: the budget still sums to ₹20,00,000, per-plate figures match the budget lines, Indian number formatting, CSV round-trips through commas and quotes, the store's add/update/remove/import/backup paths, and every screen renders with zero guests, twenty guests and four hundred.
+The unit tests cover the budget still summing to ₹20,00,000, per-plate figures
+matching the budget lines, Indian number formatting, CSV round-trips through
+commas and quotes, the store's add/update/remove/import/backup paths, phone
+number normalisation, guest lookup (including that private notes never reach
+the portal), the Supabase export column names, and every screen rendering with
+zero guests, twenty and four hundred.
+
+The browser tests drive a real Chrome over the DevTools protocol: they tap the
+doors open, type a number into the portal, check an unknown number is refused
+and a real one loads the right guest, save an RSVP, and assert that no element
+is ever left invisible by a failed animation. `tools/cdp.py` is a small
+from-scratch WebSocket and CDP client, so there is nothing to install.

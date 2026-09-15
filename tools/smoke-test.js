@@ -133,7 +133,8 @@ var FILES = [
   'js/util.js', 'js/data.js', 'js/store.js', 'js/ui.js',
   'js/views/dashboard.js', 'js/views/guests.js', 'js/views/functions.js',
   'js/views/venue.js', 'js/views/budget.js', 'js/views/vendors.js',
-  'js/views/logistics.js', 'js/views/strategy.js'
+  'js/views/logistics.js', 'js/views/strategy.js',
+  'js/config.js', 'js/db.js', 'js/motifs.js'
 ];
 
 var pass = 0, fail = 0;
@@ -390,6 +391,153 @@ check('over-guarantee state surfaces the warning path', function () {
   if (!node.childNodes.length) throw new Error('dashboard broke');
   var rooms = W.views.rooms();
   if (!rooms.childNodes.length) throw new Error('rooms broke');
+});
+
+/* ---------------- guest portal data layer ---------------- */
+
+log('\nGuest portal');
+
+check('phone numbers normalise from every common format', function () {
+  var cases = {
+    '9876543210': '9876543210',
+    '+91 98765 43210': '9876543210',
+    '098765-43210': '9876543210',
+    '+91-9876543210': '9876543210',
+    '(98765) 43210': '9876543210'
+  };
+  Object.keys(cases).forEach(function (raw) {
+    var got = W.db.normPhone(raw);
+    if (got !== cases[raw]) throw new Error(raw + ' -> ' + got);
+  });
+});
+
+check('falls back to sample data when Supabase is not configured', function () {
+  if (W.db.isConfigured()) throw new Error('config.js should ship empty');
+});
+
+check('every sample guest has a unique 10-digit number', function () {
+  var seen = {};
+  W.data.seedGuests.forEach(function (g) {
+    var p = W.db.normPhone(g.phone);
+    if (p.length !== 10) throw new Error(g.name + ' has phone "' + g.phone + '"');
+    if (seen[p]) throw new Error('duplicate number ' + p);
+    seen[p] = 1;
+  });
+});
+
+/* Settles a promise so assertions can stay synchronous. */
+function settle(promise) {
+  var out = { ok: false, value: undefined, error: null };
+  promise.then(function (v) { out.ok = true; out.value = v; },
+               function (e) { out.error = e; });
+  drainMicrotasks();
+  if (!out.ok && !out.error) throw new Error('promise never settled');
+  return out;
+}
+
+/* The planner's saved list takes precedence over the seed data, and earlier
+   tests replaced it — put the sample guests back before testing lookups. */
+check('store resets to the sample guest list', function () {
+  W.store.update(function (st) {
+    st.guests = JSON.parse(JSON.stringify(W.data.seedGuests));
+  });
+  if (W.store.get().guests.length !== W.data.seedGuests.length) throw new Error('reset failed');
+});
+
+check('lookup returns the right guest and hides private notes', function () {
+  var g = settle(W.db.getGuest('9876500001')).value;
+  if (!g) throw new Error('not found');
+  if (g.name !== W.data.seedGuests[0].name) throw new Error('wrong guest: ' + g.name);
+  if ('notes' in g) throw new Error('private notes leaked to the portal');
+  if (typeof g.invited.phere !== 'boolean') throw new Error('invite flags missing');
+});
+
+check('an unknown number resolves to null, not an error', function () {
+  var r = settle(W.db.getGuest('9000000000'));
+  if (r.error) throw new Error('rejected instead of resolving: ' + r.error.message);
+  if (r.value !== null) throw new Error('expected null, got ' + JSON.stringify(r.value));
+});
+
+check('a short number is rejected before any lookup', function () {
+  var r = settle(W.db.getGuest('12345'));
+  if (!r.error || !/10-digit/.test(r.error.message)) {
+    throw new Error('got ' + (r.error ? r.error.message : 'no rejection'));
+  }
+});
+
+check('reception-only guests are not shown family functions', function () {
+  var recOnly = W.data.seedGuests.filter(function (g) {
+    return g.inv.reception && !g.inv.phere && !g.inv.haldi;
+  });
+  if (!recOnly.length) throw new Error('sample data has no reception-only guest to test');
+  var g = settle(W.db.getGuest(recOnly[0].phone)).value;
+  if (!g) throw new Error('lookup failed');
+  if (g.invited.phere || g.invited.haldi) throw new Error('invite flags wrong');
+});
+
+check('Supabase export uses the database column names', function () {
+  // Earlier tests replace the guest list, so put a portal-ready guest back.
+  W.store.addGuest({
+    name: 'Export Test', phone: '9812345678', room: '204', table: 'T-9',
+    hotel: 'Test Hotel', message: 'hello', notes: 'private'
+  });
+  var captured = null;
+  var realDownload = W.util.download;
+  W.util.download = function (name, body) { captured = { name: name, body: body }; };
+  try { W.store.exportSupabaseCSV(); } finally { W.util.download = realDownload; }
+  if (!captured) throw new Error('nothing was exported');
+  var lines = captured.body.split('\n');
+  var header = lines[0];
+  ['phone', 'room_no', 'table_no', 'inv_reception', 'host_paid', 'message'].forEach(function (col) {
+    if (header.indexOf(col) < 0) throw new Error('missing column ' + col);
+  });
+  if (header.indexOf('giftReceived') >= 0) throw new Error('planner-only column leaked into the export');
+  if (captured.body.indexOf('9812345678') < 0) throw new Error('the guest with a number was not exported');
+});
+
+check('guests without a mobile number are left out of the Supabase export', function () {
+  W.store.update(function (s) { s.guests = []; });
+  W.store.addGuest({ name: 'No Phone', phone: '' });
+  var called = false;
+  var realDownload = W.util.download;
+  W.util.download = function () { called = true; };
+  try { W.store.exportSupabaseCSV(); } finally { W.util.download = realDownload; }
+  if (called) throw new Error('exported a file with no usable rows');
+});
+
+check('the guide and albums have content for every section', function () {
+  if (W.data.guide.length < 3) throw new Error('guide too thin');
+  W.data.guide.forEach(function (g) {
+    if (!g.title || !g.items.length) throw new Error('empty guide section');
+    g.items.forEach(function (row) {
+      if (!row[0] || !row[1]) throw new Error('empty guide row in ' + g.title);
+    });
+  });
+  if (!W.data.albums.length) throw new Error('no albums');
+});
+
+/* ---------------- ornament geometry ---------------- */
+
+log('\nOrnaments');
+
+check('generated SVG contains no NaN or undefined', function () {
+  var M = W.motifs;
+  var svg = [
+    M.doorPanel('l', 'L'), M.doorPanel('r', 'R'),
+    M.mandalaSvg('', 18, '#c9a227'), M.peacockFeather('#0f5b56', '#c9a227'),
+    M.kalash('#c9a227'), M.paisley('#d4614f'), M.corner('#c9a227'),
+    M.garlandRow(12, 7), M.archFrame('#c9a227'),
+    M.cuspArch(20, 150, 260, 120, 9, 280)
+  ].join(' ');
+  if (/NaN|undefined|Infinity/.test(svg)) throw new Error('bad number in generated SVG');
+  if (svg.length < 5000) throw new Error('suspiciously little markup');
+});
+
+check('the garland renders one positioned strand per flower string', function () {
+  var markup = W.motifs.garlandRow(9, 3);
+  var strands = markup.match(/class="strand"/g) || [];
+  if (strands.length !== 9) throw new Error('got ' + strands.length + ' strands');
+  if (!/left:[\d.]+%/.test(markup)) throw new Error('strands are not positioned');
 });
 
 /* ---------------- summary ---------------- */

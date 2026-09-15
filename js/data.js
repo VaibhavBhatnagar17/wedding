@@ -414,6 +414,15 @@ window.W = window.W || {};
   const DIETS = ['Veg', 'Jain', 'No onion/garlic', 'Vegan', 'Non-veg'];
   const RSVPS = ['Pending', 'Confirmed', 'Declined', 'Tentative'];
 
+  /* A line written for one specific guest, shown at the top of their portal.
+     These are only here so the feature is visible in the sample data. */
+  const SAMPLE_MESSAGES = {
+    'Kamla Devi Bhatnagar': 'Dadi, your room is on the ground floor and there is a wheelchair reserved at the mandap. Someone will be with you the whole time.',
+    'Rohit Sharma': 'Best man duties: baraat energy, one speech, and you are opening the sangeet. No excuses.',
+    'Priya Nair': 'Vegan thali arranged for you at every single meal — I checked twice.',
+    'Sharma Family': 'So glad you are coming. The children have a play corner during the phere.'
+  };
+
   const seedGuests = [
     ['Rajesh Bhatnagar', 'Groom', 'Immediate family', 'Jaipur', 4, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Groom\u2019s father · host room'],
     ['Sunita Bhatnagar', 'Groom', 'Immediate family', 'Jaipur', 0, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Groom\u2019s mother · host room'],
@@ -436,18 +445,95 @@ window.W = window.W || {};
     ['Gulab Singh Rathore', 'Groom', 'Family friends', 'Udaipur', 2, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Local · no room needed'],
     ['Meera Joshi', 'Bride', 'Family friends', 'Udaipur', 2, 1, 'Jain', 'Confirmed', 0, 1, 1, 1, 1, 'Local · no room needed']
   ].map(function (r, i) {
+    const local = /Udaipur/.test(r[3]);
+    const n = i + 1;
     return {
-      id: 'g' + String(i + 1).padStart(3, '0'),
+      id: 'g' + String(n).padStart(3, '0'),
       name: r[0], side: r[1], group: r[2], city: r[3],
       adults: 1 + Number(r[4]), kids: Number(r[5]),
-      phone: '', email: '',
+      // Sample numbers so the guest portal can be tried out. Replace these
+      // with the real ones before sharing the link.
+      phone: String(9876500000 + n), email: '',
       diet: r[6], rsvp: r[7],
       inv: { mehndi: !!r[8], haldi: !!r[9], sangeet: !!r[10], phere: !!r[11], reception: !!r[12] },
-      arrival: '', arrivalTime: '', departure: '', mode: '',
-      room: '', hostPaid: /host room/.test(r[13]),
+      arrival: local ? '' : '2027-01-31', arrivalTime: '', departure: local ? '' : '2027-02-03',
+      mode: local ? 'Car' : '', travelDetail: '', pickup: '',
+      needsRoom: !local,
+      hotel: local ? '' : 'Wedding venue — guest room block',
+      room: '', checkIn: local ? '' : '2027-01-31', checkOut: local ? '' : '2027-02-03',
+      hostPaid: /host room/.test(r[13]),
+      table: r[12] ? 'T-' + String(Math.ceil(n / 3)) : '',
+      message: SAMPLE_MESSAGES[r[0]] || '',
       giftReceived: false, notes: r[13]
     };
   });
+
+  /* ─────────────────── guest portal content ─────────────────── */
+
+  /* Photo albums. Paste Google Photos / Drive shared album links here, or
+     manage them in the Supabase `albums` table once connected. */
+  const albums = [
+    { title: 'Pre-wedding shoot', functionId: '', url: '', count: 0,
+      note: 'Coming in December 2026' },
+    { title: 'Haldi & Sangeet', functionId: 'haldi', url: '', count: 0,
+      note: 'Live from the evening of 1 February' },
+    { title: 'Phere', functionId: 'phere', url: '', count: 0,
+      note: 'Uploaded the same evening' },
+    { title: 'Reception', functionId: 'reception', url: '', count: 0,
+      note: 'Uploaded 3 February' }
+  ];
+
+  const announcements = [
+    { title: 'Save the date', created_at: '2026-09-01',
+      body: 'Haldi and Sangeet on 1 February, Phere on 2 February at 11 am, ' +
+            'Reception the same evening at 7 pm — all at one venue in Udaipur.' }
+  ];
+
+  /* The wedding guide shown in every guest's portal. */
+  const guide = [
+    {
+      title: 'What to wear',
+      icon: 'paisley',
+      items: [
+        ['Haldi, 1 Feb morning', 'Yellow, marigold orange, white. Cottons you do not mind staining — haldi does not come out.'],
+        ['Ring ceremony & Sangeet, 1 Feb evening', 'Fuchsia, emerald, gold. Indo-western is very welcome. Shoes you can dance in.'],
+        ['Phere, 2 Feb morning', 'Traditional. Pastels and ivory look wonderful in daylight photographs.'],
+        ['Reception, 2 Feb evening', 'Formal Indian, or black-tie if you prefer. It will be cold — plan a shawl or a jacket.']
+      ]
+    },
+    {
+      title: 'Weather & packing',
+      icon: 'kalash',
+      items: [
+        ['Days', '25–27°C and sunny. Sunglasses, and sunscreen for the haldi lawn.'],
+        ['Nights', '10–12°C. Both evening functions are outdoors. A shawl or jacket is genuinely necessary.'],
+        ['Also bring', 'Comfortable shoes for the lawns, any medication you need, and a power bank.']
+      ]
+    },
+    {
+      title: 'Good to know',
+      icon: 'mandala',
+      items: [
+        ['Everything is at one venue', 'No travelling between functions. Your room is a short walk from every lawn.'],
+        ['Food', 'All functions are pure vegetarian. Jain and no-onion-garlic thalis are arranged — tell us in advance and it will be at your table.'],
+        ['Bar', 'At the Sangeet only, from 8 pm. Outdoor music stops at 10 pm sharp — that is Udaipur law, not our choice.'],
+        ['Children', 'Very welcome. There is a supervised play corner during the phere.'],
+        ['Gifts', 'Your presence is the gift. If you insist, a blessing envelope at the reception is more than enough.'],
+        ['Photographs', 'Please stay seated during the phere so everyone can see. Our crew will get the shots, and every album lands in this portal.']
+      ]
+    },
+    {
+      title: 'While you are in Udaipur',
+      icon: 'feather',
+      items: [
+        ['City Palace', 'Go early, around 9:30 am, before the crowds. Two hours.'],
+        ['Lake Pichola at sunset', 'The boat from Rameshwar Ghat. The single best hour in the city.'],
+        ['Bagore ki Haveli', '7 pm folk dance show at Gangaur Ghat. Book on the day.'],
+        ['Sajjangarh Monsoon Palace', 'Sunset over the Aravallis. Take a taxi, not a scooter.'],
+        ['Eat', 'Ambrai for the view, Tribute for thali, Jagdish Chowk for street kachori and jalebi.']
+      ]
+    }
+  ];
 
   W.data = {
     couple: couple,
@@ -462,6 +548,7 @@ window.W = window.W || {};
     assumptions: assumptions,
     openQuestions: openQuestions,
     seedGuests: seedGuests,
+    albums: albums, announcements: announcements, guide: guide,
     GROUPS: GROUPS, DIETS: DIETS, RSVPS: RSVPS
   };
 })(window.W);

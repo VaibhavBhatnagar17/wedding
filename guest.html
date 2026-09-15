@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My invitation · Vaibhav &amp; Mahak</title>
+<meta name="description" content="Your personal details for Vaibhav and Mahak's wedding in Udaipur — room, timings, travel and photos." />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#07211d" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Italianno&family=Jost:wght@300;400;500&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/tokens.css" />
+<link rel="stylesheet" href="assets/css/motion.css" />
+<link rel="stylesheet" href="assets/css/invite.css" />
+<link rel="stylesheet" href="assets/css/portal.css" />
+</head>
+<body class="portal">
+
+<div id="demo-note"></div>
+
+<!-- ══════════ step 1: find yourself ══════════ -->
+<section class="lookup" id="lookup">
+  <div class="lookup__mandala spin-slow" id="lookup-mandala" aria-hidden="true"></div>
+  <canvas class="petals" id="lookup-petals" aria-hidden="true"></canvas>
+
+  <div class="lookup__card" data-reveal="rise">
+    <div class="lookup__om deva">ॐ</div>
+    <h1>Your invitation</h1>
+    <p>Enter the mobile number you gave us, and we will show you everything that applies to you.</p>
+
+    <form id="lookup-form" novalidate>
+      <div class="phone-in">
+        <div class="phone-in__cc">+91</div>
+        <input type="tel" id="phone" inputmode="numeric" autocomplete="tel"
+               maxlength="17" placeholder="98765 43210" aria-label="Your mobile number" />
+      </div>
+      <div class="lookup__err" id="lookup-err" role="alert"></div>
+      <button class="btn btn--gold" type="submit" id="lookup-btn" style="width:100%">
+        <span>Find my invitation</span>
+      </button>
+    </form>
+
+    <p class="lookup__help" id="lookup-help"></p>
+    <div class="orn"><i>❁</i></div>
+    <p class="lookup__help"><a href="index.html">See the full invitation instead</a></p>
+  </div>
+</section>
+
+<!-- ══════════ step 2: everything about you ══════════ -->
+<main class="me" id="me">
+
+  <header class="me__hero">
+    <div class="garland" id="me-garland" aria-hidden="true"></div>
+    <canvas class="petals" id="me-petals" aria-hidden="true"></canvas>
+    <div class="me__inner">
+      <div class="me__eyebrow" data-reveal="down">Welcome, dearest guest</div>
+      <h1 class="me__name gold-shimmer" id="me-name" data-reveal="scale">—</h1>
+      <div class="me__sub" id="me-sub" data-reveal="up"></div>
+      <div class="me__msg" id="me-msg" data-reveal="up" hidden></div>
+      <div class="me__chips" id="me-chips" data-reveal="up" data-stagger="70"></div>
+      <div class="me__actions" data-reveal="up">
+        <button class="btn btn--gold" id="me-ics"><span>Add my functions to calendar</span></button>
+        <a class="btn btn--ghost" href="#my-rsvp"><span>Update my reply</span></a>
+        <button class="btn btn--ghost" id="me-out"><span>Not you?</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- room · table · pickup -->
+  <section class="psec" style="padding-top:0">
+    <div class="wrap">
+      <div class="keys" id="me-keys" data-stagger="110"></div>
+    </div>
+  </section>
+
+  <!-- my functions -->
+  <section class="psec">
+    <div class="wrap">
+      <div class="psec__head" data-reveal="up">
+        <span class="eyebrow">Your schedule</span>
+        <h2>The functions you are invited to</h2>
+        <p id="me-fn-note"></p>
+      </div>
+      <div class="myfn" id="me-fns" data-stagger="90"></div>
+    </div>
+  </section>
+
+  <!-- travel & stay -->
+  <section class="psec psec--dark">
+    <div class="wrap">
+      <div class="psec__head" data-reveal="up">
+        <span class="eyebrow">Logistics</span>
+        <h2>Your travel &amp; stay</h2>
+      </div>
+      <div class="info-grid" id="me-travel" data-stagger="80"></div>
+    </div>
+  </section>
+
+  <!-- photos -->
+  <section class="psec psec--dark" style="padding-top:0">
+    <div class="wrap">
+      <div class="psec__head" data-reveal="up">
+        <span class="eyebrow">Memories</span>
+        <h2>Photo albums</h2>
+        <p>Albums appear here as our photographers upload them. Downloads are free — take whatever you like.</p>
+      </div>
+      <div class="albums" id="me-albums" data-stagger="90"></div>
+    </div>
+  </section>
+
+  <!-- announcements -->
+  <section class="psec psec--dark" style="padding-top:0" id="me-news-sec" hidden>
+    <div class="wrap">
+      <div class="psec__head" data-reveal="up">
+        <span class="eyebrow">From us</span>
+        <h2>Latest updates</h2>
+      </div>
+      <div class="news" id="me-news" data-stagger="80"></div>
+    </div>
+  </section>
+
+  <!-- guide -->
+  <section class="psec">
+    <div class="wrap">
+      <div class="psec__head" data-reveal="up">
+        <span class="eyebrow">Wedding guide</span>
+        <h2>Everything else you might wonder</h2>
+      </div>
+      <div class="guide" id="me-guide" data-stagger="70"></div>
+    </div>
+  </section>
+
+  <!-- rsvp -->
+  <section class="psec" id="my-rsvp" style="background:linear-gradient(180deg,var(--cream),var(--parchment))">
+    <div class="wrap">
+      <div class="psec__head" style="text-align:center" data-reveal="up">
+        <span class="eyebrow">Keep us right</span>
+        <h2>Update your reply</h2>
+        <p>Numbers changed? Someone dropping out? Change it here any time.</p>
+      </div>
+      <div class="rsvp-mini" id="me-rsvp" data-reveal="up"></div>
+    </div>
+  </section>
+
+  <footer class="pfoot">
+    <div class="pfoot__names gold-text">Vaibhav &amp; Mahak</div>
+    <p>2 February 2027 · Udaipur, Rajasthan · #VaibhavWedsMahak</p>
+    <p><a href="index.html">Full invitation</a></p>
+  </footer>
+</main>
+
+<script src="js/util.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/config.js"></script>
+<script src="js/db.js"></script>
+<script src="js/motifs.js"></script>
+<script src="js/motion.js"></script>
+<script src="js/guest.js"></script>
+</body>
+</html>

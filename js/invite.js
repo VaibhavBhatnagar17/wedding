@@ -2,80 +2,100 @@
 (function (W) {
   'use strict';
 
-  const U = W.util, D = W.data, el = U.el, $ = U.$;
+  const U = W.util, D = W.data, M = W.motifs, MO = W.motion, el = U.el, $ = U.$;
 
-  /* Set this to the number that should receive RSVPs on WhatsApp.
-     Country code, no + and no spaces. Leave blank to hide the button. */
+  /* Number that receives RSVPs on WhatsApp. Country code, no + or spaces.
+     Leave blank to hide the button. */
   const RSVP_WHATSAPP = '';
 
-  /* ---------- opener ---------- */
+  /* ---------------- ornament injection ---------------- */
 
-  function initOpener() {
-    const opener = $('#opener');
-    const btn = $('#opener-btn');
-    if (!opener) return;
-    // Only curtain on the first visit of a session; repeat visits go straight in.
-    // ?open=1 skips it entirely — handy for deep links and printing.
-    let seen = /[?&]open=1/.test(location.search);
-    try { seen = seen || sessionStorage.getItem('vm-opened') === '1'; } catch (e) { /* ignore */ }
-    if (seen) { opener.classList.add('is-open'); opener.style.display = 'none'; return; }
-    document.body.style.overflow = 'hidden';
-    function open() {
-      opener.classList.add('is-open');
-      document.body.style.overflow = '';
-      try { sessionStorage.setItem('vm-opened', '1'); } catch (e) { /* ignore */ }
-      setTimeout(function () { opener.style.display = 'none'; }, 900);
+  function paintOrnaments() {
+    $('#door-l').innerHTML = M.doorPanel('l', 'L');
+    $('#door-r').innerHTML = M.doorPanel('r', 'R');
+    $('#hero-mandala').innerHTML = M.mandalaSvg('', 24, 'currentColor');
+    $('#foot-mandala').innerHTML = M.mandalaSvg('', 20, 'currentColor');
+    $('#feather-l').innerHTML = M.peacockFeather('currentColor', 'currentColor');
+    $('#feather-r').innerHTML = M.peacockFeather('currentColor', 'currentColor');
+    $('#corner-bl').innerHTML = M.corner('currentColor');
+    $('#corner-br').innerHTML = M.corner('currentColor');
+
+    const strands = window.innerWidth < 700 ? 9 : (window.innerWidth < 1100 ? 14 : 20);
+    $('#hero-garland').innerHTML = M.garlandRow(strands, 7);
+  }
+
+  /* ---------------- the gate ---------------- */
+
+  function initGate() {
+    const gate = $('#gate');
+    const ring = $('#gate-ring');
+    if (!gate) return;
+
+    // Skip the doors on repeat visits in the same session, and via ?open=1.
+    let skip = /[?&]open=1/.test(location.search);
+    try { skip = skip || sessionStorage.getItem('vm-opened') === '1'; } catch (e) { /* ignore */ }
+    if (skip) {
+      gate.classList.add('is-open', 'is-done');
+      document.body.classList.remove('is-locked');
+      return;
     }
-    btn.addEventListener('click', open);
-    opener.addEventListener('click', function (e) { if (e.target === opener) open(); });
+
+    function open() {
+      try { sessionStorage.setItem('vm-opened', '1'); } catch (e) { /* ignore */ }
+      MO.openDoors(gate);
+    }
+
+    ring.addEventListener('click', open);
+    ring.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+    // Tapping anywhere on the doors works too.
+    gate.addEventListener('click', function (e) {
+      if (e.target === ring) return;
+      open();
+    });
   }
 
-  /* ---------- garland ---------- */
-
-  function initGarland() {
-    const host = $('#garland');
-    if (!host) return;
-    const n = Math.min(48, Math.max(18, Math.floor(window.innerWidth / 26)));
-    for (let i = 0; i < n; i++) host.appendChild(el('i'));
-  }
-
-  /* ---------- countdown ---------- */
+  /* ---------------- countdown ---------------- */
 
   function initCountdown() {
     const host = $('#countdown');
     if (!host) return;
-    const target = new Date(2027, 1, 2, 11, 0, 0); // 2 Feb 2027, 11:00 — phere muhurat
+    const target = new Date(2027, 1, 2, 11, 0, 0); // phere muhurat
+    const units = [['Days', 'd'], ['Hours', 'h'], ['Minutes', 'm'], ['Seconds', 's']];
+    const cells = {};
+
+    units.forEach(function (u) {
+      const b = el('b', { text: '0' });
+      cells[u[1]] = b;
+      host.appendChild(el('div', { class: 'cd', 'data-reveal': 'up' }, [
+        b, el('span', { text: u[0] })
+      ]));
+    });
 
     function tick() {
       const diff = target - new Date();
-      U.clear(host);
       if (diff <= 0) {
-        host.appendChild(el('div', { class: 'cd' }, [
-          el('b', { text: '❁' }), el('span', { text: 'Married' })
-        ]));
+        Object.keys(cells).forEach(function (k) { cells[k].textContent = '0'; });
         return;
       }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor(diff / 3600000) % 24;
-      const m = Math.floor(diff / 60000) % 60;
-      const s = Math.floor(diff / 1000) % 60;
-      [[d, 'Days'], [h, 'Hours'], [m, 'Minutes'], [s, 'Seconds']].forEach(function (p) {
-        host.appendChild(el('div', { class: 'cd' }, [
-          el('b', { text: String(p[0]) }), el('span', { text: p[1] })
-        ]));
-      });
+      MO.rollTo(cells.d, Math.floor(diff / 86400000), 700);
+      MO.rollTo(cells.h, Math.floor(diff / 3600000) % 24, 400);
+      MO.rollTo(cells.m, Math.floor(diff / 60000) % 60, 300);
+      cells.s.textContent = String(Math.floor(diff / 1000) % 60);
     }
     tick();
     setInterval(tick, 1000);
   }
 
-  /* ---------- function cards ---------- */
+  /* ---------------- function cards ---------------- */
 
   function renderFunctions() {
     const host = $('#fn-grid');
     if (!host) return;
-    const shown = D.functions.filter(function (f) { return f.publicInvite; });
-    shown.forEach(function (f, i) {
+    const glyphs = [M.paisley, M.kalash, M.peacockFeather, M.mandalaSvg, M.paisley];
+
+    D.functions.filter(function (f) { return f.publicInvite; }).forEach(function (f, i) {
       const rows = el('div', { class: 'fn__rows' });
       function row(label, value) {
         rows.appendChild(el('div', { class: 'fn__row' }, [
@@ -89,7 +109,14 @@
       row('Where', f.area);
       row('Dress', f.dressCode);
 
-      host.appendChild(el('article', { class: 'fn reveal' }, [
+      const glyphFn = glyphs[i % glyphs.length];
+      const glyph = glyphFn === M.mandalaSvg ? M.mandalaSvg('', 16, 'currentColor') : glyphFn('currentColor');
+
+      host.appendChild(el('article', {
+        class: 'fn sweep', 'data-reveal': 'rise', 'data-tilt': '6'
+      }, [
+        el('div', { class: 'tilt-sheen' }),
+        el('div', { class: 'fn__glyph', html: glyph }),
         el('div', { class: 'fn__no', text: 'Function ' + String(i + 1).padStart(2, '0') }),
         el('h3', { class: 'fn__name', text: f.name }),
         el('div', { class: 'fn__tag', text: f.tagline }),
@@ -99,133 +126,123 @@
     });
   }
 
-  /* ---------- timeline ---------- */
+  /* ---------------- schedule ---------------- */
 
-  const KEY_WORDS = /HALDI|RING|SANGEET|BARAAT|VARMALA|PHERE|Couple entry|Guest arrival \(650\)|Vidaai|mehndi begins/;
+  const KEY = /HALDI|RING|SANGEET|BARAAT|VARMALA|PHERE|Couple entry|Vidaai|mehndi begins|sound OFF/i;
 
-  function renderTimeline() {
-    const host = $('#timeline-body');
+  function renderSchedule() {
+    const host = $('#schedule-body');
     if (!host) return;
-    const byDate = U.groupBy(D.functions.filter(function (f) { return f.publicInvite; }), function (f) { return f.date; });
+    const byDate = U.groupBy(
+      D.functions.filter(function (f) { return f.publicInvite; }),
+      function (f) { return f.date; }
+    );
+
     Object.keys(byDate).sort().forEach(function (date, idx) {
       const items = [];
       byDate[date].forEach(function (f) {
-        f.schedule.forEach(function (row) { items.push({ t: row[0], text: row[1] }); });
+        f.schedule.forEach(function (r) { items.push({ t: r[0], text: r[1] }); });
       });
       items.sort(function (a, b) { return a.t.localeCompare(b.t); });
 
-      const list = el('ul', { class: 'tl' });
-      items.forEach(function (it) {
-        list.appendChild(el('li', { class: KEY_WORDS.test(it.text) ? 'is-key' : '' }, [
-          el('time', { text: it.t }),
-          el('p', { text: it.text })
-        ]));
-      });
-
-      host.appendChild(el('div', { class: 'day reveal' }, [
+      host.appendChild(el('div', { class: 'day', 'data-reveal': 'up' }, [
         el('div', { class: 'day__head' }, [
           el('h3', { text: U.fmtDate(date, true) }),
           el('span', { text: 'Day ' + idx })
         ]),
-        list
+        el('ul', { class: 'tl' }, items.map(function (it) {
+          return el('li', { class: KEY.test(it.text) ? 'is-key' : '' }, [
+            el('time', { text: it.t }), el('p', { text: it.text })
+          ]);
+        }))
       ]));
     });
   }
 
-  /* ---------- travel ---------- */
+  /* ---------------- travel ---------------- */
 
   function renderTravel() {
     const host = $('#travel-grid');
     if (!host) return;
     const t = D.venue.travel;
 
-    const cards = [
-      ['By air', '<strong>' + t.airport + '</strong><br>We will run shared pickups. Share your flight details in the RSVP form and we will arrange it.'],
+    [
+      ['By air', '<strong>' + t.airport + '</strong><br>We run shared pickups. Share your flight details in the RSVP form and we will arrange it.'],
       ['By train', '<strong>' + t.rail + '</strong><br>Pickups from the station too — just tell us your train and arrival time.'],
       ['By road', t.road + '<br>Parking is available at the venue.'],
       ['Weather &amp; packing', t.weather + '<br><strong>' + t.pack + '</strong>'],
-      ['Where to stay', 'Rooms are blocked at the wedding venue at a negotiated rate. The booking link and rate will be sent with the formal invitation in December.'],
-      ['While you are here', 'City Palace, Lake Pichola boat ride at sunset, Sajjangarh Monsoon Palace, Bagore ki Haveli evening dance show, Shilpgram. Stay on a day — it is worth it.']
-    ];
-
-    cards.forEach(function (c) {
-      host.appendChild(el('div', { class: 'info reveal' }, [
+      ['Where to stay', 'Rooms are blocked at the wedding venue at a negotiated rate. The booking link and rate come with the formal invitation in December.'],
+      ['While you are here', 'City Palace, a Lake Pichola boat ride at sunset, Sajjangarh Monsoon Palace, the evening show at Bagore ki Haveli, Shilpgram. Stay an extra day — it is worth it.']
+    ].forEach(function (c) {
+      host.appendChild(el('div', { class: 'info sweep', 'data-reveal': 'up', 'data-tilt': '5' }, [
+        el('div', { class: 'tilt-sheen' }),
         el('h4', { html: c[0] }),
         el('p', { html: c[1] })
       ]));
     });
   }
 
-  /* ---------- RSVP ---------- */
+  /* ---------------- RSVP ---------------- */
 
   function renderRsvp() {
     const host = $('#rsvp-card');
     if (!host) return;
     const shown = D.functions.filter(function (f) { return f.publicInvite; });
 
-    const fnBoxes = el('div', { class: 'rsvp-fns' });
-    shown.forEach(function (f) {
-      fnBoxes.appendChild(el('label', { class: 'check' }, [
-        el('input', { type: 'checkbox', name: 'fn', value: f.id, checked: f.id !== 'mehndi' }),
+    const fnBoxes = el('div', { class: 'rsvp-fns' }, shown.map(function (f) {
+      return el('label', { class: 'check' }, [
+        el('input', { type: 'checkbox', name: 'fn', value: f.id, checked: f.id !== 'mehndi' ? 'checked' : null }),
         el('span', { text: f.name })
-      ]));
-    });
+      ]);
+    }));
+
+    function field(label, input) { return el('label', { class: 'field' }, [el('span', { html: label }), input]); }
+    function sel(name, options) {
+      return el('select', { name: name }, options.map(function (o) { return el('option', { value: o, text: o }); }));
+    }
 
     const form = el('form', { id: 'rsvp-form', novalidate: 'novalidate' }, [
       el('div', { class: 'grid-2' }, [
-        field('Your name (or family name)', el('input', { type: 'text', name: 'name', required: 'required', placeholder: 'e.g. Sharma Family' })),
-        field('Mobile number', el('input', { type: 'tel', name: 'phone', placeholder: '10 digits' }))
+        field('Your name (or family name)', el('input', { type: 'text', name: 'name', placeholder: 'e.g. Sharma Family' })),
+        field('Mobile number', el('input', { type: 'tel', name: 'phone', placeholder: '10 digits', inputmode: 'numeric' }))
       ]),
       el('div', { class: 'grid-2' }, [
-        field('City you are travelling from', el('input', { type: 'text', name: 'city', placeholder: 'e.g. Delhi' })),
-        field('Whose side?', select('side', ['Bride — Mahak', 'Groom — Vaibhav']))
+        field('City you travel from', el('input', { type: 'text', name: 'city', placeholder: 'e.g. Delhi' })),
+        field('Whose side?', sel('side', ['Bride — Mahak', 'Groom — Vaibhav']))
       ]),
-      el('label', { class: 'field' }, [
-        el('span', { text: 'Will you join us?' }),
-        select('attending', ['Yes, joyfully', 'Yes, but only for some functions', 'Sadly cannot make it'])
-      ]),
+      field('Will you join us?', sel('attending', ['Yes, joyfully', 'Yes, but only for some functions', 'Sadly cannot make it'])),
       el('div', { class: 'grid-2' }, [
         field('Adults attending', el('input', { type: 'number', name: 'adults', min: '0', value: '1' })),
         field('Children attending', el('input', { type: 'number', name: 'kids', min: '0', value: '0' }))
       ]),
-      el('label', { class: 'field' }, [
-        el('span', { text: 'Which functions will you attend?' }),
-        fnBoxes
-      ]),
+      field('Which functions will you attend?', fnBoxes),
       el('div', { class: 'grid-2' }, [
-        field('Food preference', select('diet', D.DIETS)),
+        field('Food preference', sel('diet', D.DIETS)),
         field('Arriving in Udaipur on', el('input', { type: 'date', name: 'arrival', value: '2027-01-31', min: '2027-01-25', max: '2027-02-05' }))
       ]),
       el('div', { class: 'grid-2' }, [
-        field('Travelling by', select('mode', ['Flight', 'Train', 'Car', 'Bus', 'Not decided'])),
+        field('Travelling by', sel('mode', ['Flight', 'Train', 'Car', 'Bus', 'Not decided'])),
         field('Flight / train number &amp; arrival time', el('input', { type: 'text', name: 'travelDetail', placeholder: 'e.g. 6E 6521, 14:30' }))
       ]),
-      field('Anything we should know?', el('textarea', { name: 'notes', placeholder: 'Room preferences, mobility needs, allergies, a song request for the sangeet…' })),
-      el('div', { style: 'display:flex;gap:10px;flex-wrap:wrap;margin-top:6px' }, [
-        el('button', { class: 'btn', type: 'submit', text: 'Send RSVP' }),
-        RSVP_WHATSAPP ? el('button', { class: 'btn btn--ghost', type: 'button', id: 'rsvp-wa', text: 'Send on WhatsApp' }) : null
+      field('Anything we should know?', el('textarea', {
+        name: 'notes', placeholder: 'Room preferences, mobility needs, allergies, a song request for the sangeet…'
+      })),
+      el('div', { style: 'display:flex;gap:11px;flex-wrap:wrap;margin-top:8px' }, [
+        el('button', { class: 'btn', type: 'submit' }, el('span', { text: 'Send RSVP' })),
+        RSVP_WHATSAPP ? el('button', { class: 'btn btn--ghost', type: 'button', id: 'rsvp-wa' }, el('span', { text: 'Send on WhatsApp' })) : null
       ]),
-      el('p', { class: 'hint', html: 'Your reply is saved in this browser and, once we connect the form, sent straight to us. If you would rather just call — the numbers are on the printed card.' })
+      el('p', { class: 'hint', style: 'margin-top:14px', text:
+        'If you would rather just call, the numbers are on the printed card.' })
     ]);
 
-    host.appendChild(form);
+    U.clear(host).appendChild(form);
     form.addEventListener('submit', onSubmit);
     const wa = $('#rsvp-wa');
     if (wa) wa.addEventListener('click', function () { sendWhatsApp(collect(form)); });
-
-    function field(label, input) {
-      return el('label', { class: 'field' }, [el('span', { html: label }), input]);
-    }
-    function select(name, options) {
-      return el('select', { name: name }, options.map(function (o) {
-        return el('option', { value: o, text: o });
-      }));
-    }
   }
 
   function collect(form) {
     const fd = new FormData(form);
-    const fns = U.$$('input[name=fn]:checked', form).map(function (i) { return i.value; });
     return {
       name: (fd.get('name') || '').trim(),
       phone: (fd.get('phone') || '').trim(),
@@ -234,7 +251,7 @@
       attending: fd.get('attending'),
       adults: Number(fd.get('adults')) || 0,
       kids: Number(fd.get('kids')) || 0,
-      functions: fns,
+      functions: U.$$('input[name=fn]:checked', form).map(function (i) { return i.value; }),
       diet: fd.get('diet'),
       arrival: fd.get('arrival'),
       mode: fd.get('mode'),
@@ -276,113 +293,97 @@
       form.querySelector('[name=name]').focus();
       return;
     }
-    W.store.submitRsvp(r);
 
+    const btn = form.querySelector('button[type=submit]');
+    if (btn) btn.disabled = true;
+
+    // Try the database first; fall back to local storage so a reply is never lost.
+    const send = (W.db && W.db.isConfigured())
+      ? W.db.submitRsvp(r)
+      : Promise.reject(new Error('not configured'));
+
+    send.catch(function () { W.store.submitRsvp(r); })
+      .then(function () { showDone(r); });
+  }
+
+  function showDone(r) {
     const host = $('#rsvp-card');
     U.clear(host);
-    host.appendChild(el('div', { class: 'rsvp__done' }, [
-      el('div', { class: 'tick', text: '✓' }),
+    host.appendChild(el('div', { class: 'done' }, [
+      el('div', { class: 'done__tick', text: '✓' }),
       el('h3', { text: 'Thank you, ' + r.name.split(' ')[0] + '!' }),
       el('p', {
         html: /cannot/.test(r.attending)
           ? 'We will miss you, truly. Thank you for letting us know — we will raise a glass in your name.'
-          : 'We have got your reply. We will be in touch about rooms and your pickup closer to the date.'
+          : 'We have your reply. We will be in touch about your room and pickup closer to the date.'
       }),
-      el('div', { class: 'rule-orn' }, el('span', { text: '❁' })),
-      el('div', { style: 'display:flex;gap:10px;justify-content:center;flex-wrap:wrap' }, [
+      el('div', { class: 'orn' }, el('i', { text: '❁' })),
+      el('div', { style: 'display:flex;gap:11px;justify-content:center;flex-wrap:wrap' }, [
         el('button', {
-          class: 'btn btn--ghost', type: 'button', text: 'Copy my reply',
+          class: 'btn btn--ghost', type: 'button',
           onclick: function () {
-            const t = rsvpText(r);
-            if (navigator.clipboard) {
-              navigator.clipboard.writeText(t).then(function () { U.toast('Copied — paste it to us on WhatsApp.'); });
-            } else U.toast('Copy not supported in this browser.', 'warn');
+            if (!navigator.clipboard) { U.toast('Copy is not supported here.', 'warn'); return; }
+            navigator.clipboard.writeText(rsvpText(r))
+              .then(function () { U.toast('Copied — paste it to us on WhatsApp.'); });
           }
-        }),
-        RSVP_WHATSAPP ? el('button', {
-          class: 'btn', type: 'button', text: 'Also send on WhatsApp',
-          onclick: function () { sendWhatsApp(r); }
-        }) : null,
+        }, el('span', { text: 'Copy my reply' })),
+        el('a', { class: 'btn btn--gold', href: 'guest.html' }, el('span', { text: 'See my details' })),
         el('button', {
-          class: 'btn btn--ghost', type: 'button', text: 'Add another family',
-          onclick: function () { U.clear(host); renderRsvp(); host.scrollIntoView({ behavior: 'smooth' }); }
-        })
+          class: 'btn btn--ghost', type: 'button',
+          onclick: function () { renderRsvp(); host.scrollIntoView({ behavior: 'smooth' }); }
+        }, el('span', { text: 'Add another family' }))
       ])
     ]));
   }
 
-  /* ---------- calendar + share ---------- */
+  /* ---------------- calendar & share ---------------- */
 
   function initActions() {
     const ics = $('#btn-ics');
-    if (ics) {
-      ics.addEventListener('click', function () {
-        const events = D.functions.filter(function (f) { return f.publicInvite; }).map(function (f) {
-          return {
-            uid: f.id, date: f.date, start: f.start, end: f.end,
-            title: f.name + ' — Vaibhav & Mahak',
-            location: 'Udaipur, Rajasthan',
-            description: f.tagline + '\nDress code: ' + f.dressCode
-          };
-        });
-        U.download('vaibhav-mahak-wedding.ics', U.buildICS(events, 'Vaibhav & Mahak'), 'text/calendar');
-        U.toast('Calendar file downloaded — open it to add all functions.');
+    if (ics) ics.addEventListener('click', function () {
+      const events = D.functions.filter(function (f) { return f.publicInvite; }).map(function (f) {
+        return {
+          uid: f.id, date: f.date, start: f.start, end: f.end,
+          title: f.name + ' — Vaibhav & Mahak',
+          location: 'Udaipur, Rajasthan',
+          description: f.tagline + '\nDress code: ' + f.dressCode
+        };
       });
-    }
+      U.download('vaibhav-mahak-wedding.ics', U.buildICS(events, 'Vaibhav & Mahak'), 'text/calendar');
+      U.toast('Calendar file downloaded — open it to add every function.');
+    });
 
     const share = $('#btn-share');
-    if (share) {
-      share.addEventListener('click', function () {
-        const payload = {
-          title: 'Vaibhav & Mahak — Udaipur, 2 Feb 2027',
-          text: 'We are getting married in Udaipur! 31 Jan – 2 Feb 2027. Details and RSVP:',
-          url: location.href
-        };
-        if (navigator.share) {
-          navigator.share(payload).catch(function () { /* user dismissed */ });
-        } else if (navigator.clipboard) {
-          navigator.clipboard.writeText(payload.text + ' ' + payload.url)
-            .then(function () { U.toast('Invitation link copied.'); });
-        } else {
-          U.toast('Copy the address bar link to share.', 'warn');
-        }
-      });
-    }
+    if (share) share.addEventListener('click', function () {
+      const payload = {
+        title: 'Vaibhav & Mahak — Udaipur, 2 Feb 2027',
+        text: 'We are getting married in Udaipur! 31 Jan – 2 Feb 2027. Details and RSVP:',
+        url: location.href.split('?')[0]
+      };
+      if (navigator.share) navigator.share(payload).catch(function () { /* dismissed */ });
+      else if (navigator.clipboard) {
+        navigator.clipboard.writeText(payload.text + ' ' + payload.url)
+          .then(function () { U.toast('Invitation link copied.'); });
+      } else U.toast('Copy the link from the address bar to share.', 'warn');
+    });
   }
 
-  /* ---------- reveal on scroll ---------- */
-
-  function initReveal() {
-    const items = U.$$('.reveal');
-    function revealAll() { items.forEach(function (i) { i.classList.add('is-in'); }); }
-
-    if (!('IntersectionObserver' in window)) { revealAll(); return; }
-
-    // Opt into the hidden starting state only now that we know we can undo it.
-    document.documentElement.classList.add('js-anim');
-
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
-    items.forEach(function (i) { io.observe(i); });
-
-    // Safety net: if the observer never fires, nothing stays invisible.
-    setTimeout(revealAll, 2500);
-  }
-
-  /* ---------- boot ---------- */
+  /* ---------------- boot ---------------- */
 
   document.addEventListener('DOMContentLoaded', function () {
-    initOpener();
-    initGarland();
+    paintOrnaments();
+    initGate();
     initCountdown();
     renderFunctions();
-    renderTimeline();
+    renderSchedule();
     renderTravel();
     renderRsvp();
     initActions();
-    initReveal();
+
+    MO.boot(document);
+    MO.initProgress($('#thread'));
+    MO.initStickyNav($('#nav'), 140);
+    MO.initSmoothLinks(document);
+    MO.petals($('#hero-petals'), { count: 30, speed: 1 });
   });
 })(window.W);

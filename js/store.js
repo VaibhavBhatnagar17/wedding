@@ -84,7 +84,11 @@ window.W = window.W || {};
       adults: 1, kids: 0, phone: '', email: '', diet: 'Veg', rsvp: 'Pending',
       inv: { mehndi: false, haldi: true, sangeet: true, phere: true, reception: true },
       arrival: '', arrivalTime: '', departure: '', mode: '',
-      room: '', hostPaid: false, giftReceived: false, notes: ''
+      travelDetail: '', pickup: '',
+      // Portal fields — these are what the guest sees when they look themselves up.
+      needsRoom: false, hotel: '', room: '', checkIn: '', checkOut: '',
+      table: '', message: '',
+      hostPaid: false, giftReceived: false, notes: ''
     };
   }
 
@@ -163,7 +167,9 @@ window.W = window.W || {};
   const CSV_COLS = [
     'name', 'side', 'group', 'city', 'adults', 'kids', 'phone', 'email', 'diet', 'rsvp',
     'mehndi', 'haldi', 'sangeet', 'phere', 'reception',
-    'arrival', 'arrivalTime', 'departure', 'mode', 'room', 'hostPaid', 'giftReceived', 'notes'
+    'arrival', 'arrivalTime', 'departure', 'mode', 'travelDetail', 'pickup',
+    'needsRoom', 'hotel', 'room', 'checkIn', 'checkOut', 'table', 'message',
+    'hostPaid', 'giftReceived', 'notes'
   ];
 
   function guestsToRows() {
@@ -176,7 +182,11 @@ window.W = window.W || {};
         sangeet: g.inv.sangeet ? 'yes' : 'no', phere: g.inv.phere ? 'yes' : 'no',
         reception: g.inv.reception ? 'yes' : 'no',
         arrival: g.arrival, arrivalTime: g.arrivalTime, departure: g.departure, mode: g.mode,
-        room: g.room, hostPaid: g.hostPaid ? 'yes' : 'no',
+        travelDetail: g.travelDetail || '', pickup: g.pickup || '',
+        needsRoom: g.needsRoom ? 'yes' : 'no', hotel: g.hotel || '', room: g.room,
+        checkIn: g.checkIn || '', checkOut: g.checkOut || '',
+        table: g.table || '', message: g.message || '',
+        hostPaid: g.hostPaid ? 'yes' : 'no',
         giftReceived: g.giftReceived ? 'yes' : 'no', notes: g.notes
       };
     });
@@ -186,13 +196,57 @@ window.W = window.W || {};
     U.download('guest-list.csv', U.toCSV(guestsToRows(), CSV_COLS), 'text/csv');
   }
 
+  /* Column names matching the Supabase `guests` table, so the file can be
+     dropped straight into the Table Editor's CSV import. */
+  const SUPA_COLS = [
+    'phone', 'name', 'side', 'grp', 'city', 'adults', 'kids', 'diet', 'rsvp',
+    'inv_mehndi', 'inv_haldi', 'inv_sangeet', 'inv_phere', 'inv_reception',
+    'arrival', 'arrival_time', 'departure', 'mode', 'travel_detail', 'pickup',
+    'needs_room', 'hotel', 'room_no', 'check_in', 'check_out', 'host_paid',
+    'table_no', 'message', 'notes'
+  ];
+
+  function exportSupabaseCSV() {
+    const rows = get().guests
+      .filter(function (g) { return String(g.phone || '').replace(/\D/g, '').length >= 10; })
+      .map(function (g) {
+        function b(v) { return v ? 'true' : 'false'; }
+        return {
+          phone: String(g.phone).replace(/\D/g, '').slice(-10),
+          name: g.name, side: g.side, grp: g.group, city: g.city,
+          adults: g.adults, kids: g.kids, diet: g.diet,
+          // The portal only understands these four values.
+          rsvp: ({ Confirmed: 'Yes', Declined: 'No', Tentative: 'Maybe' })[g.rsvp] || 'Pending',
+          inv_mehndi: b(g.inv.mehndi), inv_haldi: b(g.inv.haldi),
+          inv_sangeet: b(g.inv.sangeet), inv_phere: b(g.inv.phere),
+          inv_reception: b(g.inv.reception),
+          arrival: g.arrival, arrival_time: g.arrivalTime, departure: g.departure,
+          mode: g.mode, travel_detail: g.travelDetail || '', pickup: g.pickup || '',
+          needs_room: b(g.needsRoom), hotel: g.hotel || '', room_no: g.room || '',
+          check_in: g.checkIn || '', check_out: g.checkOut || '',
+          host_paid: b(g.hostPaid), table_no: g.table || '',
+          message: g.message || '', notes: g.notes || ''
+        };
+      });
+
+    if (!rows.length) {
+      U.toast('No guests have a 10-digit mobile number yet — the portal needs one to look them up.', 'warn');
+      return 0;
+    }
+    U.download('guests-for-supabase.csv', U.toCSV(rows, SUPA_COLS), 'text/csv');
+    return rows.length;
+  }
+
   function csvTemplate() {
     const sample = {
       name: 'Sample Guest / Family', side: 'Bride', group: 'Extended family', city: 'Delhi',
       adults: '2', kids: '1', phone: '9876543210', email: '', diet: 'Veg', rsvp: 'Pending',
       mehndi: 'no', haldi: 'yes', sangeet: 'yes', phere: 'yes', reception: 'yes',
       arrival: '2027-01-31', arrivalTime: '14:30', departure: '2027-02-03', mode: 'Flight',
-      room: '', hostPaid: 'no', giftReceived: 'no', notes: 'Needs ground-floor room'
+      travelDetail: '6E 6521', pickup: '',
+      needsRoom: 'yes', hotel: '', room: '', checkIn: '2027-01-31', checkOut: '2027-02-03',
+      table: '', message: 'A line they will see in their portal',
+      hostPaid: 'no', giftReceived: 'no', notes: 'Needs ground-floor room'
     };
     U.download('guest-list-template.csv', U.toCSV([sample], CSV_COLS), 'text/csv');
   }
@@ -227,7 +281,11 @@ window.W = window.W || {};
         },
         arrival: r.arrival || '', arrivalTime: r.arrivalTime || '',
         departure: r.departure || '', mode: r.mode || '',
-        room: r.room || '', hostPaid: truthy(r.hostPaid),
+        travelDetail: r.travelDetail || '', pickup: r.pickup || '',
+        needsRoom: truthy(r.needsRoom), hotel: r.hotel || '', room: r.room || '',
+        checkIn: r.checkIn || '', checkOut: r.checkOut || '',
+        table: r.table || '', message: r.message || '',
+        hostPaid: truthy(r.hostPaid),
         giftReceived: truthy(r.giftReceived), notes: r.notes || ''
       });
       added++;
@@ -292,7 +350,8 @@ window.W = window.W || {};
     blankGuest: blankGuest, addGuest: addGuest, updateGuest: updateGuest, removeGuest: removeGuest,
     heads: heads, functionStats: functionStats, dietCounts: dietCounts,
     budgetTotals: budgetTotals, budgetByCategory: budgetByCategory,
-    exportGuestsCSV: exportGuestsCSV, importGuestsCSV: importGuestsCSV, csvTemplate: csvTemplate,
+    exportGuestsCSV: exportGuestsCSV, exportSupabaseCSV: exportSupabaseCSV,
+    importGuestsCSV: importGuestsCSV, csvTemplate: csvTemplate,
     exportAll: exportAll, importAll: importAll, resetAll: resetAll,
     submitRsvp: submitRsvp, readRsvps: readRsvps, clearRsvps: clearRsvps,
     CSV_COLS: CSV_COLS
