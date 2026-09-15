@@ -199,34 +199,36 @@
       .map(function (f) { return f.id; });
   }
 
+  /* Only the guest's own functions. Listing the rest greyed out just tells
+     someone what they are missing, so we leave them out entirely. */
   function renderFunctions(g) {
     const host = U.clear($('#me-fns'));
-    const shown = D.functions.filter(function (f) { return f.publicInvite; });
-    const mine = invitedIds(g);
+    const all = D.functions.filter(function (f) { return f.publicInvite; });
+    const mine = all.filter(function (f) { return g.invited[f.id]; });
 
-    $('#me-fn-note').textContent = mine.length === shown.length
+    $('#me-fn-note').textContent = mine.length === all.length
       ? 'You are invited to everything — we would not have it any other way.'
-      : 'The ones in colour are yours. The faded ones are smaller family-only functions.';
+      : mine.length === 1
+        ? 'Here is your function, with the timing and where to be.'
+        : 'Your ' + mine.length + ' functions, in order.';
 
-    shown.forEach(function (f) {
-      const isMine = g.invited[f.id];
-      host.appendChild(el('div', {
-        class: 'myfn__row' + (isMine ? '' : ' is-skip'), 'data-reveal': 'up'
-      }, [
+    if (!mine.length) {
+      host.appendChild(el('p', { class: 'myfn__none', text:
+        'We are still finalising your functions. Call us and we will sort it out right away.' }));
+      return;
+    }
+
+    mine.forEach(function (f) {
+      host.appendChild(el('div', { class: 'myfn__row', 'data-reveal': 'up' }, [
         el('div', { class: 'myfn__when' }, [
           el('b', { text: U.fmtDate(f.date, false).replace(/,.*/, '') }),
           el('span', { text: f.muhurat ? f.muhurat : f.start })
         ]),
         el('div', { class: 'myfn__body' }, [
           el('h3', { text: f.name }),
-          el('p', {
-            text: f.area + ' · ' + f.dressCode
-          })
+          el('p', { text: f.area + ' · ' + f.dressCode })
         ]),
-        el('div', {
-          class: 'myfn__badge',
-          text: isMine ? 'You’re invited' : 'Family only'
-        })
+        el('div', { class: 'myfn__badge', text: 'You’re invited' })
       ]));
     });
   }

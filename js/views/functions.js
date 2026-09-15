@@ -7,10 +7,10 @@ W.views.functions = function () {
   const wrap = el('div');
 
   wrap.appendChild(UI.pageHead('Functions',
-    'Five functions across three days at one venue. Timings, décor briefs and menus — this is what you hand to the venue and the décor team.',
+    'Four functions across two days at one venue. Timings, décor briefs and menus — this is what you hand to the venue and the décor team. Greyed rows are vendor-only beats and never appear on the guest site.',
     [UI.btn('Print run sheet', function () { window.print(); }, 'ghost')]));
 
-  const KEY = /HALDI|RING|SANGEET|BARAAT|VARMALA|PHERE|Couple entry|Vidaai|mehndi begins|Lighting test|sound OFF/i;
+  const KEY = /HALDI|RING CEREMONY|Sangeet begins|BARAAT|VARMALA|PHERE|Couple entry|Vidaai|Rooms open/i;
 
   /* sequence summary */
   wrap.appendChild(UI.panel('The sequence, and why', {}, [
@@ -56,10 +56,17 @@ W.views.functions = function () {
       kv('Cost', 'Folded into the welcome-food line · <strong>zero décor spend</strong>');
     }
 
+    /* Rows are [time, guestText, plannerNote]. A null guestText means the beat
+       is ours alone — the guest site skips it, the run sheet must not. */
     const sched = el('ul', { class: 'sched' }, fn.schedule.map(function (r) {
-      return el('li', { class: KEY.test(r[1]) ? 'is-key' : '' }, [
-        el('time', { text: r[0] }), el('span', { text: r[1] })
+      const guest = r[1], note = r[2];
+      const body = el('span', {}, [
+        guest ? el('i', { class: 'sched__guest', text: guest }) : null,
+        note ? el('i', { class: 'sched__ops', text: note }) : null
       ]);
+      const cls = [guest && KEY.test(guest) ? 'is-key' : '', guest ? '' : 'is-ops']
+        .filter(Boolean).join(' ');
+      return el('li', { class: cls }, [el('time', { text: r[0] }), body]);
     }));
 
     const cols = el('div', { class: 'cols' }, [

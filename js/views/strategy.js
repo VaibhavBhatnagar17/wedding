@@ -186,7 +186,7 @@ window.W = window.W || {}; W.views = W.views || {};
     return wrap;
 
     function toGuest(r) {
-      const inv = { mehndi: false, haldi: false, sangeet: false, phere: false, reception: false };
+      const inv = { haldi: false, sangeet: false, phere: false, reception: false };
       (r.functions || []).forEach(function (id) { if (id in inv) inv[id] = true; });
       return {
         name: r.name, side: r.side || 'Bride', city: r.city || '',

@@ -13,7 +13,7 @@ body.portal {
   /* See .hero — an implicit auto column overflows narrow screens. */
   display: grid; grid-template-columns: minmax(0, 1fr); place-items: center;
   padding: 90px 22px 60px;
-  background: radial-gradient(130% 100% at 50% 0%, #14523f 0%, #0b3129 48%, #07211d 100%);
+  background: radial-gradient(130% 100% at 50% 0%, #7d1a2c 0%, #47101c 48%, #2b0810 100%);
   color: var(--champagne); overflow: hidden;
 }
 .lookup::before {
@@ -45,7 +45,7 @@ body.portal {
 .lookup__om { font-family: var(--deva); font-size: 30px; color: var(--gold-dark); line-height: 1; }
 .lookup__card h1 {
   font-family: var(--display); font-size: clamp(25px, 5.4vw, 35px);
-  color: var(--emerald); margin: 16px 0 8px;
+  color: var(--brand); margin: 16px 0 8px;
 }
 .lookup__card > p { color: var(--muted); font-size: 14.5px; max-width: 380px; margin: 0 auto 26px; }
 
@@ -65,7 +65,7 @@ body.portal {
   min-height: 20px; font-size: 13px; color: var(--bad); margin-bottom: 10px;
 }
 .lookup__help { font-size: 12.5px; color: var(--muted); margin: 18px 0 0; }
-.lookup__help a { color: var(--maroon); }
+.lookup__help a { color: var(--brand); }
 
 .spinner {
   display: inline-block; width: 15px; height: 15px; border-radius: 50%;
@@ -81,7 +81,7 @@ body.portal {
 .me__hero {
   /* Deep enough that the hanging garland clears the name beneath it. */
   position: relative; padding: 168px 22px 96px; text-align: center;
-  background: radial-gradient(120% 100% at 50% 0%, #14523f, #0b3129 55%, #07211d);
+  background: radial-gradient(120% 100% at 50% 0%, #7d1a2c, #47101c 55%, #2b0810);
   color: var(--champagne); overflow: hidden;
 }
 .me__hero::before {
@@ -142,7 +142,7 @@ body.portal {
 }
 .key::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--marigold), var(--gold-lit), var(--emerald-soft));
+  background: linear-gradient(90deg, var(--marigold), var(--gold-lit), var(--brand-soft));
 }
 .key__label {
   font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase;
@@ -150,7 +150,7 @@ body.portal {
 }
 .key__val {
   font-family: var(--display); font-size: 40px; line-height: 1.05;
-  color: var(--emerald); margin: 10px 0 6px; word-break: break-word;
+  color: var(--brand); margin: 10px 0 6px; word-break: break-word;
 }
 .key__val--sm { font-size: 21px; }
 .key__note { font-size: 12.8px; color: var(--muted); }
@@ -158,7 +158,7 @@ body.portal {
 /* ---------- sections ---------- */
 
 .psec { padding: 62px 0; position: relative; }
-.psec--dark { background: var(--grad-emerald); color: var(--champagne); }
+.psec--dark { background: var(--grad-brand); color: var(--champagne); }
 .psec--dark::before {
   content: ''; position: absolute; inset: 0; pointer-events: none; color: var(--gold-lit);
   background-image:
@@ -167,7 +167,7 @@ body.portal {
   opacity: .05;
 }
 .psec__head { margin-bottom: 30px; position: relative; z-index: 2; }
-.psec__head h2 { font-family: var(--display); font-size: clamp(24px, 4vw, 34px); color: var(--emerald); margin: 8px 0 6px; }
+.psec__head h2 { font-family: var(--display); font-size: clamp(24px, 4vw, 34px); color: var(--brand); margin: 8px 0 6px; }
 .psec--dark .psec__head h2 { color: var(--gold-pale); }
 .psec__head p { color: var(--muted); font-size: 14.5px; margin: 0; }
 .psec--dark .psec__head p { color: rgba(247, 236, 201, .7); }
@@ -182,24 +182,21 @@ body.portal {
   border: 1px solid var(--line); border-radius: var(--radius);
   border-left: 3px solid var(--marigold);
 }
-.myfn__row.is-skip {
-  opacity: .5; border-left-color: var(--line);
-  background: transparent; box-shadow: none;
+.myfn__none {
+  padding: 20px 22px; background: var(--ivory); margin: 0;
+  border: 1px dashed var(--line); border-radius: var(--radius); color: var(--muted);
 }
 .myfn__when {
   font-family: var(--display); font-size: 14px; color: var(--gold-dark);
   letter-spacing: .05em; line-height: 1.4;
 }
-.myfn__when b { display: block; font-size: 19px; color: var(--emerald); font-weight: 400; }
-.myfn__body h3 { font-family: var(--display); font-size: 21px; color: var(--emerald); margin: 0 0 3px; }
+.myfn__when b { display: block; font-size: 19px; color: var(--brand); font-weight: 400; }
+.myfn__body h3 { font-family: var(--display); font-size: 21px; color: var(--brand); margin: 0 0 3px; }
 .myfn__body p { font-size: 13.5px; color: var(--muted); margin: 0; }
 .myfn__badge {
   font-size: 9.5px; letter-spacing: .18em; text-transform: uppercase;
   padding: 6px 13px; border-radius: 999px; white-space: nowrap;
   background: rgba(31, 122, 77, .1); color: var(--ok); border: 1px solid rgba(31, 122, 77, .28);
-}
-.myfn__row.is-skip .myfn__badge {
-  background: transparent; color: var(--muted); border-color: var(--line);
 }
 @media (max-width: 640px) {
   .myfn__row { grid-template-columns: 1fr; }
@@ -218,7 +215,7 @@ body.portal {
 .album:hover { transform: translateY(-4px); border-color: var(--gold); }
 .album__thumb {
   height: 132px; display: grid; place-items: center;
-  background: linear-gradient(140deg, #14523f, #0b3129);
+  background: linear-gradient(140deg, #7d1a2c, #47101c);
   color: var(--gold); position: relative; overflow: hidden;
 }
 .album__thumb svg { width: 74px; height: 74px; opacity: .55; }
@@ -238,7 +235,7 @@ body.portal {
 .gitem__btn {
   width: 100%; display: flex; align-items: center; gap: 14px;
   padding: 19px 22px; background: none; border: 0; cursor: pointer; text-align: left;
-  font-family: var(--display); font-size: 19px; color: var(--emerald);
+  font-family: var(--display); font-size: 19px; color: var(--brand);
   transition: background .25s ease;
 }
 .gitem__btn:hover { background: #fffdf4; }
@@ -292,7 +289,7 @@ body.portal {
 }
 .seg button:hover { border-color: var(--gold); color: var(--ink); }
 .seg button.is-on {
-  background: var(--emerald); border-color: var(--emerald); color: var(--champagne);
+  background: var(--brand); border-color: var(--brand); color: var(--champagne);
 }
 
 /* ---------- footer ---------- */

@@ -24,12 +24,23 @@ Then open <http://localhost:8899/index.html>.
 
 ## The invitation
 
-It opens on a pair of carved jharokha doors that swing apart onto the invitation
-— an arch card with your names in gold, marigold strands swaying overhead and
-petals drifting down. Below that: a live countdown, cards for all five
-functions, the full running order for all three days, travel and packing notes,
-and an RSVP form. Guests can add every function to their phone calendar in one
-tap.
+It opens on a pair of carved doors that swing apart onto the invitation — an
+arch card with your names and both sets of parents in gold, marigold strands
+swaying overhead and petals drifting down. Below that: a live countdown, cards
+for all four functions, the full running order for both days, travel and packing
+notes, and an RSVP form. Guests can add every function to their phone calendar
+in one tap.
+
+The palette is maroon, sindoor red, saffron, marigold and gold — a shaadi joda,
+not a Mughal one. Colours live in `assets/css/tokens.css` and nowhere else, so
+the whole site re-tints from that one file.
+
+The doors are layered rather than drawn as one image: the wood gradient, the
+tiled lattice and the gold frame are CSS, and only the arch and the medallion are
+SVG, each with `preserveAspectRatio="…meet"`. That is deliberate — a single
+full-door SVG has to stretch to fit the viewport, which flattens the arch and
+turns every lattice circle into an oval on a wide or short window. A smoke test
+asserts no door SVG ever goes back to `preserveAspectRatio="none"`.
 
 Append `?open=1` to skip the doors — useful for deep links, e.g.
 `index.html?open=1#rsvp`. The doors also only appear once per browsing session.

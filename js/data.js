@@ -6,8 +6,16 @@ window.W = window.W || {};
   'use strict';
 
   const couple = {
-    groom: { name: 'Vaibhav Bhatnagar', short: 'Vaibhav', age: 29, side: 'Groom' },
-    bride: { name: 'Mahak Kalra', short: 'Mahak', age: 27, side: 'Bride' },
+    groom: {
+      name: 'Vaibhav Bhatnagar', short: 'Vaibhav', age: 29, side: 'Groom',
+      mother: 'Kamla Srivastava', father: 'Ved Prakash Bhatnagar',
+      parents: 'Kamla Srivastava & Ved Prakash Bhatnagar'
+    },
+    bride: {
+      name: 'Mahak Kalra', short: 'Mahak', age: 27, side: 'Bride',
+      mother: 'Riya Kalra', father: 'Kishore Kalra',
+      parents: 'Riya Kalra & Kishore Kalra'
+    },
     hashtag: '#VaibhavWedsMahak',
     city: 'Udaipur, Rajasthan',
     weddingDate: '2027-02-02',
@@ -23,46 +31,21 @@ window.W = window.W || {};
 
   /* ---------------- Functions ---------------- */
 
+  /* Schedule rows are [time, guestText, plannerNote].
+     guestText === null keeps the row off the invitation — those are pure vendor
+     beats (décor builds, makeup call times, lighting tests) that no guest should
+     have to read. plannerNote is the operational detail and shows only in the
+     private planner console. Write guestText as if a guest is reading it, because
+     they are. */
+
   const functions = [
-    {
-      id: 'mehndi',
-      name: 'Mehndi',
-      tagline: 'Henna, chaat and a slow start',
-      date: '2027-01-31',
-      start: '18:00',
-      end: '22:00',
-      area: 'Poolside lawn',
-      guests: 120,
-      dressCode: 'Comfortable Indian · greens & yellows',
-      optional: true,
-      publicInvite: true,
-      decorBudget: 0,
-      perPlate: 0,
-      summary:
-        'Added to the original five because bridal mehndi needs 12+ hours to darken, and because it costs almost nothing while taking pressure off Day 1.',
-      schedule: [
-        ['14:00', 'Check-in opens · welcome hampers already in rooms'],
-        ['17:00', 'Chai & Chaat on the lawn — informal, existing garden lighting'],
-        ['18:00', 'Bridal mehndi begins · 4 artists rotate through guests'],
-        ['19:00', 'Acoustic / folk duo'],
-        ['20:00', 'Dinner from the chaat counters plus one hot counter'],
-        ['22:00', 'Close']
-      ],
-      decor: [
-        'Zero décor spend — string lights the property already has',
-        'Floor cushions, low tables, brass lamps',
-        'Marigold strings left over from the haldi delivery',
-        'A hand-lettered mehndi signboard'
-      ],
-      menu: ['Chaat counter', 'One hot counter', 'Masala chai & kahwa', 'Jalebi']
-    },
     {
       id: 'haldi',
       name: 'Haldi',
       tagline: 'Marigold Morning',
       date: '2027-02-01',
-      start: '09:30',
-      end: '13:00',
+      start: '10:00',
+      end: '13:30',
       area: 'Garden lawn / poolside',
       guests: 300,
       dressCode: 'Yellow & marigold orange · cottons',
@@ -70,13 +53,17 @@ window.W = window.W || {};
       decorBudget: 35000,
       perPlate: 475,
       summary:
-        'Deliberately a daylight brunch, not a lunch. Daylight means zero lighting spend, and a brunch at ₹475 instead of a full lunch at ₹1,100 saves about ₹1.7 lakh on its own.',
+        'Rooms open at 06:00 so everyone can shift in, eat and dress without rushing — which is why the haldi starts at 10:00 rather than 09:30. It stays a daylight brunch rather than a lunch: daylight means no lighting spend, and a brunch at ₹475 instead of a full lunch at ₹1,100 saves about ₹1.7 lakh on its own.',
       schedule: [
-        ['07:30', 'Ganesh Puja / Griha Shanti — both families, ~40 people, poolside'],
-        ['09:30', 'Separate haldi for bride and groom'],
+        ['06:00', 'Rooms open — check in, drop your bags, breakfast is already on'],
+        ['06:30', 'Chai, poha and breakfast counters on the lawn — open till 09:30'],
+        ['07:30', 'Ganesh Puja & Griha Shanti — immediate families, poolside'],
+        ['08:00', null, 'Welcome desk hands out keys in arrival order. 2 staff per 100 guests, luggage runners on standby, and a bag-hold counter for anyone whose room is not ready.'],
+        ['09:00', 'Time to change — yellows and oranges, and something you do not mind staining'],
+        ['10:00', 'Separate haldi for bride and groom'],
         ['11:00', 'Joint haldi · dhol · flower shower · water-splash zone'],
         ['12:00', 'Brunch counters open'],
-        ['13:00', 'Close — guests rest until evening']
+        ['13:30', 'Close — go rest, the evening is a long one']
       ],
       decor: [
         'Marigold and genda torans throughout',
@@ -106,21 +93,22 @@ window.W = window.W || {};
       end: '00:30',
       area: 'Main lawn, after-party in the banquet',
       guests: 300,
-      dressCode: 'Fuchsia, emerald & gold · indo-western welcome',
+      dressCode: 'Fuchsia, marigold & gold · indo-western welcome',
       publicInvite: true,
       decorBudget: 45000,
       perPlate: 700,
       summary:
-        'The engagement is a 30-minute ring ceremony at 19:00 on the sangeet stage rather than a separate function. That single merge saves roughly ₹2.6 lakh — another dinner for 285, another décor setup, another venue slot — and it paces the evening better.',
+        'The engagement is a 30-minute ring ceremony at 19:00 on the sangeet stage rather than a separate function. That single merge saves roughly ₹2.6 lakh — another dinner for 285, another décor setup, another venue slot — and it paces the evening better. The folk act now runs first, as a warm-up: a Kalbelia troupe that pulls people out of their chairs makes the family performances far easier to follow, because nobody wants to be the first one dancing in front of 300 seated relatives.',
       schedule: [
         ['18:30', 'Guest arrival · welcome drinks'],
         ['19:00', 'RING CEREMONY — couple entry, ring exchange, blessings, cake'],
-        ['19:30', 'Sangeet — 8 to 10 performances, family face-off'],
-        ['20:00', 'Bar opens (2 hours only)'],
-        ['20:45', 'Kalbelia / Ghoomar folk act — 20 minutes'],
-        ['21:15', 'Dinner service opens, staggered'],
-        ['21:30', "Couple's dance, then the last group number"],
-        ['22:00', 'Outdoor sound OFF — legal cut-off. After-party moves indoors.'],
+        ['19:35', 'Kalbelia & Ghoomar folk act — 25 minutes, and they will pull you up to dance'],
+        ['20:00', 'Bar opens', 'Bar open 2 hours only. Brief the captain — soft close at 22:00.'],
+        ['20:10', 'Sangeet begins — the families, then the cousins, then the siblings'],
+        ['21:00', 'The couple perform'],
+        ['21:15', 'Dinner opens, in stages'],
+        ['21:40', 'Open floor — everybody dances'],
+        ['22:00', 'The night moves indoors to the banquet', 'Outdoor sound OFF at 22:00 — legal cut-off, no exceptions. Sound team shifts to the indoor rig by 21:45 so there is no gap.'],
         ['00:30', 'Close']
       ],
       decor: [
@@ -129,7 +117,7 @@ window.W = window.W || {};
         'Fairy-light canopy over the dance floor',
         '12 uplighters + 2 moving heads',
         '12×8 ft LED wall (~₹18k) — also the video screen and monogram display',
-        'Fuchsia, emerald and gold drapes',
+        'Fuchsia, marigold and gold drapes',
         'Low seating with bolsters, mirrored tables, hanging umbrellas',
         'Ring ceremony uses the same stage plus one 4×4 ft floral arch rolled on and off'
       ],
@@ -161,9 +149,9 @@ window.W = window.W || {};
       summary:
         'Your muhurat is 11:00–13:30. Brief the pandit for a 90-minute core ceremony with 60 minutes of buffer — rushed pheras photograph badly and upset elders. Lunch afterwards is a curated Rajasthani thali rather than a 14-counter buffet: cheaper, more authentic, and exactly what guests want after 2.5 hours at a mandap.',
       schedule: [
-        ['05:00', 'Décor team completes the mandap (structure built overnight on 1 Feb)'],
-        ['07:30', "Bride's hair and makeup begins — 3 hours, ready by 10:45"],
-        ['08:00', 'Breakfast for all guests — negotiate this into the room tariff'],
+        ['05:00', null, 'Décor team completes the mandap. Structure goes up overnight on 1 Feb while the sangeet after-party is indoors; flowers dressed from 05:00, signed off by 08:00.'],
+        ['07:30', null, "Bride's hair and makeup begins — 3 hours, ready by 10:45. Groom from 08:30."],
+        ['08:00', 'Breakfast for everyone', 'Negotiate breakfast into the room tariff rather than paying per plate.'],
         ['09:30', 'BARAAT — brass band, 2 dhols, ghodi or vintage car, 300m loop on the property'],
         ['10:15', 'Toran / Dwar Puja + Milni'],
         ['10:35', 'VARMALA on a raised stage — flower shower, 2 cold-pyro bursts'],
@@ -208,14 +196,14 @@ window.W = window.W || {};
       summary:
         'The largest function and the one most likely to go wrong. 650 guests through a single stage line takes 90–110 minutes and will swallow the evening — run two photo queues, have the anchor call guests table-block by table-block, and put a separate photo booth near the entrance for people who do not need a stage picture.',
       schedule: [
-        ['16:00', "Bride's reception look — outfit and jewellery change, makeup refresh only (saves 60 min)"],
-        ['17:00', 'Lighting test — not at 19:00. Sunset is 18:10.'],
-        ['19:00', 'Guest arrival (650) · welcome drinks · photo wall'],
+        ['16:00', null, "Bride's reception look — outfit and jewellery change, makeup refresh only. Saves 60 minutes over a full reset."],
+        ['17:00', null, 'Lighting test at 17:00, not 19:00. Sunset is 18:10 and you cannot aim a fixture in the dark.'],
+        ['19:00', 'Guest arrival · welcome drinks · photo wall'],
         ['19:45', 'Couple entry'],
-        ['20:00', 'Dinner opens · stage greetings in two parallel queues'],
-        ['21:00', 'Cake, then exactly 3 speeches × 2 minutes'],
-        ['21:15', 'Live ghazal / semi-classical duo · dinner continues'],
-        ['22:45', 'Vidaai — or move it to 3 Feb morning (recommended)'],
+        ['20:00', 'Dinner opens · greetings on stage in two queues, so the wait is short'],
+        ['21:00', 'Cake, then a few short speeches', 'Exactly 3 speeches × 2 minutes. Brief the anchor to close them out — this is where receptions overrun.'],
+        ['21:15', 'Live ghazal and semi-classical duo · dinner continues'],
+        ['22:45', 'Vidaai', 'Or move vidaai to the morning of 3 Feb — recommended. At 22:45 half the guests have left and everyone is exhausted.'],
         ['23:15', 'Close']
       ],
       decor: [
@@ -276,7 +264,7 @@ window.W = window.W || {};
     { decision: 'Engagement merged into the Sangeet evening as a 30-min ring ceremony', saving: 260000 },
     { decision: 'Haldi as a brunch (₹475) instead of a full lunch (₹1,100)', saving: 170000 },
     { decision: 'Wedding lunch as a curated Rajasthani thali, not a 14-counter buffet', saving: 150000 },
-    { decision: 'Single venue for all five functions — no transport, one décor mobilisation', saving: 140000 },
+    { decision: 'Single venue for all four functions — no transport, one décor mobilisation', saving: 140000 },
     { decision: 'Weekday (Mon–Tue) rates on venue, décor and vendors', saving: 120000 },
     { decision: 'Rent 2 of 4 outfits each instead of buying all four', saving: 110000 },
     { decision: 'Digital-first invitations; 120 printed boxes for elders and VIPs only', saving: 90000 },
@@ -320,7 +308,7 @@ window.W = window.W || {};
     travel: {
       airport: 'Maharana Pratap Airport (UDR), Dabok — 22 km, 40 min',
       rail: 'Udaipur City Railway Station (UDZ) — city centre',
-      road: 'NH-48 from Ahmedabad (4.5 hr) · NH-58 from Jaipur (6 hr)',
+      road: 'Neemuch 3 hr · Ahmedabad 4.5 hr (NH-48) · Kota 5 hr · Jaipur 6 hr (NH-58) · Indore 6.5 hr',
       weather: 'Early Feb: days 25–27°C, nights 10–12°C. Sunrise 07:05, sunset 18:10.',
       pack: 'Layers. A shawl or jacket for both evenings is not optional.'
     }
@@ -392,7 +380,7 @@ window.W = window.W || {};
 
   const assumptions = [
     'Excluded from the ₹20L: heirloom/investment jewellery, shagun and cash gifts, guests\u2019 airfare and rail fare, guests\u2019 room tariffs, honeymoon.',
-    'Included in the ₹20L: all five functions, both wardrobes, hair and makeup, décor, photography, entertainment, logistics.',
+    'Included in the ₹20L: all four functions, both wardrobes, hair and makeup, décor, photography, entertainment, logistics.',
     'Guest rooms are blocked at a negotiated rate and paid by guests. The host covers 10 rooms.',
     'All functions at a single property. Food is all-vegetarian.',
     'No planner fee is budgeted — a ₹35–50k day-of coordinator should come from contingency.'
@@ -417,33 +405,35 @@ window.W = window.W || {};
   /* A line written for one specific guest, shown at the top of their portal.
      These are only here so the feature is visible in the sample data. */
   const SAMPLE_MESSAGES = {
-    'Kamla Devi Bhatnagar': 'Dadi, your room is on the ground floor and there is a wheelchair reserved at the mandap. Someone will be with you the whole time.',
+    'Shanti Devi Bhatnagar': 'Dadi, your room is on the ground floor and there is a wheelchair reserved at the mandap. Someone will be with you the whole time.',
     'Rohit Sharma': 'Best man duties: baraat energy, one speech, and you are opening the sangeet. No excuses.',
     'Priya Nair': 'Vegan thali arranged for you at every single meal — I checked twice.',
     'Sharma Family': 'So glad you are coming. The children have a play corner during the phere.'
   };
 
+  /* Columns: name, side, group, city, extra adults, kids, diet, RSVP,
+     haldi, sangeet, phere, reception, notes. */
   const seedGuests = [
-    ['Rajesh Bhatnagar', 'Groom', 'Immediate family', 'Jaipur', 4, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Groom\u2019s father · host room'],
-    ['Sunita Bhatnagar', 'Groom', 'Immediate family', 'Jaipur', 0, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Groom\u2019s mother · host room'],
-    ['Ananya Bhatnagar', 'Groom', 'Immediate family', 'Bengaluru', 1, 1, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Sister · sangeet performance'],
-    ['Dr. Mahesh Kalra', 'Bride', 'Immediate family', 'Delhi', 3, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Bride\u2019s father · host room'],
-    ['Rekha Kalra', 'Bride', 'Immediate family', 'Delhi', 0, 0, 'No onion/garlic', 'Confirmed', 1, 1, 1, 1, 1, 'Bride\u2019s mother · host room'],
-    ['Aditya Kalra', 'Bride', 'Immediate family', 'Pune', 2, 1, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Brother · handles baraat'],
-    ['Kamla Devi Bhatnagar', 'Groom', 'Extended family', 'Jaipur', 1, 0, 'Jain', 'Confirmed', 1, 1, 1, 1, 1, 'Dadi · 82, ground-floor room, wheelchair at mandap'],
-    ['Prem Chand Kalra', 'Bride', 'Extended family', 'Ludhiana', 1, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Nana ji · ground-floor room'],
-    ['Vikram & Neha Bhatnagar', 'Groom', 'Extended family', 'Kota', 2, 2, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Chacha–chachi'],
-    ['Suresh & Anita Kalra', 'Bride', 'Extended family', 'Amritsar', 2, 0, 'Veg', 'Tentative', 1, 1, 1, 1, 1, 'Mama–mami'],
-    ['Rohit Sharma', 'Groom', 'Friends', 'Mumbai', 2, 0, 'Non-veg', 'Confirmed', 0, 0, 1, 0, 1, 'Best man · sangeet performance'],
-    ['Karan Mehta', 'Groom', 'Friends', 'Gurgaon', 1, 0, 'Veg', 'Pending', 0, 0, 1, 0, 1, ''],
-    ['Priya Nair', 'Bride', 'Friends', 'Bengaluru', 1, 0, 'Vegan', 'Confirmed', 0, 0, 1, 0, 1, 'Maid of honour'],
-    ['Shreya Gupta', 'Bride', 'Friends', 'Delhi', 1, 0, 'Veg', 'Confirmed', 0, 0, 1, 0, 1, 'Sangeet performance'],
-    ['Amit Deshpande', 'Groom', 'Colleagues', 'Hyderabad', 2, 0, 'Non-veg', 'Pending', 0, 0, 0, 0, 1, 'Reception only'],
-    ['Nikita Rao', 'Bride', 'Colleagues', 'Bengaluru', 1, 0, 'Veg', 'Pending', 0, 0, 0, 0, 1, 'Reception only'],
-    ['Sharma Family', 'Bride', 'Neighbours', 'Delhi', 4, 2, 'Veg', 'Pending', 0, 0, 0, 0, 1, 'Reception only'],
-    ['Iyer Family', 'Groom', 'Family friends', 'Jaipur', 3, 1, 'Veg', 'Confirmed', 0, 0, 1, 1, 1, ''],
-    ['Gulab Singh Rathore', 'Groom', 'Family friends', 'Udaipur', 2, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 1, 'Local · no room needed'],
-    ['Meera Joshi', 'Bride', 'Family friends', 'Udaipur', 2, 1, 'Jain', 'Confirmed', 0, 1, 1, 1, 1, 'Local · no room needed']
+    ['Ved Prakash Bhatnagar', 'Groom', 'Immediate family', 'Jaipur', 4, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Groom\u2019s father · host room'],
+    ['Kamla Srivastava', 'Groom', 'Immediate family', 'Jaipur', 0, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Groom\u2019s mother · host room'],
+    ['Ananya Bhatnagar', 'Groom', 'Immediate family', 'Bengaluru', 1, 1, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Sister · sangeet performance'],
+    ['Kishore Kalra', 'Bride', 'Immediate family', 'Delhi', 3, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Bride\u2019s father · host room'],
+    ['Riya Kalra', 'Bride', 'Immediate family', 'Delhi', 0, 0, 'No onion/garlic', 'Confirmed', 1, 1, 1, 1, 'Bride\u2019s mother · host room'],
+    ['Aditya Kalra', 'Bride', 'Immediate family', 'Pune', 2, 1, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Brother · handles baraat'],
+    ['Shanti Devi Bhatnagar', 'Groom', 'Extended family', 'Jaipur', 1, 0, 'Jain', 'Confirmed', 1, 1, 1, 1, 'Dadi · 82, ground-floor room, wheelchair at mandap'],
+    ['Prem Chand Kalra', 'Bride', 'Extended family', 'Ludhiana', 1, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Nana ji · ground-floor room'],
+    ['Vikram & Neha Bhatnagar', 'Groom', 'Extended family', 'Kota', 2, 2, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Chacha–chachi · driving down'],
+    ['Suresh & Anita Kalra', 'Bride', 'Extended family', 'Neemuch', 2, 0, 'Veg', 'Tentative', 1, 1, 1, 1, 'Mama–mami · driving down'],
+    ['Rohit Sharma', 'Groom', 'Friends', 'Mumbai', 2, 0, 'Non-veg', 'Confirmed', 0, 1, 0, 1, 'Best man · sangeet performance'],
+    ['Karan Mehta', 'Groom', 'Friends', 'Gurgaon', 1, 0, 'Veg', 'Pending', 0, 1, 0, 1, ''],
+    ['Priya Nair', 'Bride', 'Friends', 'Bengaluru', 1, 0, 'Vegan', 'Confirmed', 0, 1, 0, 1, 'Maid of honour'],
+    ['Shreya Gupta', 'Bride', 'Friends', 'Delhi', 1, 0, 'Veg', 'Confirmed', 0, 1, 0, 1, 'Sangeet performance'],
+    ['Amit Deshpande', 'Groom', 'Colleagues', 'Hyderabad', 2, 0, 'Non-veg', 'Pending', 0, 0, 0, 1, 'Reception only'],
+    ['Nikita Rao', 'Bride', 'Colleagues', 'Indore', 1, 0, 'Veg', 'Pending', 0, 0, 0, 1, 'Reception only'],
+    ['Sharma Family', 'Bride', 'Neighbours', 'Delhi', 4, 2, 'Veg', 'Pending', 0, 0, 0, 1, 'Reception only'],
+    ['Iyer Family', 'Groom', 'Family friends', 'Jaipur', 3, 1, 'Veg', 'Confirmed', 0, 1, 1, 1, ''],
+    ['Gulab Singh Rathore', 'Groom', 'Family friends', 'Udaipur', 2, 0, 'Veg', 'Confirmed', 1, 1, 1, 1, 'Local · no room needed'],
+    ['Meera Joshi', 'Bride', 'Family friends', 'Udaipur', 2, 1, 'Jain', 'Confirmed', 1, 1, 1, 1, 'Local · no room needed']
   ].map(function (r, i) {
     const local = /Udaipur/.test(r[3]);
     const n = i + 1;
@@ -455,16 +445,17 @@ window.W = window.W || {};
       // with the real ones before sharing the link.
       phone: String(9876500000 + n), email: '',
       diet: r[6], rsvp: r[7],
-      inv: { mehndi: !!r[8], haldi: !!r[9], sangeet: !!r[10], phere: !!r[11], reception: !!r[12] },
-      arrival: local ? '' : '2027-01-31', arrivalTime: '', departure: local ? '' : '2027-02-03',
+      inv: { haldi: !!r[8], sangeet: !!r[9], phere: !!r[10], reception: !!r[11] },
+      // Rooms open at 06:00 on 1 Feb, so that is the default arrival.
+      arrival: local ? '' : '2027-02-01', arrivalTime: '', departure: local ? '' : '2027-02-03',
       mode: local ? 'Car' : '', travelDetail: '', pickup: '',
       needsRoom: !local,
       hotel: local ? '' : 'Wedding venue — guest room block',
-      room: '', checkIn: local ? '' : '2027-01-31', checkOut: local ? '' : '2027-02-03',
-      hostPaid: /host room/.test(r[13]),
-      table: r[12] ? 'T-' + String(Math.ceil(n / 3)) : '',
+      room: '', checkIn: local ? '' : '2027-02-01', checkOut: local ? '' : '2027-02-03',
+      hostPaid: /host room/.test(r[12]),
+      table: r[11] ? 'T-' + String(Math.ceil(n / 3)) : '',
       message: SAMPLE_MESSAGES[r[0]] || '',
-      giftReceived: false, notes: r[13]
+      giftReceived: false, notes: r[12]
     };
   });
 
@@ -475,6 +466,8 @@ window.W = window.W || {};
   const albums = [
     { title: 'Pre-wedding shoot', functionId: '', url: '', count: 0,
       note: 'Coming in December 2026' },
+    { title: 'Mehndi at home', functionId: '', url: '', count: 0,
+      note: 'From the days before we travel' },
     { title: 'Haldi & Sangeet', functionId: 'haldi', url: '', count: 0,
       note: 'Live from the evening of 1 February' },
     { title: 'Phere', functionId: 'phere', url: '', count: 0,
@@ -492,11 +485,22 @@ window.W = window.W || {};
   /* The wedding guide shown in every guest's portal. */
   const guide = [
     {
+      title: 'Arriving on 1 February',
+      icon: 'kalash',
+      items: [
+        ['Rooms open at 6 am', 'Come straight to the venue whenever you land or arrive. You can check in, shower and change before anything starts — no waiting in a lobby.'],
+        ['Breakfast from 6:30', 'Chai, poha and hot counters on the lawn until 9:30. Eat first, unpack later.'],
+        ['Dress by 9:30', 'The haldi starts at 10. That is deliberate: it gives you three and a half hours between arriving and being needed anywhere.'],
+        ['If you arrive the night before', 'Tell us in your RSVP and we will sort a room for the 31st. Do not book anything yourself.'],
+        ['Mehndi', 'Happening quietly at home with close family before we all travel, so there is no mehndi function at the venue.']
+      ]
+    },
+    {
       title: 'What to wear',
       icon: 'paisley',
       items: [
         ['Haldi, 1 Feb morning', 'Yellow, marigold orange, white. Cottons you do not mind staining — haldi does not come out.'],
-        ['Ring ceremony & Sangeet, 1 Feb evening', 'Fuchsia, emerald, gold. Indo-western is very welcome. Shoes you can dance in.'],
+        ['Ring ceremony & Sangeet, 1 Feb evening', 'Fuchsia, marigold, gold. Indo-western is very welcome. Shoes you can dance in.'],
         ['Phere, 2 Feb morning', 'Traditional. Pastels and ivory look wonderful in daylight photographs.'],
         ['Reception, 2 Feb evening', 'Formal Indian, or black-tie if you prefer. It will be cold — plan a shawl or a jacket.']
       ]
@@ -516,7 +520,8 @@ window.W = window.W || {};
       items: [
         ['Everything is at one venue', 'No travelling between functions. Your room is a short walk from every lawn.'],
         ['Food', 'All functions are pure vegetarian. Jain and no-onion-garlic thalis are arranged — tell us in advance and it will be at your table.'],
-        ['Bar', 'At the Sangeet only, from 8 pm. Outdoor music stops at 10 pm sharp — that is Udaipur law, not our choice.'],
+        ['Bar', 'At the Sangeet only, from 8 pm. The music moves indoors at 10 and carries on there.'],
+        ['The sangeet', 'A Kalbelia folk troupe opens the evening and will pull you up to dance, so nobody has to be the first one on the floor. Family performances follow.'],
         ['Children', 'Very welcome. There is a supervised play corner during the phere.'],
         ['Gifts', 'Your presence is the gift. If you insist, a blessing envelope at the reception is more than enough.'],
         ['Photographs', 'Please stay seated during the phere so everyone can see. Our crew will get the shots, and every album lands in this portal.']
@@ -526,11 +531,15 @@ window.W = window.W || {};
       title: 'While you are in Udaipur',
       icon: 'feather',
       items: [
-        ['City Palace', 'Go early, around 9:30 am, before the crowds. Two hours.'],
-        ['Lake Pichola at sunset', 'The boat from Rameshwar Ghat. The single best hour in the city.'],
-        ['Bagore ki Haveli', '7 pm folk dance show at Gangaur Ghat. Book on the day.'],
+        ['City Palace', 'Go early, around 9:30 am, before the crowds. Two hours, three if you add the Crystal Gallery.'],
+        ['Lake Pichola at sunset', 'The boat from Rameshwar Ghat around 5 pm. The single best hour in the city.'],
+        ['Bagore ki Haveli', '7 pm folk dance show at Gangaur Ghat. Get there by 6:15 — tickets are same-day only and it fills up.'],
         ['Sajjangarh Monsoon Palace', 'Sunset over the Aravallis. Take a taxi, not a scooter.'],
-        ['Eat', 'Ambrai for the view, Tribute for thali, Jagdish Chowk for street kachori and jalebi.']
+        ['Jagdish Temple', 'Five minutes uphill from the City Palace gate, and free. Worth the detour.'],
+        ['A whole spare day', 'Kumbhalgarh Fort with the Ranakpur Jain temples on the way back — two hours each way, so share a cab.'],
+        ['Eat', 'Ambrai or Upre for the view across the water, Tribute for thali, Jagdish Chowk for kachori and jalebi.'],
+        ['Shop', 'Bandhej and leheriya, Pichwai paintings, Molela clay plaques, juttis and silver. Bada Bazaar and Hathi Pol. Bargain, kindly.'],
+        ['Stay an extra day', 'Genuinely worth it. Ask any of us for a plan — half the family has done all of this twice.']
       ]
     }
   ];

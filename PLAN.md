@@ -1,6 +1,6 @@
 # Vaibhav & Mahak — Udaipur Wedding Plan
 
-**Dates:** 31 Jan (arrivals) · 1 Feb (Haldi, Ring Ceremony + Sangeet) · 2 Feb 2027 (Phere, Reception)
+**Dates:** 1 Feb (rooms open 06:00 · Haldi · Ring Ceremony + Sangeet) · 2 Feb 2027 (Phere, Reception). Mehndi happens at home beforehand.
 **Phere muhurat:** 2 Feb 2027, 11:00 – 13:30
 **City:** Udaipur, Rajasthan
 **Budget:** ₹20,00,000 all-in
@@ -28,7 +28,7 @@ A standalone engagement means another dinner for 285, another décor setup and a
 **Assumed excluded from the ₹20L** — confirm these, because they change everything:
 heirloom / investment jewellery · shagun and cash gifts · guests' airfare and train fare · guests' room tariffs · honeymoon.
 
-Bride's and groom's outfits, hair and makeup, and all five functions **are** inside the ₹20L.
+Bride's and groom's outfits, hair and makeup, and all four venue functions **are** inside the ₹20L, as is the mehndi at home.
 
 ---
 
@@ -62,7 +62,7 @@ February is peak season, so book early anyway. Weather: days 25–27°C, nights 
 | 14 | Sound, DJ, dhol ×2, band, shehnai, folk act | — | 62,000 |
 | 15 | Sangeet choreographer | 6 sessions + rehearsal | 22,000 |
 | 16 | Hair & makeup | bride 4 looks, groom 2, 6 family | 62,000 |
-| 17 | Mehndi | bridal + 4 artists for guests | 26,000 |
+| 17 | Mehndi artists | bridal + 4 artists, at home before travel | 26,000 |
 | 18 | Bride's outfits | 2 bought (incl. phere lehenga), 2 rented | 75,000 |
 | 19 | Groom's outfits | sherwani bought, 3 rented, safa/mojari | 40,000 |
 | 20 | Pandit, samagri, havan, Ganesh puja | — | 28,000 |
@@ -90,7 +90,7 @@ Food at 51% is high but unavoidable at 1,445 covers. The way to buy yourself roo
 | Wedding lunch as a curated Rajasthani thali, not a 14-counter buffet | ~₹1,50,000 |
 | Weekday (Mon–Tue) rates on venue, décor and vendors | ~₹1,20,000 |
 | Rent 2 of 4 outfits each instead of buying all four | ~₹1,10,000 |
-| Single venue for all five functions (no transport, one décor mobilisation) | ~₹1,40,000 |
+| Single venue for all four functions (no transport, one décor mobilisation) | ~₹1,40,000 |
 | Digital-first invitations; 120 printed boxes for elders and VIPs only | ~₹90,000 |
 | Marigold-led palette, zero imported flowers | ~₹85,000 |
 | 2-hour limited IMFL bar instead of all-night open bar with imported labels | ~₹80,000 |
@@ -104,37 +104,42 @@ Food at 51% is high but unavoidable at 1,445 covers. The way to buy yourself roo
 
 ## 5. Function-by-function plan
 
-### Day 0 — Sunday 31 January: Arrivals & Mehndi
-Not on your original list. I've added it because it costs almost nothing and it decompresses Day 1 — and because bridal mehndi needs 12+ hours to darken, so it has to happen the night before the haldi.
+### Mehndi — at home, before anyone travels
+Kept off the venue entirely, at your call. Bridal mehndi needs 12+ hours to darken, so it happens at home with close family in the days before we all leave for Udaipur. This is the single cheapest decision in the plan: no extra function, no extra dinner, no extra room-night. The artists' fee (₹26,000, line 17) stays — that work still has to happen, just in a drawing room instead of on a lawn.
 
-| Time | What |
-|---|---|
-| 14:00 | Check-in opens · welcome hampers already in rooms |
-| 17:00–19:00 | Chai & Chaat on the lawn — informal, no décor spend, existing garden lighting |
-| 18:00–22:00 | **Mehndi** — bride and close family; 4 artists rotating through guests; acoustic/folk duo |
-| 20:00 | Dinner from the same chaat counters plus one hot counter |
-
-*Dress code:* comfortable Indian, greens and yellows. *Décor:* ₹0 — string lights the property already has, floor cushions, brass lamps, and marigold strings left over from the haldi delivery.
+Keep the photographer for two hours of it. Mehndi at home photographs better than mehndi at a resort.
 
 ### Day 1 — Monday 1 February
 
+The room block starts at **06:00 on 1 February**, not the night before. That saves roughly 90 room-nights, which is the largest single saving available to you outside food — but it only works if the early check-in is written into the contract and the morning is staffed for it. See the note below the table.
+
 | Time | What |
 |---|---|
-| 07:30–08:15 | **Ganesh Puja / Griha Shanti** — both families, ~40 people, poolside |
-| 09:30–10:30 | **HALDI** — separate haldi for bride and groom |
+| 06:00 | **Rooms open** — check-in desk live, 2 staff per 100 guests, luggage runners, bag-hold counter for rooms not yet ready |
+| 06:30–09:30 | Welcome breakfast on the lawn — chai, poha, hot counters. Guests eat while rooms are turned around |
+| 07:30–08:15 | **Ganesh Puja / Griha Shanti** — immediate families, ~40 people, poolside |
+| 09:00–10:00 | Guests dress. This buffer is the whole reason the haldi moved to 10:00 |
+| 10:00–11:00 | **HALDI** — separate haldi for bride and groom |
 | 11:00–12:00 | Joint haldi, dhol, flower shower, water-splash zone |
-| 12:00–13:00 | Brunch counters open |
-| 13:00–16:30 | **Rest** — non-negotiable; bride goes into hair and makeup at 16:00 |
+| 12:00–13:30 | Brunch counters open |
+| 13:30–16:30 | **Rest** — non-negotiable; bride goes into hair and makeup at 16:00 |
 | 16:00–17:00 | Family portraits in coordinated colours (free, highest-ROI hour of the day) |
 | 18:30–19:00 | Guest arrival, welcome drinks |
 | 19:00–19:30 | **RING CEREMONY** — couple entry, ring exchange, blessings, cake |
-| 19:30–21:30 | **SANGEET** — 8–10 performances, family face-off, couple's dance, 20-min Kalbelia/Ghoomar folk act |
+| 19:35–20:00 | **Kalbelia / Ghoomar folk act** — 25 min, opens the evening, troupe pulls guests up to dance |
 | 20:00–22:00 | Bar open (2 hours only) |
+| 20:10–21:00 | **SANGEET** — families, then cousins, then siblings |
+| 21:00–21:15 | The couple's performance |
 | 21:15 | Dinner service opens, staggered |
-| **22:00** | **Outdoor sound off** — legal cut-off, see §8 |
-| 22:00–00:30 | After-party moves indoors to the banquet/lounge |
+| 21:40 | Open floor |
+| **22:00** | **Outdoor sound off** — legal cut-off, see §8. Sound team shifts to the indoor rig by 21:45 so there is no gap |
+| 22:00–00:30 | After-party in the banquet/lounge |
 
-*Haldi dress code:* yellow and marigold orange, cottons. *Sangeet:* fuchsia, emerald, gold — indo-western welcome.
+**On the 06:00 room opening.** It is the right call, with three conditions. First, get it in the contract in words — "rooms available from 06:00 on 1 Feb, no early-check-in charge" — because most Udaipur resorts price a 6 am check-in as a full extra night, and they will only waive it against your F&B commitment. Second, book 25–30 rooms for the night of 31 January anyway, for the immediate families, the elderly, and anyone flying in late; they cannot be checking in at dawn on the day they are needed at a 07:30 puja. Third, accept that not every room will be ready at 06:00 if the property had guests on the 31st — hence the bag-hold counter and the two-hour breakfast, so nobody is standing in a lobby holding a suitcase.
+
+**On the sangeet running order.** The folk act now goes *first*, not at 20:45. A Kalbelia troupe that pulls people out of their chairs solves the problem every sangeet has: nobody wants to be the first person dancing in front of 300 seated relatives. Warm the room up with professionals, then the family performances land, then close with the couple.
+
+*Haldi dress code:* yellow and marigold orange, cottons. *Sangeet:* fuchsia, marigold, gold — indo-western welcome.
 
 ### Day 2 — Tuesday 2 February
 
@@ -175,7 +180,7 @@ The strategy is one palette per day, structures reused, and spend concentrated o
 Marigold and genda torans, yellow-orange gota chandeliers, bamboo and cane props, earthen pots, chatris, umbrella ceiling, a tyre swing, dhol corner, hand-painted "Haldi" board. Daylight means zero lighting spend — that's why it's a morning function.
 
 **Ring Ceremony + Sangeet — ₹45,000**
-This is a lighting function, not a flower function. Mirror-mosaic stage backdrop, fairy-light canopy over the dance floor, 12 uplighters, 2 moving heads, a 12×8 ft LED wall (~₹18k, also your video screen and monogram display), fuchsia-emerald-gold drapes, low seating with bolsters and mirrored tables, hanging umbrellas. The ring ceremony uses the same stage plus one 4×4 ft floral arch rolled on and off.
+This is a lighting function, not a flower function. Mirror-mosaic stage backdrop, fairy-light canopy over the dance floor, 12 uplighters, 2 moving heads, a 12×8 ft LED wall (~₹18k, also your video screen and monogram display), fuchsia-marigold-gold drapes, low seating with bolsters and mirrored tables, hanging umbrellas. The ring ceremony uses the same stage plus one 4×4 ft floral arch rolled on and off.
 
 **Baraat + Varmala + Mandap — ₹65,000 · the hero setup**
 Four-pillar open mandap, ivory and soft pink, hanging jasmine and rajnigandha strings, kalash and banana leaves, fabric canopy, petal-path aisle with brass urlis, 300 chairs with white covers and coloured sashes, a toran gate for the baraat, and a raised varmala stage with a flower-shower machine.
@@ -251,7 +256,7 @@ These are the right *tier* for your budget and capacity. Rates move constantly a
 
 **Target deal to chase:** F&B commitment of ~₹10L in exchange for waived lawn rental, 8–10 complimentary rooms, a guest block at ₹6,500–8,000 including breakfast, and free use of the second lawn so the mandap and reception don't have to share a space (which would force a brutal 3-hour décor flip on 2 Feb).
 
-**Ideally one property hosts all five functions.** Zero transport, one décor team, one banquet manager, and guests never leave.
+**Ideally one property hosts all four functions.** Zero transport, one décor team, one banquet manager, and guests never leave.
 
 ---
 

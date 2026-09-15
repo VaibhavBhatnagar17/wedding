@@ -128,7 +128,13 @@
 
   /* ---------------- schedule ---------------- */
 
-  const KEY = /HALDI|RING|SANGEET|BARAAT|VARMALA|PHERE|Couple entry|Vidaai|mehndi begins|sound OFF/i;
+  const KEY = /HALDI|RING CEREMONY|Sangeet begins|BARAAT|VARMALA|PHERE|Couple entry|Vidaai|Rooms open/i;
+
+  function sortKey(t) {
+    const parts = String(t).split(':');
+    const mins = Number(parts[0]) * 60 + Number(parts[1] || 0);
+    return mins < 4 * 60 ? mins + 24 * 60 : mins;
+  }
 
   function renderSchedule() {
     const host = $('#schedule-body');
@@ -141,14 +147,19 @@
     Object.keys(byDate).sort().forEach(function (date, idx) {
       const items = [];
       byDate[date].forEach(function (f) {
-        f.schedule.forEach(function (r) { items.push({ t: r[0], text: r[1] }); });
+        // A null second element marks a vendor-only beat — never show those here.
+        f.schedule.forEach(function (r) {
+          if (r[1]) items.push({ t: r[0], text: r[1] });
+        });
       });
-      items.sort(function (a, b) { return a.t.localeCompare(b.t); });
+      // A 00:30 close belongs at the end of the evening it finishes, not at
+      // dawn — anything before 04:00 sorts as the small hours of the next day.
+      items.sort(function (a, b) { return sortKey(a.t) - sortKey(b.t); });
 
       host.appendChild(el('div', { class: 'day', 'data-reveal': 'up' }, [
         el('div', { class: 'day__head' }, [
           el('h3', { text: U.fmtDate(date, true) }),
-          el('span', { text: 'Day ' + idx })
+          el('span', { text: 'Day ' + (idx + 1) })
         ]),
         el('ul', { class: 'tl' }, items.map(function (it) {
           return el('li', { class: KEY.test(it.text) ? 'is-key' : '' }, [
@@ -171,16 +182,41 @@
       ['By train', '<strong>' + t.rail + '</strong><br>Pickups from the station too — just tell us your train and arrival time.'],
       ['By road', t.road + '<br>Parking is available at the venue.'],
       ['Weather &amp; packing', t.weather + '<br><strong>' + t.pack + '</strong>'],
-      ['Where to stay', 'Rooms are blocked at the wedding venue at a negotiated rate. The booking link and rate come with the formal invitation in December.'],
-      ['While you are here', 'City Palace, a Lake Pichola boat ride at sunset, Sajjangarh Monsoon Palace, the evening show at Bagore ki Haveli, Shilpgram. Stay an extra day — it is worth it.']
+      ['Where to stay', 'You are staying with us — rooms are held for you at the wedding venue itself, so there is nothing for you to book.<br>Room details go out with the formal invitation, and your own room shows up on <a href="guest.html">your guest page</a> once it is allotted.'],
+      ['While you are here', WHILE_HERE, 'wide']
     ].forEach(function (c) {
-      host.appendChild(el('div', { class: 'info sweep', 'data-reveal': 'up', 'data-tilt': '5' }, [
+      host.appendChild(el('div', {
+        class: 'info sweep' + (c[2] === 'wide' ? ' info--wide' : ''),
+        'data-reveal': 'up', 'data-tilt': c[2] === 'wide' ? null : '5'
+      }, [
         el('div', { class: 'tilt-sheen' }),
         el('h4', { html: c[0] }),
         el('p', { html: c[1] })
       ]));
     });
   }
+
+  /* Udaipur, ordered so it is actually usable: what fits in a spare morning,
+     what needs a whole day, and what to bring home. Each block is its own
+     element so the multi-column layout cannot split a heading from its list. */
+  const WHILE_HERE = [
+    ['', 'Udaipur deserves more than a wedding weekend. If you can, come a day early or leave a day late.'],
+    ['A spare morning',
+      'City Palace and the Crystal Gallery · Jagdish Temple, five minutes uphill · ' +
+      'Bagore ki Haveli, then its folk dance show at 19:00 — buy tickets by 18:15, it fills up.'],
+    ['A spare evening',
+      'A Lake Pichola boat from Rameshwar Ghat around 17:00, for the light on Jag Mandir · ' +
+      'sunset from Sajjangarh Monsoon Palace · Ambrai or Upre for dinner across the water from the palace.'],
+    ['A whole spare day',
+      'Kumbhalgarh Fort with the Ranakpur Jain temples on the way back (2 hr each way, share a cab) · ' +
+      'Shilpgram for crafts · Eklingji and Nagda, 22 km north.'],
+    ['To bring home',
+      'Pichwai and miniature painting, bandhej and leheriya, Molela clay plaques, ' +
+      'juttis and silver from Bada Bazaar and Hathi Pol. Bargain, kindly.'],
+    ['', 'Ask any of us for directions — half the family has done all of it twice.']
+  ].map(function (b) {
+    return '<span class="wh">' + (b[0] ? '<b>' + b[0] + '</b>' : '') + b[1] + '</span>';
+  }).join('');
 
   /* ---------------- RSVP ---------------- */
 
@@ -191,7 +227,7 @@
 
     const fnBoxes = el('div', { class: 'rsvp-fns' }, shown.map(function (f) {
       return el('label', { class: 'check' }, [
-        el('input', { type: 'checkbox', name: 'fn', value: f.id, checked: f.id !== 'mehndi' ? 'checked' : null }),
+        el('input', { type: 'checkbox', name: 'fn', value: f.id, checked: 'checked' }),
         el('span', { text: f.name })
       ]);
     }));
@@ -357,7 +393,7 @@
     if (share) share.addEventListener('click', function () {
       const payload = {
         title: 'Vaibhav & Mahak — Udaipur, 2 Feb 2027',
-        text: 'We are getting married in Udaipur! 31 Jan – 2 Feb 2027. Details and RSVP:',
+        text: 'We are getting married in Udaipur! 1 & 2 February 2027. Details and RSVP:',
         url: location.href.split('?')[0]
       };
       if (navigator.share) navigator.share(payload).catch(function () { /* dismissed */ });

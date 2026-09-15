@@ -231,9 +231,14 @@ def task_shots(tab):
     tab.goto(base() + "/index.html?open=1", settle=1.5)
     tab.eval("localStorage.clear(); sessionStorage.clear();")
 
-    def shot(name, url, w=1440, h=900, full=True, settle=3.0, before=None):
+    def shot(name, url, w=1440, h=900, full=True, settle=3.0, before=None, fresh=False):
         tab.call("Emulation.setDeviceMetricsOverride", width=w, height=h,
                  deviceScaleFactor=1, mobile=False)
+        if fresh:
+            # The gate only shows on a first visit, and an earlier shot in this
+            # run may have set the "already opened" flag. Clear it, then reload.
+            tab.goto(base() + url, settle=0.6)
+            tab.eval("sessionStorage.clear(); localStorage.clear();")
         tab.goto(base() + url, settle=settle)
         if before:
             tab.eval(before)
@@ -250,19 +255,25 @@ def task_shots(tab):
         print("  " + name)
 
     print("desktop")
-    shot("01-gate", "/index.html", full=False)
+    shot("01-gate", "/index.html", full=False, fresh=True)
     shot("02-hero", "/index.html?open=1", h=950, full=False)
     shot("03-invite-full", "/index.html?open=1", h=900)
     shot("04-portal-lookup", "/guest.html", full=False)
     shot("05-portal-me", "/guest.html#p=9876500007")
     shot("06-planner", "/planner.html", h=1000)
     # the doors mid-swing
-    shot("07-gate-opening", "/index.html", full=False, settle=2.6,
+    shot("07-gate-opening", "/index.html", full=False, settle=2.6, fresh=True,
          before="document.getElementById('gate-ring').click()")
     shot("08-portal-me-top", "/guest.html#p=9876500007", h=1000, full=False, settle=3.4)
 
+    # Wide and short is where the old stretched door art fell apart, so shoot it.
+    print("wide / short")
+    shot("10-gate-wide", "/index.html", w=1024, h=540, full=False, fresh=True)
+    shot("11-gate-ultrawide", "/index.html", w=1800, h=620, full=False, fresh=True)
+    shot("12-hero-wide", "/index.html?open=1", w=1024, h=540, full=False)
+
     print("mobile")
-    shot("20-m-gate", "/index.html", w=414, h=896, full=False)
+    shot("20-m-gate", "/index.html", w=414, h=896, full=False, fresh=True)
     shot("21-m-hero", "/index.html?open=1", w=414, h=896, full=False)
     shot("22-m-invite", "/index.html?open=1", w=414, h=896)
     shot("23-m-portal", "/guest.html#p=9876500007", w=414, h=896)
@@ -285,15 +296,35 @@ def task_check(tab):
     tab.eval("window.scrollTo(0,0);")
     time.sleep(0.6)
 
-    check("function cards render", tab.eval("document.querySelectorAll('.fn').length") == 5,
+    check("function cards render", tab.eval("document.querySelectorAll('.fn').length") == 4,
           tab.eval("document.querySelectorAll('.fn').length"))
+    check("both sets of parents on the card",
+          tab.eval("document.querySelectorAll('.parents__side b').length") == 2)
     check("timeline days render", tab.eval("document.querySelectorAll('.day').length") >= 2)
     check("timeline rows render", tab.eval("document.querySelectorAll('.tl li').length") > 20)
+    # The sangeet closes at 00:30, which is the end of 1 Feb rather than its dawn.
+    day1 = tab.eval("Array.from(document.querySelectorAll('.day')[0]"
+                    ".querySelectorAll('time')).map(function(t){return t.textContent})")
+    check("day 1 opens with the 06:00 room opening", day1[0] == "06:00", day1[:3])
+    check("the after-midnight close sorts last", day1[-1] == "00:30", day1[-3:])
     check("travel cards render", tab.eval("document.querySelectorAll('#travel-grid .info').length") == 6)
     check("countdown ticking", tab.eval("Number(document.querySelector('.cd b').textContent) > 0"))
     check("rsvp form present", tab.eval("!!document.getElementById('rsvp-form')"))
     check("garland strands", tab.eval("document.querySelectorAll('#hero-garland .strand').length") >= 9)
-    check("door svg drawn", tab.eval("document.querySelectorAll('#door-l svg').length") == 1)
+    check("door carving drawn", tab.eval("document.querySelectorAll('#door-l svg').length") == 2)
+    check("no door svg stretches",
+          tab.eval("Array.from(document.querySelectorAll('#door-l svg,#door-r svg'))"
+                   ".every(function(s){return s.getAttribute('preserveAspectRatio')"
+                   "&&s.getAttribute('preserveAspectRatio').indexOf('meet')>-1})")) 
+    check("nothing guest-facing mentions vendor noise",
+          not tab.eval("/legal cut-?off|sound OFF|D\u00e9cor team|negotiated rate|booking link/i"
+                       ".test(document.body.innerText)"),
+          tab.eval("(document.body.innerText.match(/legal cut-?off|sound OFF|negotiated rate|booking link/i)||[])[0]"))
+    check("Kota, Indore and Neemuch are in the road directions",
+          tab.eval("['Kota','Indore','Neemuch'].every(function(c)"
+                   "{return document.body.innerText.indexOf(c)>-1})"))
+    check("no Mehndi function on the invitation",
+          not tab.eval("/\\bMehndi\\b/.test(document.getElementById('fn-grid').innerText)"))
     # The reveal safety net runs from DOMContentLoaded, so poll rather than
     # guess at a sleep: the guarantee is that nothing stays invisible.
     tab.wait_for("document.querySelectorAll('[data-reveal]').length > 0 && "
@@ -341,19 +372,24 @@ def task_check(tab):
     })()""")
     time.sleep(1.8)
     check("portal opens", tab.eval("document.getElementById('me').classList.contains('is-live')"))
-    check("guest name shown", tab.eval("document.getElementById('me-name').textContent") == "Rajesh Bhatnagar")
+    check("guest name shown", tab.eval("document.getElementById('me-name').textContent") == "Ved Prakash Bhatnagar")
     check("key cards render", tab.eval("document.querySelectorAll('#me-keys .key').length") >= 2)
-    check("my functions render", tab.eval("document.querySelectorAll('#me-fns .myfn__row').length") == 5)
-    check("guide sections render", tab.eval("document.querySelectorAll('#me-guide .gitem').length") == 4)
-    check("albums render", tab.eval("document.querySelectorAll('#me-albums .album').length") == 4)
+    check("my functions render", tab.eval("document.querySelectorAll('#me-fns .myfn__row').length") == 4)
+    check("guide sections render", tab.eval("document.querySelectorAll('#me-guide .gitem').length") == 5)
+    check("albums render", tab.eval("document.querySelectorAll('#me-albums .album').length") == 5)
     check("rsvp editor renders", tab.eval("document.querySelectorAll('#me-rsvp .seg button').length") == 3)
     check("number remembered", tab.eval("localStorage.getItem('vm-guest-phone')") == "9876500001")
 
-    # a reception-only guest should see faded rows
+    # A reception-only guest should see exactly one row and nothing greyed out,
+    # because listing the rest only tells them what they are missing.
     tab.goto(base() + "/guest.html?t=2#p=9876500015", settle=3.4)
-    check("reception-only guest sees fewer functions",
-          tab.eval("document.querySelectorAll('#me-fns .myfn__row.is-skip').length") == 4,
-          tab.eval("document.querySelectorAll('#me-fns .myfn__row.is-skip').length"))
+    check("reception-only guest sees only their own function",
+          tab.eval("document.querySelectorAll('#me-fns .myfn__row').length") == 1,
+          tab.eval("document.querySelectorAll('#me-fns .myfn__row').length"))
+    check("uninvited functions are absent, not greyed",
+          tab.eval("document.querySelectorAll('#me-fns .myfn__row.is-skip').length") == 0)
+    check("the one row shown is the reception",
+          "Reception" in (tab.eval("document.getElementById('me-fns').innerText") or ""))
 
     # guest updates their own reply
     tab.eval("""(function(){

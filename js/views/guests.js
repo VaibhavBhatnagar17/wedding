@@ -259,7 +259,7 @@ window.W = window.W || {}; W.views = W.views || {};
       },
       {
         key: 'inv', label: 'Functions', sortable: false, render: function (g) {
-          const short = { mehndi: 'Me', haldi: 'Ha', sangeet: 'Sa', phere: 'Ph', reception: 'Re' };
+          const short = { haldi: 'Ha', sangeet: 'Sa', phere: 'Ph', reception: 'Re' };
           return el('div', { class: 'chip-row' }, D.functions.map(function (x) {
             const on = g.inv && g.inv[x.id];
             return el('span', {

@@ -88,7 +88,6 @@ window.W = window.W || {};
       rsvp: r.rsvp || 'Pending',
       // Supabase sends flat inv_* columns; the local store nests them under inv.
       invited: {
-        mehndi: pick(r, 'inv_mehndi', 'mehndi'),
         haldi: pick(r, 'inv_haldi', 'haldi'),
         sangeet: pick(r, 'inv_sangeet', 'sangeet'),
         phere: pick(r, 'inv_phere', 'phere'),

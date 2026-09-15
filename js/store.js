@@ -82,7 +82,7 @@ window.W = window.W || {};
     return {
       id: U.uid('g'), name: '', side: 'Bride', group: 'Extended family', city: '',
       adults: 1, kids: 0, phone: '', email: '', diet: 'Veg', rsvp: 'Pending',
-      inv: { mehndi: false, haldi: true, sangeet: true, phere: true, reception: true },
+      inv: { haldi: true, sangeet: true, phere: true, reception: true },
       arrival: '', arrivalTime: '', departure: '', mode: '',
       travelDetail: '', pickup: '',
       // Portal fields — these are what the guest sees when they look themselves up.
@@ -166,7 +166,7 @@ window.W = window.W || {};
 
   const CSV_COLS = [
     'name', 'side', 'group', 'city', 'adults', 'kids', 'phone', 'email', 'diet', 'rsvp',
-    'mehndi', 'haldi', 'sangeet', 'phere', 'reception',
+    'haldi', 'sangeet', 'phere', 'reception',
     'arrival', 'arrivalTime', 'departure', 'mode', 'travelDetail', 'pickup',
     'needsRoom', 'hotel', 'room', 'checkIn', 'checkOut', 'table', 'message',
     'hostPaid', 'giftReceived', 'notes'
@@ -178,7 +178,7 @@ window.W = window.W || {};
         name: g.name, side: g.side, group: g.group, city: g.city,
         adults: g.adults, kids: g.kids, phone: g.phone, email: g.email,
         diet: g.diet, rsvp: g.rsvp,
-        mehndi: g.inv.mehndi ? 'yes' : 'no', haldi: g.inv.haldi ? 'yes' : 'no',
+        haldi: g.inv.haldi ? 'yes' : 'no',
         sangeet: g.inv.sangeet ? 'yes' : 'no', phere: g.inv.phere ? 'yes' : 'no',
         reception: g.inv.reception ? 'yes' : 'no',
         arrival: g.arrival, arrivalTime: g.arrivalTime, departure: g.departure, mode: g.mode,
@@ -200,7 +200,7 @@ window.W = window.W || {};
      dropped straight into the Table Editor's CSV import. */
   const SUPA_COLS = [
     'phone', 'name', 'side', 'grp', 'city', 'adults', 'kids', 'diet', 'rsvp',
-    'inv_mehndi', 'inv_haldi', 'inv_sangeet', 'inv_phere', 'inv_reception',
+    'inv_haldi', 'inv_sangeet', 'inv_phere', 'inv_reception',
     'arrival', 'arrival_time', 'departure', 'mode', 'travel_detail', 'pickup',
     'needs_room', 'hotel', 'room_no', 'check_in', 'check_out', 'host_paid',
     'table_no', 'message', 'notes'
@@ -217,7 +217,7 @@ window.W = window.W || {};
           adults: g.adults, kids: g.kids, diet: g.diet,
           // The portal only understands these four values.
           rsvp: ({ Confirmed: 'Yes', Declined: 'No', Tentative: 'Maybe' })[g.rsvp] || 'Pending',
-          inv_mehndi: b(g.inv.mehndi), inv_haldi: b(g.inv.haldi),
+          inv_haldi: b(g.inv.haldi),
           inv_sangeet: b(g.inv.sangeet), inv_phere: b(g.inv.phere),
           inv_reception: b(g.inv.reception),
           arrival: g.arrival, arrival_time: g.arrivalTime, departure: g.departure,
@@ -241,10 +241,10 @@ window.W = window.W || {};
     const sample = {
       name: 'Sample Guest / Family', side: 'Bride', group: 'Extended family', city: 'Delhi',
       adults: '2', kids: '1', phone: '9876543210', email: '', diet: 'Veg', rsvp: 'Pending',
-      mehndi: 'no', haldi: 'yes', sangeet: 'yes', phere: 'yes', reception: 'yes',
-      arrival: '2027-01-31', arrivalTime: '14:30', departure: '2027-02-03', mode: 'Flight',
+      haldi: 'yes', sangeet: 'yes', phere: 'yes', reception: 'yes',
+      arrival: '2027-02-01', arrivalTime: '06:30', departure: '2027-02-03', mode: 'Flight',
       travelDetail: '6E 6521', pickup: '',
-      needsRoom: 'yes', hotel: '', room: '', checkIn: '2027-01-31', checkOut: '2027-02-03',
+      needsRoom: 'yes', hotel: '', room: '', checkIn: '2027-02-01', checkOut: '2027-02-03',
       table: '', message: 'A line they will see in their portal',
       hostPaid: 'no', giftReceived: 'no', notes: 'Needs ground-floor room'
     };
@@ -276,7 +276,7 @@ window.W = window.W || {};
         rsvp: /^(confirmed|declined|tentative)$/i.test(r.rsvp || '')
           ? r.rsvp.charAt(0).toUpperCase() + r.rsvp.slice(1).toLowerCase() : 'Pending',
         inv: {
-          mehndi: truthy(r.mehndi), haldi: truthy(r.haldi), sangeet: truthy(r.sangeet),
+          haldi: truthy(r.haldi), sangeet: truthy(r.sangeet),
           phere: truthy(r.phere), reception: truthy(r.reception)
         },
         arrival: r.arrival || '', arrivalTime: r.arrivalTime || '',

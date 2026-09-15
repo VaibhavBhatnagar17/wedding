@@ -540,6 +540,116 @@ check('the garland renders one positioned strand per flower string', function ()
   if (!/left:[\d.]+%/.test(markup)) throw new Error('strands are not positioned');
 });
 
+check('the door carving never stretches', function () {
+  var markup = W.motifs.doorPanel('l', 'L');
+  if (/preserveAspectRatio="none"/.test(markup)) {
+    throw new Error('a door SVG still stretches — circles will render as ovals');
+  }
+  var svgs = markup.match(/<svg[^>]*>/g) || [];
+  if (!svgs.length) throw new Error('no SVG in the door');
+  svgs.forEach(function (tag) {
+    if (!/preserveAspectRatio="[a-zA-Z]+ meet"/.test(tag)) {
+      throw new Error('door SVG is missing a "meet" aspect ratio: ' + tag);
+    }
+  });
+  // The tiled lattice and the frame moved to CSS, so both must be referenced.
+  if (!/door__jaali/.test(markup)) throw new Error('lattice layer missing');
+});
+
+/* ---------------- content the guests read ---------------- */
+
+log('\nGuest-facing content');
+
+check('Mehndi is no longer a venue function', function () {
+  var ids = W.data.functions.map(function (f) { return f.id; });
+  if (ids.indexOf('mehndi') !== -1) throw new Error('mehndi is still a function');
+  if (ids.length !== 4) throw new Error('expected 4 functions, got ' + ids.length);
+  var dates = {};
+  W.data.functions.forEach(function (f) { dates[f.date] = 1; });
+  var days = Object.keys(dates).sort();
+  if (days.join(',') !== '2027-02-01,2027-02-02') {
+    throw new Error('expected two days on 1 and 2 Feb, got ' + days.join(','));
+  }
+  // The invite flag has to go too, or CSV round-trips carry a dead column.
+  if ('mehndi' in W.data.seedGuests[0].inv) throw new Error('inv.mehndi survives');
+});
+
+check('rooms open at 06:00 on 1 Feb, before the haldi', function () {
+  var haldi = W.data.functions.find(function (f) { return f.id === 'haldi'; });
+  var first = haldi.schedule[0];
+  if (first[0] !== '06:00' || !/Rooms open/i.test(first[1])) {
+    throw new Error('the 06:00 room opening is not the first beat of 1 Feb');
+  }
+  if (haldi.start !== '10:00') throw new Error('haldi should start at 10:00 to allow dressing time');
+});
+
+check('the sangeet warms up with folk before family performances', function () {
+  var s = W.data.functions.find(function (f) { return f.id === 'sangeet'; });
+  function timeOf(re) {
+    var row = s.schedule.find(function (r) { return r[1] && re.test(r[1]); });
+    if (!row) throw new Error('no schedule row matching ' + re);
+    return row[0];
+  }
+  var folk = timeOf(/folk act/i);
+  var family = timeOf(/Sangeet begins/i);
+  var couple = timeOf(/couple perform/i);
+  if (!(folk < family)) throw new Error('folk act must come before the family performances');
+  if (!(family < couple)) throw new Error('the couple should close, not open');
+});
+
+check('vendor-only beats are hidden from guests but kept for the planner', function () {
+  var opsRows = 0, guestRows = 0;
+  W.data.functions.forEach(function (f) {
+    f.schedule.forEach(function (r) {
+      if (r[1] === null) { opsRows++; if (!r[2]) throw new Error('hidden row has no planner note'); }
+      else guestRows++;
+    });
+  });
+  if (opsRows < 4) throw new Error('expected the décor build, makeup call and lighting test to be hidden');
+  if (guestRows < 20) throw new Error('too little left for guests to read');
+
+  // Nothing a guest reads should mention vendors, cut-offs or internal costs.
+  var noise = /legal cut-?off|sound OFF|décor team|decor team|makeup begins|lighting test|negotiate|saves ₹|saves \d+ min/i;
+  W.data.functions.forEach(function (f) {
+    f.schedule.forEach(function (r) {
+      if (r[1] && noise.test(r[1])) throw new Error('guest row reads like a vendor note: ' + r[1]);
+    });
+  });
+});
+
+check('the portal lists only the functions a guest is invited to', function () {
+  // Earlier tests rewrite the guest list, so put the sample data back first.
+  W.store.update(function (st) {
+    st.guests = JSON.parse(JSON.stringify(W.data.seedGuests));
+  });
+  var recOnly = W.data.seedGuests.filter(function (g) {
+    return g.inv.reception && !g.inv.phere && !g.inv.haldi && !g.inv.sangeet;
+  })[0];
+  if (!recOnly) throw new Error('sample data has no reception-only guest');
+  var g = settle(W.db.getGuest(recOnly.phone)).value;
+  var mine = W.data.functions.filter(function (f) { return f.publicInvite && g.invited[f.id]; });
+  if (mine.length !== 1 || mine[0].id !== 'reception') {
+    throw new Error('reception-only guest resolves to ' + mine.length + ' functions');
+  }
+});
+
+check('both sets of parents are on the invitation', function () {
+  var c = W.data.couple;
+  if (c.bride.parents !== 'Riya Kalra & Kishore Kalra') throw new Error('bride parents wrong');
+  if (c.groom.parents !== 'Kamla Srivastava & Ved Prakash Bhatnagar') throw new Error('groom parents wrong');
+  var names = W.data.seedGuests.map(function (g) { return g.name; });
+  ['Riya Kalra', 'Kishore Kalra', 'Kamla Srivastava', 'Ved Prakash Bhatnagar'].forEach(function (n) {
+    if (names.indexOf(n) === -1) throw new Error('guest list is missing ' + n);
+  });
+});
+
+check('driving guests get the routes they actually use', function () {
+  var road = W.data.venue.travel.road;
+  ['Kota', 'Indore', 'Neemuch', 'Ahmedabad', 'Jaipur'].forEach(function (city) {
+    if (road.indexOf(city) === -1) throw new Error('By road is missing ' + city);
+  });
+});
+
 /* ---------------- summary ---------------- */
 
 log('\n' + (fail ? 'FAILED' : 'PASSED') + ' — ' + pass + ' passed, ' + fail + ' failed, ' +

@@ -35,7 +35,6 @@ create table if not exists public.guests (
   rsvp          text default 'Pending' check (rsvp in ('Pending','Yes','No','Maybe')),
 
   -- which functions this guest is invited to
-  inv_mehndi    boolean default false,
   inv_haldi     boolean default false,
   inv_sangeet   boolean default false,
   inv_phere     boolean default false,
@@ -172,7 +171,7 @@ create or replace function public.get_my_details(p_phone text)
 returns table (
   name text, salutation text, side text, grp text, city text,
   adults int, kids int, diet text, rsvp text,
-  inv_mehndi boolean, inv_haldi boolean, inv_sangeet boolean,
+  inv_haldi boolean, inv_sangeet boolean,
   inv_phere boolean, inv_reception boolean,
   arrival date, arrival_time text, departure date,
   mode text, travel_detail text, pickup text,
@@ -186,7 +185,7 @@ set search_path = public
 as $$
   select g.name, g.salutation, g.side, g.grp, g.city,
          g.adults, g.kids, g.diet, g.rsvp,
-         g.inv_mehndi, g.inv_haldi, g.inv_sangeet, g.inv_phere, g.inv_reception,
+         g.inv_haldi, g.inv_sangeet, g.inv_phere, g.inv_reception,
          g.arrival, g.arrival_time, g.departure,
          g.mode, g.travel_detail, g.pickup,
          g.needs_room, g.hotel, g.room_no,
@@ -335,24 +334,24 @@ grant execute on function public.submit_rsvp(text, text, text, text, text, int, 
 -- console (Guests → Export CSV) into the Table Editor, or edit by hand.
 
 insert into public.guests (phone, name, salutation, side, grp, city, adults, kids, diet,
-  inv_mehndi, inv_haldi, inv_sangeet, inv_phere, inv_reception,
+  inv_haldi, inv_sangeet, inv_phere, inv_reception,
   arrival, arrival_time, mode, pickup, needs_room, hotel, room_no,
   check_in, check_out, host_paid, table_no, message, rsvp)
 values
   ('9876500001', 'Sharma Family', 'Shri & Smt.', 'Bride', 'Family', 'Delhi', 4, 2, 'Veg',
-   true, true, true, true, true,
-   '2027-01-31', '10:40', 'Flight', 'Innova at Udaipur airport, 11:00 — driver Kishan, 98290 00001',
-   true, 'Hotel Fateh Niwas', '204', '2027-01-31', '2027-02-03', true, 'T-3',
+   true, true, true, true,
+   '2027-02-01', '06:40', 'Flight', 'Innova at Udaipur airport, 07:00 — driver Kishan, 98290 00001',
+   true, 'Hotel Fateh Niwas', '204', '2027-02-01', '2027-02-03', true, 'T-3',
    'Bua, your room is on the lake side as you asked. See you at the haldi!', 'Yes'),
   ('9876500002', 'Ankit Kalra', 'Shri', 'Bride', 'Friends', 'Bengaluru', 1, 0, 'Non-veg',
-   true, true, true, true, true,
-   '2027-01-31', '18:20', 'Train', 'Cab from Udaipur City station, 18:45',
-   true, 'Hotel Fateh Niwas', '311', '2027-01-31', '2027-02-03', false, 'T-7',
+   true, true, true, true,
+   '2027-02-01', '08:20', 'Train', 'Cab from Udaipur City station, 08:45',
+   true, 'Hotel Fateh Niwas', '311', '2027-02-01', '2027-02-03', false, 'T-7',
    'You are on sangeet duty — three dances, no excuses.', 'Yes'),
   ('9876500003', 'Bhatnagar Family', 'Shri & Smt.', 'Groom', 'Family', 'Jaipur', 3, 1, 'Jain',
-   true, true, true, true, true,
-   '2027-01-31', '14:00', 'Car', 'Self-drive; parking reserved at the venue gate',
-   true, 'Hotel Fateh Niwas', '108', '2027-01-31', '2027-02-03', true, 'T-1',
+   true, true, true, true,
+   '2027-02-01', '07:00', 'Car', 'Self-drive; parking reserved at the venue gate',
+   true, 'Hotel Fateh Niwas', '108', '2027-02-01', '2027-02-03', true, 'T-1',
    'Jain thali arranged for all four of you at every meal.', 'Yes')
 on conflict (phone) do nothing;
 
