@@ -12,17 +12,25 @@ Two things to do. The site works without either — this just makes it *yours*.
 The site is plain HTML, CSS and JavaScript. There is nothing to build and no
 server to run, so any static host works. GitHub Pages is free and fast.
 
-### Using the `gh` command line
+### The quick way
+
+`gh` is already installed. Two commands:
 
 ```bash
-gh auth login                      # opens a browser, log in once
-gh repo create wedding --public --source=. --push
-gh api -X POST repos/:owner/wedding/pages \
-  -f 'source[branch]=main' -f 'source[path]=/'
+gh auth login          # opens a browser — choose GitHub.com, then HTTPS
+tools/deploy.sh        # creates the repo, pushes, turns Pages on
 ```
 
-Your site is then at `https://<your-username>.github.io/wedding/`. The first
-build takes two or three minutes.
+The script prints your live URL when it finishes. The first build takes two or
+three minutes; after that every update is live in about a minute.
+
+Run `tools/deploy.sh` again any time — it commits anything outstanding and
+pushes. Pass a different repository name as the first argument if you'd rather
+not call it `wedding`:
+
+```bash
+tools/deploy.sh vaibhav-mahak
+```
 
 ### Using the GitHub website
 
