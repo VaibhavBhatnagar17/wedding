@@ -10,7 +10,9 @@ body.portal {
 
 .lookup {
   position: relative; min-height: 100vh; min-height: 100svh;
-  display: grid; place-items: center; padding: 90px 22px 60px;
+  /* See .hero — an implicit auto column overflows narrow screens. */
+  display: grid; grid-template-columns: minmax(0, 1fr); place-items: center;
+  padding: 90px 22px 60px;
   background: radial-gradient(130% 100% at 50% 0%, #14523f 0%, #0b3129 48%, #07211d 100%);
   color: var(--champagne); overflow: hidden;
 }

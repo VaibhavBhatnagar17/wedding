@@ -65,6 +65,34 @@
   --ease-back: cubic-bezier(.34, 1.56, .64, 1);
 }
 
+/* ---------- reset ----------
+   tokens.css is the only base stylesheet the invitation and portal load, so it
+   carries the reset. Without border-box, every padded element that is also
+   width:100% overflows its parent. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg, canvas, video { display: block; max-width: 100%; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; }
+
+a { color: var(--maroon); }
+
+.deva { font-family: var(--deva); }
+
 /* ---------- gold text ---------- */
 
 .gold-text {

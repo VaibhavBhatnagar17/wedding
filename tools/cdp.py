@@ -157,6 +157,12 @@ class Tab:
         return val
 
     def goto(self, url, settle=2.2):
+        # Always fetch fresh; a cached stylesheet silently invalidates the run.
+        try:
+            self.call("Network.enable")
+            self.call("Network.setCacheDisabled", cacheDisabled=True)
+        except Exception:
+            pass
         self.call("Page.navigate", url=url)
         time.sleep(settle)
 
@@ -248,18 +254,18 @@ def task_shots(tab):
     shot("02-hero", "/index.html?open=1", h=950, full=False)
     shot("03-invite-full", "/index.html?open=1", h=900)
     shot("04-portal-lookup", "/guest.html", full=False)
-    shot("05-portal-me", "/guest.html#p=9876500001")
+    shot("05-portal-me", "/guest.html#p=9876500007")
     shot("06-planner", "/planner.html", h=1000)
     # the doors mid-swing
     shot("07-gate-opening", "/index.html", full=False, settle=2.6,
          before="document.getElementById('gate-ring').click()")
-    shot("08-portal-me-top", "/guest.html#p=9876500001", h=1000, full=False, settle=3.4)
+    shot("08-portal-me-top", "/guest.html#p=9876500007", h=1000, full=False, settle=3.4)
 
     print("mobile")
     shot("20-m-gate", "/index.html", w=414, h=896, full=False)
     shot("21-m-hero", "/index.html?open=1", w=414, h=896, full=False)
     shot("22-m-invite", "/index.html?open=1", w=414, h=896)
-    shot("23-m-portal", "/guest.html#p=9876500001", w=414, h=896)
+    shot("23-m-portal", "/guest.html#p=9876500007", w=414, h=896)
     shot("24-m-lookup", "/guest.html", w=414, h=896, full=False)
 
 
