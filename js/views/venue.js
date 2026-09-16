@@ -55,7 +55,7 @@ W.views.venue = function () {
       el('li', { class: 'yes', text: 'Free use of the second lawn so the mandap and reception do not share a space' }),
       el('li', { class: 'yes', text: 'Breakfast on 2 Feb included in the room tariff, not billed separately' }),
       el('li', { class: 'yes', text: 'No outside-vendor entry fee for photography and entertainment' }),
-      el('li', { class: 'yes', text: 'Written indoor backup for 300 at the sangeet and 650 at the reception' }),
+      el('li', { class: 'yes', text: 'Written indoor backup for 180 at the sangeet and 650 at the reception' }),
       el('li', { class: 'yes', text: 'Written music policy, including what is permitted indoors after 22:00' }),
       el('li', { class: 'na', text: 'Do not accept: a per-plate that floats with the final menu, or a "subject to availability" second lawn' })
     ])
@@ -90,7 +90,7 @@ W.views.venue = function () {
     el('ul', { class: 'ul-clean' }, [
       el('li', { class: 'na', html: '<strong>Taj Lake Palace, Oberoi Udaivilas, The Leela, Raffles</strong> — a wedding of this size starts at ₹1 crore and up.' }),
       el('li', { class: 'na', html: '<strong>Trident, Ananta, The Westin, Fateh Garh</strong> — ₹35–70 lakh for 650 guests. Possible only for a single function with no rooms, which defeats the single-venue logic.' }),
-      el('li', { class: 'na', html: '<strong>Any hotel banquet at ₹1,400+ per plate</strong> — at 1,445 covers that is ₹20 lakh in food alone.' })
+      el('li', { class: 'na', html: '<strong>Any hotel banquet at ₹1,400+ per plate</strong> — at 1,130 covers that is ₹15.8 lakh in food alone.' })
     ]),
     el('p', { style: 'margin-bottom:0', html: 'What you lose is a brand name and room luxury. What you keep is the Aravalli backdrop, the lake light and a garden setting that photographs better than most five-stars anywhere else in the country.' })
   ]));

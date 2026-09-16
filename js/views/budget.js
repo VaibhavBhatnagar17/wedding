@@ -6,6 +6,9 @@ W.views.budget = function () {
   const U = W.util, UI = W.ui, D = W.data, S = W.store, el = U.el;
   const st = S.get();
   const t = S.budgetTotals();
+  const contingency = st.budget.reduce(function (n, b) {
+    return b.cat === 'Contingency' ? n + b.amount : n;
+  }, 0);
   const wrap = el('div');
 
   wrap.appendChild(UI.pageHead('Budget',
@@ -21,7 +24,7 @@ W.views.budget = function () {
     ]));
 
   wrap.appendChild(UI.stats([
-    UI.stat('Planned', U.lakh(t.planned), '25 line items'),
+    UI.stat('Planned', U.lakh(t.planned), st.budget.length + ' line items'),
     UI.stat('Committed', U.lakh(t.actual),
       t.actual ? U.pct(t.actual, t.planned) + ' of the budget' : 'Nothing signed yet'),
     UI.stat('Paid out', U.lakh(t.paid), U.inr(t.outstanding) + ' outstanding'),
@@ -31,7 +34,9 @@ W.views.budget = function () {
       : UI.stat('Variance', (t.variance > 0 ? '+' : '') + U.inr(t.variance),
           t.variance > 0 ? 'Over plan — find a cut' : (t.variance < 0 ? 'Still under plan' : 'Exactly on plan'),
           t.variance > 0 ? 'bad' : 'ok'),
-    UI.stat('Contingency', U.lakh(82125), 'Do not touch until January', 'warn'),
+    // Read from the data rather than restated here, so re-cutting the budget
+    // cannot leave this tile quoting a figure that no longer exists.
+    UI.stat('Contingency', U.lakh(contingency), U.pct(contingency, t.planned) + ' — do not touch until January', 'warn'),
     UI.stat('Left to commit', U.lakh(Math.max(0, t.planned - t.actual)), 'against the ₹20 L cap')
   ]));
 

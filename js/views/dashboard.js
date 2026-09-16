@@ -52,7 +52,7 @@ W.views.dashboard = function () {
   }
   if (core.confirmedHeads > D.couple.guaranteeCore) {
     alerts.push('<b>Core functions are over the catering guarantee.</b> ' + core.confirmedHeads +
-      ' confirmed against a guarantee of ' + D.couple.guaranteeCore + '. Every extra head costs about ₹1,725 across the three days.');
+      ' confirmed against a guarantee of ' + D.couple.guaranteeCore + '. Every extra head costs about ₹1,725 across the two days.');
   }
   if (rec.confirmedHeads > D.couple.guaranteeReception) {
     alerts.push('<b>Reception is over the guarantee.</b> ' + rec.confirmedHeads +
@@ -75,7 +75,7 @@ W.views.dashboard = function () {
   /* headcount vs guarantee */
   const fnRows = D.functions.filter(function (f) { return f.perPlate > 0; }).map(function (f) {
     const s = S.functionStats(f.id);
-    const guarantee = f.id === 'reception' ? D.couple.guaranteeReception : D.couple.guaranteeCore;
+    const guarantee = f.guarantee;
     return {
       label: f.name,
       value: s.confirmedHeads,
@@ -129,17 +129,28 @@ W.views.dashboard = function () {
       }))
     : UI.empty('All clear', 'Every task on the checklist is done. Go and enjoy your wedding.')));
 
+  /* Shares are computed, not written down, so a re-cut of the budget cannot
+     leave this row of badges quoting last month's percentages. */
+  const planned = st.budget.reduce(function (n, b) { return n + b.amount; }, 0);
+  const share = function (cat) {
+    const n = st.budget.reduce(function (a, b) { return b.cat === cat ? a + b.amount : a; }, 0);
+    return Math.round(n / planned * 1000) / 10 + '%';
+  };
+
   cols2.appendChild(UI.panel('The plan in one paragraph', {}, [
     el('p', { style: 'font-size:14px', html:
-      'Five functions across three days at <strong>one venue</strong>, so nobody travels between them. ' +
+      'Four functions across two days at <strong>one venue</strong>, so nobody travels between them. ' +
       'The engagement is folded into the sangeet evening as a 30-minute ring ceremony — that single merge saves about ₹2.6 lakh. ' +
       'Haldi and phere sit in <strong>daylight</strong>, which removes any lighting spend from two of the four setups. ' +
       'Haldi is a ₹475 brunch and the wedding meal is a Rajasthani thali rather than a fourteen-counter buffet. ' +
-      'Guest rooms are blocked at a negotiated rate but paid by guests; you cover ten. ' +
+      'Guest rooms are blocked at a negotiated rate but paid by guests; you cover ten of about fifty. ' +
       'Money is concentrated where it shows: the mandap, reception lighting, and photography.' }),
     el('div', { class: 'chip-row' }, [
-      UI.badge('F&B 51%', 'gold'), UI.badge('Décor 9.4%'), UI.badge('Photo 6.5%'),
-      UI.badge('Personal 10.2%'), UI.badge('Contingency 4.1%', 'info')
+      UI.badge('F&B ' + share('Food & Beverage'), 'gold'),
+      UI.badge('Décor ' + share('Décor')),
+      UI.badge('Photo ' + share('Photo & Video')),
+      UI.badge('Personal ' + share('Personal')),
+      UI.badge('Contingency ' + share('Contingency'), 'info')
     ]),
     el('div', { style: 'margin-top:14px' },
       UI.btn('Read the full strategy', function () { location.hash = '#/strategy'; }, 'ghost'))

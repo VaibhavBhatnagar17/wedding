@@ -15,7 +15,7 @@ window.W = window.W || {}; W.views = W.views || {};
 
     wrap.appendChild(UI.panel('The binding constraint', {}, [
       el('p', { style: 'font-size:15px', html:
-        '<strong>1,445 meal covers.</strong> Three hundred guests across three functions plus 650 at the reception. ' +
+        '<strong>1,130 meal covers.</strong> A hundred and eighty guests across three functions plus 650 at the reception. ' +
         'Even at a lean ₹700 a plate that is ₹10 lakh — half your budget — before a single flower is bought. ' +
         'Every other decision in this plan follows from that one number.' }),
       el('p', { html:
@@ -31,7 +31,7 @@ window.W = window.W || {}; W.views = W.views || {};
       ]),
       el('div', { class: 'qa' }, [
         el('b', { text: 'Guest rooms are blocked, not bought' }),
-        el('span', { html: 'A hundred rooms for two nights is ₹14 lakh on its own. Standard destination practice: negotiate a block rate, guests pay their own, you cover immediate family and VIPs. This plan budgets ten host-paid rooms. <strong>If you intend to pay for all guest rooms, the guest count has to fall to roughly 120 and 300</strong> — that is a different wedding and it needs a different plan.' })
+        el('span', { html: 'Fifty rooms for two nights is ₹7 lakh on its own. Standard destination practice: negotiate a block rate, guests pay their own, you cover immediate family and VIPs. This plan budgets ten host-paid rooms. <strong>Doubling couples up two to a room is what takes the block from 67 rooms to 50</strong> — but four adults need a room with two double beds, not two twins, so that count has to be confirmed in writing before you sign.' })
       ]),
       el('div', { class: 'qa' }, [
         el('b', { text: 'The engagement merges into the sangeet evening' }),

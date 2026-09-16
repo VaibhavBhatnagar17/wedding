@@ -4,7 +4,7 @@
 **Phere muhurat:** 2 Feb 2027, 11:00 – 13:30
 **City:** Udaipur, Rajasthan
 **Budget:** ₹20,00,000 all-in
-**Guests:** ~300 (family, both sides) for Haldi / Ring + Sangeet / Phere · ~650 for Reception
+**Guests:** ~180 (family, both sides) for Haldi / Ring + Sangeet / Phere · ~650 for Reception
 
 ---
 
@@ -12,7 +12,7 @@
 
 Before anything else, be clear about what this budget can and cannot buy in peak-season Udaipur.
 
-**1,445 meal covers is the binding constraint.** 300 guests × 3 functions + 650 at the reception is ~1,445 plates. Even at a lean ₹700/plate that is ₹10L — half the budget — before a single flower is bought. Every other decision follows from this.
+**1,130 meal covers is the binding constraint.** 180 guests × 3 functions + 650 at the reception is ~1,130 plates. Even at a lean ₹700/plate that is ₹8L — 40% of the budget — before a single flower is bought. Every other decision follows from this. It was 1,445 covers and half the budget when the core list stood at 300; bringing it to 180 is the single most useful thing you have done to this plan.
 
 Three structural choices, in order of impact:
 
@@ -20,7 +20,7 @@ Three structural choices, in order of impact:
 A luxury property (Taj Lake Palace, Oberoi Udaivilas, Leela, Raffles) starts at ₹1Cr+. A premium resort (Trident, Ananta, Westin, Fateh Garh) runs ₹35–70L for a wedding of this size. Both are out. Your tier is a **heritage or mid-resort with a 700+ capacity lawn, or a marriage garden that permits your own caterer** — where ₹650–800/plate is genuinely achievable at volume. This is not a compromise on beauty; Udaipur's mid-tier properties have Aravalli backdrops and lake views that photograph better than most five-stars elsewhere. It *is* a compromise on brand name and room luxury.
 
 **(b) Guest rooms are blocked, not bought.**
-100+ rooms × 2 nights would be ₹14L+ on its own. Standard destination-wedding practice: you negotiate a block rate and guests pay their own rooms; the host covers only immediate family and VIPs. **This plan budgets 10 host-paid rooms** (₹60,000), assuming you extract 8–10 complimentary rooms against your ~₹10L F&B commitment. If you intend to pay for all guest rooms, the guest count has to come down to roughly 120 / 300 — tell me and I'll rebuild the plan.
+50 rooms × 2 nights is ₹7L on its own. Standard destination-wedding practice: you negotiate a block rate and guests pay their own rooms; the host covers only immediate family and VIPs. **This plan budgets 10 host-paid rooms** (₹60,000), assuming you extract 8–10 complimentary rooms against your ~₹8L F&B commitment. At 50 rooms rather than 115, host-paying a larger share is thinkable for the first time — 20 rooms is ₹2.8L. See §9a.
 
 **(c) Engagement merges into the Sangeet evening.**
 A standalone engagement means another dinner for 285, another décor setup and another venue slot — about **₹2.6L**. Instead: a 30-minute ring ceremony at 19:00 on the sangeet stage, before the performances. It reads as intentional ("Ring Ceremony & Sangeet Night"), it's better paced for guests, and it is the single biggest saving available to you.
@@ -46,19 +46,19 @@ February is peak season, so book early anyway. Weather: days 25–27°C, nights 
 
 | # | Head | Basis | ₹ |
 |---|---|---|---|
-| 1 | Haldi brunch | 275 × ₹475 | 1,30,625 |
-| 2 | Ring Ceremony + Sangeet dinner | 285 × ₹700 | 1,99,500 |
-| 3 | Wedding lunch (Rajasthani thali) | 285 × ₹550 | 1,56,750 |
+| 1 | Haldi brunch | 170 × ₹475 | 80,750 |
+| 2 | Ring Ceremony + Sangeet dinner | 180 × ₹700 | 1,26,000 |
+| 3 | Wedding lunch (Rajasthani thali) | 180 × ₹550 | 99,000 |
 | 4 | Reception dinner | 600 × ₹700 | 4,20,000 |
-| 5 | Welcome chaat, breakfasts, crew meals | — | 48,000 |
-| 6 | Bar — 2-hr limited IMFL + excise licence | ~35% of 300 drinking | 70,000 |
+| 5 | Welcome chaat, breakfasts, crew meals | — | 38,000 |
+| 6 | Bar — 2-hr limited IMFL + excise licence | ~35% of 180 drinking | 45,000 |
 | 7 | Venue rental, taxes, generator, extra-hour | 2 lawns + banquet | 75,000 |
 | 8 | Host-side rooms | 10 net × 2 nights | 60,000 |
 | 9 | Décor — Haldi | daylight, marigold-led | 35,000 |
 | 10 | Décor — Ring + Sangeet | stage, LED wall, lighting, lounge | 45,000 |
-| 11 | Décor — Baraat, Varmala, Mandap | the hero setup | 65,000 |
+| 11 | **Décor — Baraat, Varmala, Mandap** | the hero setup — *up ₹45,000* | **1,10,000** |
 | 12 | Décor — Reception | backdrop, entry, uplights, tables | 43,000 |
-| 13 | Photography + cinematography | 2 + 2 crew, drone, teaser, albums | 1,30,000 |
+| 13 | **Photography + cinematography** | 2 + 2 crew, drone, teaser, albums — *up ₹60,000* | **1,90,000** |
 | 14 | Sound, DJ, dhol ×2, band, shehnai, folk act | — | 62,000 |
 | 15 | Sangeet choreographer | 6 sessions + rehearsal | 22,000 |
 | 16 | Hair & makeup | bride 4 looks, groom 2, 6 family | 62,000 |
@@ -67,17 +67,20 @@ February is peak season, so book early anyway. Weather: days 25–27°C, nights 
 | 19 | Groom's outfits | sherwani bought, 3 rented, safa/mojari | 40,000 |
 | 20 | Pandit, samagri, havan, Ganesh puja | — | 28,000 |
 | 21 | Invitations — digital + 120 printed + website | — | 32,000 |
-| 22 | Welcome hampers (120) + favours (400) | — | 38,000 |
-| 23 | Guest logistics — transfers, shuttle, ghodi/car | — | 40,000 |
-| 24 | Signage, seating charts, menu cards, printing | — | 15,000 |
-| 25 | **Contingency** | 4.1% | **82,125** |
+| 22 | Welcome hampers (60) + favours (400) | one per room | 30,000 |
+| 23 | Guest logistics — transfers, shuttle, ghodi/car | — | 34,000 |
+| 24 | Signage, seating charts, menu cards, printing | — | 12,000 |
+| 25 | **Day-of coordinator** | both days — *new line* | **50,000** |
+| 26 | **Contingency** | 8% — *up from 4.1%* | **1,60,250** |
 | | **Total** | | **20,00,000** |
 
-**How it splits:** food & bar 51%, décor 9.4%, photo & video 6.5%, venue & rooms 6.8%, personal (outfits + HMU + mehndi) 10.2%, everything else 12%, contingency 4.1%.
+**What changed when the core list came down to 180.** Cutting 120 guests off the three family functions freed **₹2.32 lakh** — ₹2.16L of it food and bar, the rest hampers, transfers and printing. None of it was banked. Contingency went from a thin 4.1% to a real **8%**, the day-of coordinator became its own ₹50,000 line instead of being raided from that reserve, and the ₹1.05L left over went to the two things you keep: **the mandap** and **photography**. Food has dropped from 51% of the budget to 40%, which is the healthiest single number in this plan.
 
-Food at 51% is high but unavoidable at 1,445 covers. The way to buy yourself room is not to shave décor further — it is to cut covers. Every 25 guests you remove from the 300 list saves about ₹44,000 across the three days.
+**How it splits:** food & bar 40.4%, décor 11.7%, personal (outfits + HMU + mehndi) 10.2%, photo & video 9.5%, contingency 8%, venue & rooms 6.8%, everything else 13.4%.
 
-**No planner fee is included.** If you self-manage, you need two dedicated family members owning logistics on each day plus the venue's banquet manager. I'd strongly recommend a day-of coordinator at ₹35–50k funded from contingency — on a 650-guest reception, that is the cheapest insurance you can buy.
+Food at 40% is where it should be. The lever, as always, is covers rather than décor: every 25 guests added back to the 180 list costs about ₹43,000 across the two days, and every 25 at the reception costs ₹17,500.
+
+**No full planner fee is included.** If you self-manage, you need two dedicated family members owning logistics on each day plus the venue's banquet manager. A day-of coordinator is now budgeted properly at ₹50,000 (line 25) rather than raided from contingency — on a 650-guest reception, that is the cheapest insurance you can buy.
 
 ---
 
@@ -137,7 +140,7 @@ The room block starts at **06:00 on 1 February**, not the night before. That sav
 
 **On the 06:00 room opening.** It is the right call, with three conditions. First, get it in the contract in words — "rooms available from 06:00 on 1 Feb, no early-check-in charge" — because most Udaipur resorts price a 6 am check-in as a full extra night, and they will only waive it against your F&B commitment. Second, book 25–30 rooms for the night of 31 January anyway, for the immediate families, the elderly, and anyone flying in late; they cannot be checking in at dawn on the day they are needed at a 07:30 puja. Third, accept that not every room will be ready at 06:00 if the property had guests on the 31st — hence the bag-hold counter and the two-hour breakfast, so nobody is standing in a lobby holding a suitcase.
 
-**On the sangeet running order.** The folk act now goes *first*, not at 20:45. A Kalbelia troupe that pulls people out of their chairs solves the problem every sangeet has: nobody wants to be the first person dancing in front of 300 seated relatives. Warm the room up with professionals, then the family performances land, then close with the couple.
+**On the sangeet running order.** The folk act now goes *first*, not at 20:45. A Kalbelia troupe that pulls people out of their chairs solves the problem every sangeet has: nobody wants to be the first person dancing in front of 180 seated relatives. Warm the room up with professionals, then the family performances land, then close with the couple.
 
 *Haldi dress code:* yellow and marigold orange, cottons. *Sangeet:* fuchsia, marigold, gold — indo-western welcome.
 
@@ -183,7 +186,7 @@ Marigold and genda torans, yellow-orange gota chandeliers, bamboo and cane props
 This is a lighting function, not a flower function. Mirror-mosaic stage backdrop, fairy-light canopy over the dance floor, 12 uplighters, 2 moving heads, a 12×8 ft LED wall (~₹18k, also your video screen and monogram display), fuchsia-marigold-gold drapes, low seating with bolsters and mirrored tables, hanging umbrellas. The ring ceremony uses the same stage plus one 4×4 ft floral arch rolled on and off.
 
 **Baraat + Varmala + Mandap — ₹65,000 · the hero setup**
-Four-pillar open mandap, ivory and soft pink, hanging jasmine and rajnigandha strings, kalash and banana leaves, fabric canopy, petal-path aisle with brass urlis, 300 chairs with white covers and coloured sashes, a toran gate for the baraat, and a raised varmala stage with a flower-shower machine.
+Four-pillar open mandap, ivory and soft pink, hanging jasmine and rajnigandha strings, kalash and banana leaves, fabric canopy, petal-path aisle with brass urlis, 180 chairs with white covers and coloured sashes, a toran gate for the baraat, and a raised varmala stage with a flower-shower machine.
 
 **Reception — ₹43,000**
 Dramatic backdrop with the couple's monogram (~₹20k), 20 uplighters, entrance arch, 6 photo-wall panels, candles and tall centrepieces on 30 cocktail tables. After dark, lighting does all the work.
@@ -229,7 +232,7 @@ Dal Baati Churma, Gatte ki Sabzi, Ker Sangri, Papad ki Sabzi, Bajra and missi ro
 
 **Drone permissions.** Udaipur has restricted airspace near Dabok airport and over the lakes. Confirm your cinematographer flies a DGCA-compliant, registered drone and get written venue clearance.
 
-**Indoor backup.** February rain is unlikely but not impossible. Get written confirmation that the venue can move 300 (sangeet) and 650 (reception) indoors.
+**Indoor backup.** February rain is unlikely but not impossible. Get written confirmation that the venue can move 180 (sangeet) and 650 (reception) indoors.
 
 **Old-city traffic.** Peak season around Lake Pichola and the City Palace is genuinely bad. Keep the venue out of the old city or add a 45-minute buffer to every transfer.
 
@@ -299,7 +302,7 @@ Because guests pay their own tariff (§1b), a tighter block does not directly sa
 |---|---|
 | **Sep–Oct 2026** | Site-visit 3 venues. Negotiate and book with 20% advance. **Book the photographer now** — the good ones in Udaipur are gone 12+ months out for February. |
 | **Nov 2026** | Décor partner signed. Caterer tasting #1. Sangeet choreographer. Hair-and-makeup trial. |
-| **Dec 2026** | Invitation design finalised. Website live. Save-the-date out. Guest list locked at 300 / 650. Room block confirmed. |
+| **Dec 2026** | Invitation design finalised. Website live. Save-the-date out. Guest list locked at 180 / 650. Room block confirmed. |
 | **Jan 2027** | Printed invites dispatched by 5 Jan. Tasting #2 and final menus. Décor layout and mock-up approved. Travel-desk sheet built. Room allocation. Vendor balances scheduled. |
 | **20–25 Jan** | RSVP chase calls. Final counts. Seating plan. Vendor call-sheet with names and mobile numbers. Emergency kit. |
 | **29–30 Jan** | Décor load-in begins. Final walkthrough with the banquet manager and every vendor lead. |
@@ -313,4 +316,4 @@ Because guests pay their own tariff (§1b), a tighter block does not directly sa
 3. **Alcohol** — 2-hour open bar (budgeted), cash bar, or dry?
 4. **Non-veg** at any function? It adds 25–35% per plate where served.
 5. **Vidaai** on 2 Feb night or 3 Feb morning?
-6. Roughly **how many of the 300 are outstation**, and flying vs driving? This sizes the travel desk and the room block.
+6. Roughly **how many of the 180 are outstation**, and flying vs driving? This sizes the travel desk and the room block.

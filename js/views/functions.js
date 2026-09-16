@@ -20,7 +20,7 @@ W.views.functions = function () {
     ]),
     el('div', { class: 'qa' }, [
       el('b', { text: 'Haldi and phere are daylight functions' }),
-      el('span', { text: 'No lighting rig on two of the four setups. It is also how you get a 300-guest haldi for ₹475 a head — a brunch, not a lunch.' })
+      el('span', { text: 'No lighting rig on two of the four setups. It is also how you get a 180-guest haldi for ₹475 a head — a brunch, not a lunch.' })
     ]),
     el('div', { class: 'qa' }, [
       el('b', { text: 'Mandap and reception need separate spaces' }),
@@ -39,7 +39,7 @@ W.views.functions = function () {
   /* per-function detail */
   D.functions.forEach(function (fn, idx) {
     const stats = S.functionStats(fn.id);
-    const guarantee = fn.id === 'reception' ? D.couple.guaranteeReception : D.couple.guaranteeCore;
+    const guarantee = fn.guarantee;
 
     const meta = el('dl', { class: 'kv', style: 'margin-bottom:16px' });
     function kv(k, v) { meta.appendChild(el('dt', { text: k })); meta.appendChild(el('dd', { html: v })); }
@@ -95,7 +95,7 @@ W.views.functions = function () {
 
   /* cost roll-up */
   const rows = D.functions.map(function (fn) {
-    const guarantee = fn.id === 'reception' ? D.couple.guaranteeReception : D.couple.guaranteeCore;
+    const guarantee = fn.guarantee;
     const food = fn.perPlate * (fn.perPlate ? guarantee : 0);
     return { fn: fn, food: food, decor: fn.decorBudget, total: food + fn.decorBudget };
   });
@@ -106,7 +106,7 @@ W.views.functions = function () {
     flush: true
   }, UI.table([
     { key: 'name', label: 'Function', render: function (r) { return el('span', { class: 'nm', text: r.fn.name }); } },
-    { key: 'pax', label: 'Guarantee', num: true, render: function (r) { return r.fn.perPlate ? (r.fn.id === 'reception' ? D.couple.guaranteeReception : D.couple.guaranteeCore) : '—'; } },
+    { key: 'pax', label: 'Guarantee', num: true, render: function (r) { return r.fn.perPlate ? r.fn.guarantee : '—'; } },
     { key: 'pp', label: 'Per plate', num: true, render: function (r) { return r.fn.perPlate ? U.inr(r.fn.perPlate) : '—'; } },
     { key: 'food', label: 'Food', num: true, render: function (r) { return r.food ? U.inr(r.food) : '—'; } },
     { key: 'decor', label: 'Décor', num: true, render: function (r) { return r.decor ? U.inr(r.decor) : '₹0'; } },

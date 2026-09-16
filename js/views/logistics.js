@@ -50,7 +50,7 @@ window.W = window.W || {}; W.views = W.views || {};
     if (hostPaid.length > 10) {
       wrap.appendChild(el('div', { class: 'callout callout--warn', html:
         '<b>' + hostPaid.length + ' parties are marked as host-paid.</b> The budget covers ten rooms (₹60,000). ' +
-        'Each additional room costs roughly ₹6,000 for two nights. Either trim the list or move the extra from contingency — but decide now, not in January.' }));
+        'Each additional room costs roughly ₹6,000 for two nights. Either trim the list or take it from contingency — but decide now, not in January.' }));
     }
 
     wrap.appendChild(el('div', { class: 'callout', html:

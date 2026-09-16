@@ -22,10 +22,12 @@ window.W = window.W || {};
     pheraStart: '11:00',
     pheraEnd: '13:30',
     budgetTotal: 2000000,
-    guestCountCore: 300,
+    guestCountCore: 180,
     guestCountReception: 650,
-    // Catering guarantees — deliberately below invite counts. See PLAN.md §8.
-    guaranteeCore: 275,
+    // Aggregate catering commitment, deliberately below the invite counts. Each
+    // function carries its own `guarantee` too — the haldi runs lighter than the
+    // evening functions because guests are still arriving. See PLAN.md §8.
+    guaranteeCore: 180,
     guaranteeReception: 600
   };
 
@@ -47,11 +49,12 @@ window.W = window.W || {};
       start: '10:00',
       end: '13:30',
       area: 'Garden lawn / poolside',
-      guests: 300,
+      guests: 180,
       dressCode: 'Yellow & marigold orange · cottons',
       publicInvite: true,
       decorBudget: 35000,
       perPlate: 475,
+      guarantee: 170,
       summary:
         'Rooms open at 06:00 so everyone can shift in, eat and dress without rushing — which is why the haldi starts at 10:00 rather than 09:30. It stays a daylight brunch rather than a lunch: daylight means no lighting spend, and a brunch at ₹475 instead of a full lunch at ₹1,100 saves about ₹1.7 lakh on its own.',
       schedule: [
@@ -92,13 +95,14 @@ window.W = window.W || {};
       start: '18:30',
       end: '00:30',
       area: 'Main lawn, after-party in the banquet',
-      guests: 300,
+      guests: 180,
       dressCode: 'Fuchsia, marigold & gold · indo-western welcome',
       publicInvite: true,
       decorBudget: 45000,
       perPlate: 700,
+      guarantee: 180,
       summary:
-        'The engagement is a 30-minute ring ceremony at 19:00 on the sangeet stage rather than a separate function. That single merge saves roughly ₹2.6 lakh — another dinner for 285, another décor setup, another venue slot — and it paces the evening better. The folk act now runs first, as a warm-up: a Kalbelia troupe that pulls people out of their chairs makes the family performances far easier to follow, because nobody wants to be the first one dancing in front of 300 seated relatives.',
+        'The engagement is a 30-minute ring ceremony at 19:00 on the sangeet stage rather than a separate function. That single merge saves roughly ₹2.6 lakh — another dinner for 285, another décor setup, another venue slot — and it paces the evening better. The folk act now runs first, as a warm-up: a Kalbelia troupe that pulls people out of their chairs makes the family performances far easier to follow, because nobody wants to be the first one dancing in front of 180 seated relatives.',
       schedule: [
         ['18:30', 'Guest arrival · welcome drinks'],
         ['19:00', 'RING CEREMONY — couple entry, ring exchange, blessings, cake'],
@@ -140,11 +144,12 @@ window.W = window.W || {};
       start: '09:30',
       end: '16:00',
       area: 'Lawn A — mandap',
-      guests: 300,
+      guests: 180,
       dressCode: 'Traditional · pastels and ivory for the day',
       publicInvite: true,
-      decorBudget: 65000,
+      decorBudget: 110000,
       perPlate: 550,
+      guarantee: 180,
       muhurat: '11:00 – 13:30',
       summary:
         'Your muhurat is 11:00–13:30. Brief the pandit for a 90-minute core ceremony with 60 minutes of buffer — rushed pheras photograph badly and upset elders. Lunch afterwards is a curated Rajasthani thali rather than a 14-counter buffet: cheaper, more authentic, and exactly what guests want after 2.5 hours at a mandap.',
@@ -166,7 +171,7 @@ window.W = window.W || {};
         'Hanging jasmine and rajnigandha strings',
         'Kalash and banana leaves, fabric canopy',
         'Petal-path aisle with brass urlis',
-        '300 chairs, white covers with coloured sashes',
+        '180 chairs, white covers with coloured sashes',
         'Toran gate for the baraat',
         'Raised varmala stage with a flower-shower machine',
         'Daylight again — no lighting rig'
@@ -193,6 +198,7 @@ window.W = window.W || {};
       publicInvite: true,
       decorBudget: 43000,
       perPlate: 700,
+      guarantee: 600,
       summary:
         'The largest function and the one most likely to go wrong. 650 guests through a single stage line takes 90–110 minutes and will swallow the evening — run two photo queues, have the anchor call guests table-block by table-block, and put a separate photo booth near the entrance for people who do not need a stage picture.',
       schedule: [
@@ -231,19 +237,19 @@ window.W = window.W || {};
   /* Sums to exactly ₹20,00,000 including contingency. */
 
   const budget = [
-    { id: 'b01', head: 'Haldi brunch', cat: 'Food & Beverage', basis: '275 × ₹475', amount: 130625 },
-    { id: 'b02', head: 'Ring Ceremony + Sangeet dinner', cat: 'Food & Beverage', basis: '285 × ₹700', amount: 199500 },
-    { id: 'b03', head: 'Wedding lunch (Rajasthani thali)', cat: 'Food & Beverage', basis: '285 × ₹550', amount: 156750 },
+    { id: 'b01', head: 'Haldi brunch', cat: 'Food & Beverage', basis: '170 × ₹475', amount: 80750 },
+    { id: 'b02', head: 'Ring Ceremony + Sangeet dinner', cat: 'Food & Beverage', basis: '180 × ₹700', amount: 126000 },
+    { id: 'b03', head: 'Wedding lunch (Rajasthani thali)', cat: 'Food & Beverage', basis: '180 × ₹550', amount: 99000 },
     { id: 'b04', head: 'Reception dinner', cat: 'Food & Beverage', basis: '600 × ₹700', amount: 420000 },
-    { id: 'b05', head: 'Welcome chaat, breakfasts, crew meals', cat: 'Food & Beverage', basis: 'across 3 days', amount: 48000 },
-    { id: 'b06', head: 'Bar — 2-hr limited IMFL + excise licence', cat: 'Food & Beverage', basis: '~105 drinkers', amount: 70000 },
+    { id: 'b05', head: 'Welcome chaat, breakfasts, crew meals', cat: 'Food & Beverage', basis: 'across 3 days', amount: 38000 },
+    { id: 'b06', head: 'Bar — 2-hr limited IMFL + excise licence', cat: 'Food & Beverage', basis: '~63 drinkers', amount: 45000 },
     { id: 'b07', head: 'Venue rental, taxes, generator, extra-hour', cat: 'Venue & Stay', basis: '2 lawns + banquet', amount: 75000 },
     { id: 'b08', head: 'Host-side rooms', cat: 'Venue & Stay', basis: '10 net × 2 nights', amount: 60000 },
     { id: 'b09', head: 'Décor — Haldi', cat: 'Décor', basis: 'daylight, marigold-led', amount: 35000 },
     { id: 'b10', head: 'Décor — Ring + Sangeet', cat: 'Décor', basis: 'stage, LED wall, lighting', amount: 45000 },
-    { id: 'b11', head: 'Décor — Baraat, Varmala, Mandap', cat: 'Décor', basis: 'the hero setup', amount: 65000 },
+    { id: 'b11', head: 'Décor — Baraat, Varmala, Mandap', cat: 'Décor', basis: 'the hero setup', amount: 110000 },
     { id: 'b12', head: 'Décor — Reception', cat: 'Décor', basis: 'backdrop, entry, uplights', amount: 43000 },
-    { id: 'b13', head: 'Photography + cinematography', cat: 'Photo & Video', basis: '2+2 crew, drone, teaser, albums', amount: 130000 },
+    { id: 'b13', head: 'Photography + cinematography', cat: 'Photo & Video', basis: '2+2 crew, drone, teaser, albums', amount: 190000 },
     { id: 'b14', head: 'Sound, DJ, dhol ×2, band, shehnai, folk act', cat: 'Entertainment', basis: '3 days', amount: 62000 },
     { id: 'b15', head: 'Sangeet choreographer', cat: 'Entertainment', basis: '6 sessions + rehearsal', amount: 22000 },
     { id: 'b16', head: 'Hair & makeup', cat: 'Personal', basis: 'bride 4 looks, groom 2, 6 family', amount: 62000 },
@@ -252,10 +258,11 @@ window.W = window.W || {};
     { id: 'b19', head: "Groom's outfits", cat: 'Personal', basis: 'sherwani bought, 3 rented', amount: 40000 },
     { id: 'b20', head: 'Pandit, samagri, havan, Ganesh puja', cat: 'Rituals', basis: '—', amount: 28000 },
     { id: 'b21', head: 'Invitations — digital + 120 printed + website', cat: 'Invitations & Gifting', basis: '—', amount: 32000 },
-    { id: 'b22', head: 'Welcome hampers (120) + favours (400)', cat: 'Invitations & Gifting', basis: '—', amount: 38000 },
-    { id: 'b23', head: 'Guest logistics — transfers, shuttle, ghodi/car', cat: 'Logistics', basis: '—', amount: 40000 },
-    { id: 'b24', head: 'Signage, seating charts, menu cards, printing', cat: 'Logistics', basis: '—', amount: 15000 },
-    { id: 'b25', head: 'Contingency', cat: 'Contingency', basis: '4.1% — hold this back', amount: 82125 }
+    { id: 'b22', head: 'Welcome hampers (60) + favours (400)', cat: 'Invitations & Gifting', basis: 'one per room', amount: 30000 },
+    { id: 'b23', head: 'Guest logistics — transfers, shuttle, ghodi/car', cat: 'Logistics', basis: '—', amount: 34000 },
+    { id: 'b24', head: 'Signage, seating charts, menu cards, printing', cat: 'Logistics', basis: '—', amount: 12000 },
+    { id: 'b25', head: 'Day-of coordinator', cat: 'Logistics', basis: 'both days, own line — not from contingency', amount: 50000 },
+    { id: 'b26', head: 'Contingency', cat: 'Contingency', basis: '8% — hold this back', amount: 160250 }
   ];
 
   /* ---------------- The cuts ---------------- */
@@ -279,7 +286,7 @@ window.W = window.W || {};
     'The mandap and varmala setup — the phere is the wedding',
     'Reception lighting — 650 guests after dark, lighting is the entire look',
     'Sound quality at the sangeet',
-    'A day-of coordinator (₹35–50k from contingency) — cheapest insurance on a 650-guest reception'
+    'A day-of coordinator — now its own ₹50k budget line, not raided from contingency'
   ];
 
   /* ---------------- Venue ---------------- */
@@ -291,7 +298,7 @@ window.W = window.W || {};
       'Per-plate: ₹650–800 for 600 all-veg on a Tuesday',
       'Rooms: block at ₹6,500–8,000 including breakfast, guest-paid',
       'Complimentary: 8–10 rooms against a ~₹10L F&B commitment, lawn rental waived',
-      'Written confirmation of indoor backup for 300 and 650',
+      'Written confirmation of indoor backup for 180 and 650',
       'Written music policy — outdoor sound must stop at 22:00 by law',
       'Décor: in-house or preferred decorator, no outside-vendor entry fee'
     ],
@@ -346,7 +353,7 @@ window.W = window.W || {};
     { id: 'c10', phase: 'Nov 2026', task: 'Outfit shopping trip — buy 2, identify 2 rentals each', owner: 'Both' },
     { id: 'c11', phase: 'Dec 2026', task: 'Finalise invitation design', owner: 'Both' },
     { id: 'c12', phase: 'Dec 2026', task: 'Wedding website live, send save-the-date', owner: 'Vaibhav' },
-    { id: 'c13', phase: 'Dec 2026', task: 'Lock guest list at 300 core / 650 reception', owner: 'Families' },
+    { id: 'c13', phase: 'Dec 2026', task: 'Lock guest list at 180 core / 650 reception', owner: 'Families' },
     { id: 'c14', phase: 'Dec 2026', task: 'Confirm room block and circulate the booking link', owner: 'Vaibhav' },
     { id: 'c15', phase: 'Jan 2027', task: 'Dispatch printed invites by 5 Jan', owner: 'Families' },
     { id: 'c16', phase: 'Jan 2027', task: 'Tasting #2, sign off final menus', owner: 'Both' },
@@ -371,19 +378,19 @@ window.W = window.W || {};
     { risk: 'Night temperatures of 10–12°C', action: '12 patio heaters at ₹800–1,200/day (~₹15k for two nights, from contingency) plus shawl favours. Guests remember being cold.' },
     { risk: 'Sunset at 18:10', action: 'All outdoor daytime functions finish by 17:30. Test reception lighting at 17:00.' },
     { risk: 'Drone airspace near Dabok airport and the lakes', action: 'Confirm a DGCA-compliant registered drone and get written venue clearance.' },
-    { risk: 'Unseasonal rain', action: 'Written confirmation the venue can move 300 (sangeet) and 650 (reception) indoors.' },
+    { risk: 'Unseasonal rain', action: 'Written confirmation the venue can move 180 (sangeet) and 650 (reception) indoors.' },
     { risk: 'Old-city traffic in peak season', action: 'Keep the venue out of the old city, or add 45 minutes to every transfer.' },
     { risk: 'Vendor advances', action: 'Never more than 30% upfront. Hold 30% until after the event. Written cancellation and postponement clause in every contract.' },
-    { risk: 'Catering guarantee inflation', action: 'Venues bill max(guarantee, actual). Commit 275 and 600, never the full invite count. Negotiate 5% flex, final numbers 72 hours out.' },
+    { risk: 'Catering guarantee inflation', action: 'Venues bill max(guarantee, actual). Commit 180 and 600, never the full invite count. Negotiate 5% flex, final numbers 72 hours out.' },
     { risk: 'Feb 2027 muhurat clustering', action: 'Verify against a 2027 panchang whether 1–2 Feb is a heavy vivah date. Basant Panchami is around 11 Feb. Heavy dates mean +15% rates and thin availability.' }
   ];
 
   const assumptions = [
     'Excluded from the ₹20L: heirloom/investment jewellery, shagun and cash gifts, guests\u2019 airfare and rail fare, guests\u2019 room tariffs, honeymoon.',
     'Included in the ₹20L: all four functions, both wardrobes, hair and makeup, décor, photography, entertainment, logistics.',
-    'Guest rooms are blocked at a negotiated rate and paid by guests. The host covers 10 rooms.',
+    'Guest rooms are blocked at a negotiated rate and paid by guests. The host covers 10 rooms. The block is ~50 rooms — see PLAN.md §9a.',
     'All functions at a single property. Food is all-vegetarian.',
-    'No planner fee is budgeted — a ₹35–50k day-of coordinator should come from contingency.'
+    'No full planner fee is budgeted. A ₹50k day-of coordinator is its own line; contingency stays at 8% and untouched.'
   ];
 
   const openQuestions = [
@@ -392,7 +399,7 @@ window.W = window.W || {};
     'Alcohol — 2-hour open bar (budgeted), cash bar, or dry?',
     'Non-veg at any function? It adds 25–35% per plate where served.',
     'Vidaai on 2 Feb night, or 3 Feb morning (recommended)?',
-    'How many of the 300 are outstation, and flying vs driving? This sizes the travel desk and room block.'
+    'How many of the 180 are outstation, and flying vs driving? This sizes the travel desk and room block.'
   ];
 
   /* ---------------- Guest seed ---------------- */

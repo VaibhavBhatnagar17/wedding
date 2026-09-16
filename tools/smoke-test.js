@@ -182,14 +182,36 @@ check('function ids match guest invite flags', function () {
   });
 });
 
+/* Contingency was 4.1% when the core list was 300. Cutting it to 180 freed
+   about ₹2L and the agreed call was to spend the first slice on a proper
+   reserve, so hold that here — it is the line most likely to be quietly raided
+   to cover something else. */
+check('contingency is at least 8% of the budget', function () {
+  var total = W.data.budget.reduce(function (n, b) { return n + b.amount; }, 0);
+  var c = W.data.budget.reduce(function (n, b) {
+    return b.cat === 'Contingency' ? n + b.amount : n;
+  }, 0);
+  var pct = c / total * 100;
+  if (pct < 8) throw new Error('contingency down to ' + pct.toFixed(1) + '%');
+});
+
+check('the day-of coordinator is its own line, not taken from contingency', function () {
+  var row = W.data.budget.find(function (b) { return /coordinator/i.test(b.head); });
+  if (!row) throw new Error('no coordinator line in the budget');
+  if (row.cat === 'Contingency') throw new Error('coordinator is inside contingency');
+  if (row.amount < 35000) throw new Error('coordinator budgeted at only ' + row.amount);
+});
+
 check('per-plate x guarantee matches the F&B budget lines', function () {
   var f = W.data.functions;
   function fn(id) { return f.find(function (x) { return x.id === id; }); }
+  // Derived from the function data, so re-cutting the budget cannot leave the
+  // test asserting numbers that were only ever true last month.
   var expect = {
-    b01: fn('haldi').perPlate * 275,
-    b02: fn('sangeet').perPlate * 285,
-    b03: fn('phere').perPlate * 285,
-    b04: fn('reception').perPlate * 600
+    b01: fn('haldi').perPlate * fn('haldi').guarantee,
+    b02: fn('sangeet').perPlate * fn('sangeet').guarantee,
+    b03: fn('phere').perPlate * fn('phere').guarantee,
+    b04: fn('reception').perPlate * fn('reception').guarantee
   };
   Object.keys(expect).forEach(function (id) {
     var row = W.data.budget.find(function (b) { return b.id === id; });
