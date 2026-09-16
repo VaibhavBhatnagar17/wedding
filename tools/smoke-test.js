@@ -295,6 +295,29 @@ check('CSV import maps function columns and skips nameless rows', function () {
   if (g.diet !== 'Jain') throw new Error('diet ' + g.diet);
 });
 
+/* tools/check-guests.py collapses the two-tab sheet into exactly this shape.
+   If the importer stops understanding one of these columns, the bridge from the
+   Google Sheet breaks silently, so pin the contract here. */
+check('the flat file from check-guests.py imports with every column honoured', function () {
+  var csv = 'name,side,group,city,adults,kids,phone,diet,rsvp,' +
+            'haldi,sangeet,phere,reception,needsRoom,notes\n' +
+            'Vikram & Neha Bhatnagar,Groom,Extended family,Kota,3,1,9876500009,Veg,Pending,' +
+            'yes,yes,yes,yes,yes,"Chacha-chachi · Vikram (Adult); Neha (Adult); ' +
+            'Aarav (Child); Ishita (Teen, Jain)"\n';
+  var res = W.store.importGuestsCSV(csv, 'replace');
+  if (res.error) throw new Error(res.error);
+  if (res.added !== 1) throw new Error('added ' + res.added);
+  var g = W.store.get().guests[0];
+  if (g.city !== 'Kota') throw new Error('city ' + g.city);
+  if (g.group !== 'Extended family') throw new Error('group ' + g.group);
+  if (g.phone !== '9876500009') throw new Error('phone ' + g.phone);
+  if (!g.needsRoom) throw new Error('needsRoom did not survive');
+  if (W.store.heads(g) !== 4) throw new Error('heads ' + W.store.heads(g));
+  // A teen counts toward adults for beds, so the named roster is the only place
+  // the individual people survive today. It must come through intact.
+  if (!/Ishita \(Teen, Jain\)/.test(g.notes)) throw new Error('roster lost: ' + g.notes);
+});
+
 check('CSV import rejects a file with no name column', function () {
   var res = W.store.importGuestsCSV('foo,bar\n1,2\n', 'append');
   if (!res.error) throw new Error('should have errored');

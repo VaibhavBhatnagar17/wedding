@@ -121,51 +121,83 @@ a sheet at once, it has history, and it works on a phone while you are on a call
 with a relative. The console is for the operational side later — rooms, tables,
 pickups.
 
-**Set the sheet up once.** In Google Sheets: **File → Import →** upload
-`tools/guest-list-template.csv` → *Replace current sheet*. That gives you the
-thirteen columns that matter now, with four example rows showing the
-conventions. Delete the examples when you start.
+**Set the sheet up once, as two tabs.** In Google Sheets, **File → Import →**
+upload `tools/templates/1-invitations.csv` → *Insert new sheet*, then do the same
+with `tools/templates/2-people.csv`. Both arrive with example rows showing the
+conventions; delete them when you start.
+
+The split matters. An invitation is what you send and what a phone number belongs
+to. A person is who eats a meal and sleeps in a bed. Keeping household facts on
+one tab means you can never end up with two rows disagreeing about whether the
+Sharmas were invited to the haldi.
+
+**Tab 1 — `invitations`.** One row per invitation card.
 
 | column | values |
 | --- | --- |
-| `name` | one row per **invitation**, not per person — `Sharma Family`, not six rows |
+| `invite_id` | your own short code — `BH-CHACHA`, `KA-PARENTS`. This joins the two tabs, so never reuse or renumber one |
+| `household` | the name on the card — `Vikram & Neha Bhatnagar` |
 | `side` | `Bride`, `Groom` or `Both` — exact spelling, the database rejects anything else |
 | `group` | `Immediate family`, `Extended family`, `Friends`, `Colleagues`, `Neighbours`, `Family friends` |
 | `city` | where they travel from; this is what sizes the travel desk |
-| `adults`, `kids` | heads on this row. `adults` counts the invitee too, so a couple is `2` |
-| `phone` | **10 digits, one per row, never repeated.** The portal's only key |
-| `diet` | `Veg`, `Jain`, `No onion/garlic`, `Vegan`, `Non-veg` |
+| `phone`, `phone_alt` | **10 digits, never repeated across rows.** One or two per family is plenty — the portal's only key |
+| `needs_room` | `yes` or `no`. Locals get `no` |
 | `haldi`, `sangeet`, `phere`, `reception` | `yes` or `no` |
-| `notes` | anything — ground-floor room, wheelchair, allergy, who is chasing them |
+| `notes` | ground-floor room, wheelchair, who is chasing them |
+
+**Tab 2 — `people`.** One row per named person.
+
+| column | values |
+| --- | --- |
+| `invite_id` | must match a row on tab 1. Use **Data → Data validation** against tab 1 so it becomes a dropdown |
+| `name` | the individual, spelled how they would want it on a place card |
+| `age_band` | `Infant`, `Child`, `Teen`, `Adult`, `Senior` — this is a bed size, not curiosity |
+| `gender` | `M` or `F`. Required for adults, because same-gender sharing is what makes the room block fit |
+| `couple_with` | spouse's name, on both rows. Marks the pairs who must have a room to themselves |
+| `diet` | `Veg`, `Jain`, `No onion/garlic`, `Vegan`, `Non-veg` — per person, since one vegan in a family of six is the whole point |
+| `room_notes` | age in years for children, snores, early riser, needs a lift |
 
 Add your own working columns freely — `owner`, `tier`, `called_on`, whatever
-helps. The importer only reads the columns above and ignores the rest, so your
+helps. The tool only reads the columns above and ignores the rest, so your
 process notes never reach the site.
 
-**Split a row** when a group needs more than one room, or when someone needs
-their own portal page. Parents and a grown son on separate rows; a family of four
-sharing one room on a single row.
-
-**Check it before importing.** Export the sheet (**File → Download →
-Comma-separated values**) and run:
+**Check it before importing.** Download both tabs (**File → Download →
+Comma-separated values**, once per tab) and run:
 
 ```bash
-python3 tools/check-guests.py ~/Downloads/guest-list.csv
+python3 tools/check-guests.py 1-invitations.csv 2-people.csv
 ```
 
-It refuses anything the database would reject and flags the things that are
-merely suspicious. The one it earns its keep on is duplicate phone numbers:
-`+91 98765 43210` and `9876543210` look different in a sheet but are the same
-key, and `phone` is `unique` in the schema, so one clash fails the entire
-import. It also prints headcount per function against your 300 and 650 caps, so
-you can see the reception filling up while there is still time to do something
-about it.
+It refuses anything the database would reject and flags what is merely
+suspicious. It earns its keep on duplicate phone numbers — `+91 98765 43210` and
+`9876543210` look different in a sheet but are the same key, and `phone` is
+`unique` in the schema, so one clash fails the whole import — and on broken
+joins, where a person points at an `invite_id` that no longer exists.
 
-**Then load it.**
+It also prints two things you will actually plan against: headcount per function
+versus your 300 and 650 caps, and **the size of the room block**, worked out under
+the sharing rules in `PLAN.md` — couples together, children folded into their
+parents' room, teens three to a room with same-gender cousins, seniors two to a
+ground-floor room. It ends by telling you which of the shortlisted venues can
+hold the block.
 
-1. Planner console (`planner.html` → **Guests → Import CSV**) → upload the same
-   file. Use *Replace* so re-importing an updated sheet does not duplicate
-   everyone.
+You can run that estimate before a single name exists, which is the point — the
+room count decides the venue, and the venue has to be booked first:
+
+```bash
+python3 tools/check-guests.py --estimate \
+  --couples 60 --families-with-kids 22 --seniors 14 \
+  --single-adults 30 --teens 14 --friends 30
+```
+
+**Then load it.** A passing check writes `guest-list-flat.csv` next to your
+export. That is the two tabs collapsed to one row per invitation, which is what
+the site stores today — the individual names, age bands and diets ride along in
+`notes` so nothing is lost.
+
+1. Planner console (`planner.html` → **Guests → Import CSV**) → upload
+   `guest-list-flat.csv`. Use *Replace* so re-importing an updated sheet does not
+   duplicate everyone.
 2. Click **Export for Supabase**. You get `guests-for-supabase.csv` with the
    column names and value vocabularies the database expects.
 3. In Supabase: **Table Editor → guests → Insert → Import data from CSV** →

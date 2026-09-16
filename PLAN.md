@@ -258,6 +258,31 @@ These are the right *tier* for your budget and capacity. Rates move constantly a
 
 **Ideally one property hosts all four functions.** Zero transport, one décor team, one banquet manager, and guests never leave.
 
+### 9a. The room block — how many, and who shares with whom
+
+Ask a property for its room count before you fall in love with its lawn. On a 300-guest core list with roughly 270 people staying over, the block comes to **about 115 rooms**, and *none* of the eight properties above can hold that. This is the constraint that decides the venue, so it has to be settled early. Run `python3 tools/check-guests.py --estimate` with your own counts to see the number move.
+
+**Married couples are the floor.** About 75 of those 115 rooms are couples, and no amount of clever pairing compresses a couple into half a room. So the only real levers are how many couples you invite to the core functions, and how densely everyone else shares.
+
+The sharing rules, in the order they should be applied:
+
+| Who | Per room | Why |
+|---|---|---|
+| Married couple | 2 | Non-negotiable. Book it and move on |
+| Couple with children under 12 | 4 | Kids share the bed or one rollaway. The best value in the block |
+| Teenagers, same gender | 3 | They *prefer* this. Ask before assuming they want to be with their parents |
+| Unmarried adult cousins, same gender | 2 | 3 with a rollaway if they are close and under 30 |
+| Friends and colleagues, same gender | 3 | They are out until 3 am regardless |
+| Seniors | 2 | Ground floor, near the lift. Never with small children |
+
+And the rules about who *not* to put together, which matter more than the density: never mix generations in a shared room — a 55-year-old uncle with three cousins in their twenties makes four unhappy people. Never room two families who have not met, except for young single friends, who don't mind. Keep the immediate families next to the couple, and the seniors next to their own children rather than wherever there was space.
+
+**Two rooms need naming now.** The bride's room must be a large one near the makeup area with somewhere to sit, because it holds the HMU team, both mothers and four cousins for three hours on the morning of the 2nd. And **hold three rooms back, unallocated.** Someone always arrives with an unannounced plus-one, someone falls ill, and a vendor always ends up needing to crash. Three empty rooms on the 1st is the cheapest insurance in this plan.
+
+**If no single property fits,** the split that works is family on-site and friends at a hotel five to ten minutes away with a shuttle every 30 minutes from 18:00 until the bar closes. Family-only is about **87 rooms**, which Labh Garh and Ramada can hold. Friends are the right group to move: they mind least, they arrive latest, and they will not be at the 07:30 puja. Never split a family across two properties, and never put the elderly off-site.
+
+Because guests pay their own tariff (§1b), a tighter block does not directly save you money — it saves *them* money, it keeps everyone on one property, and a bigger committed block is a real lever on the F&B rate. Ask for the block to be held with a release date of 15 December 2026, so unclaimed rooms go back without penalty.
+
 ---
 
 ## 10. Booking timeline
