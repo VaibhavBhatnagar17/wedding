@@ -43,9 +43,10 @@ BED_LOAD = {"Infant": 0.0, "Child": 0.5, "Teen": 1.0, "Adult": 1.0, "Senior": 1.
 YES = {"y", "yes", "true", "1"}
 NO = {"", "n", "no", "false", "0"}
 
-# From js/data.js — invite caps and the catering guarantees we pay for.
-CAPS = {"core": 300, "reception": 650}
-GUARANTEES = {"core": 275, "reception": 600}
+# Invite caps and the catering guarantees we pay for. Core came down from 300 to
+# 180 once both families were actually counted; the reception is unchanged.
+CAPS = {"core": 180, "reception": 650}
+GUARANTEES = {"core": 170, "reception": 600}
 
 # Rooms at the shortlisted venues, so the estimate lands as a decision.
 VENUE_ROOMS = [
@@ -151,6 +152,9 @@ def load_invitations(path):
             "side": side, "group": group, "city": (r.get("city") or "").strip(),
             "phone": nums[0] if nums else "", "phones": nums,
             "needs_room": truthy(r.get("needs_room")),
+            # no_share opts a household out of being doubled up with another
+            # family, whatever the density setting says.
+            "no_share": truthy(r.get("no_share")),
             "invited": invited, "notes": (r.get("notes") or "").strip(),
         }
 
@@ -226,24 +230,36 @@ def load_people(path, invites):
 
 # ─────────────────────── the room block ───────────────────────
 
-def plan_rooms(invites, people):
+def plan_rooms(invites, people, density="dense"):
     """Estimate the block under rules that hold up at an Indian wedding.
 
-    Married couples are the floor and cannot be compressed. Everything else
-    can: kids fold into their parents' room, teens are happiest three to a
-    room with same-gender cousins, and single adults share. Seniors get their
-    own ground-floor rooms and never share with children.
+    Two profiles. `comfortable` gives every married couple its own room, which
+    is what most destination weddings do. `dense` doubles couples up two to a
+    room, rooms single adults three at a time and teens four, on the view that
+    a room holding only two people is a room wasted.
+
+    `dense` is not free: four adults need a room with two double beds, not two
+    twins, and four adults sharing one bathroom on the morning of a 10:00 haldi
+    is the real constraint. Both are counted and reported.
+
+    Some households are never doubled up regardless: the immediate families, any
+    room with a senior in it, and anything flagged no_share in the sheet.
     """
     rooms = []
     pool = defaultdict(list)   # (side, group, gender, class) -> [person]
 
     def add(kind, occupants, inv, ground=False, mixed=False):
         load = sum(BED_LOAD[p["band"]] for p in occupants)
+        beds = sum(1 for p in occupants if p["band"] in ("Adult", "Senior", "Teen"))
         rooms.append({
             "kind": kind, "occupants": occupants, "invite": inv,
-            "ground": ground, "mixed": mixed,
+            "ground": ground, "mixed": mixed, "beds": beds,
+            # Four grown-ups only fit if the room has two double beds. Two twins
+            # means a married couple on a 3-foot mattress, which is not sharing.
+            "two_doubles": beds >= 4,
             "extra_beds": max(0, math.ceil(load) - 2),
         })
+        return rooms[-1]
 
     for iid, inv in invites.items():
         if not inv["needs_room"]:
@@ -266,7 +282,12 @@ def plan_rooms(invites, people):
         for pair in paired:
             take = kids[ki:ki + 2]
             ki += len(take)
-            add("Couple" + (" + kids" if take else ""), pair + take, inv)
+            r = add("Couple" + (" + kids" if take else ""), pair + take, inv)
+            # A childless couple in an ordinary household is a candidate for
+            # being doubled up with another; everyone else is left alone.
+            r["pairable"] = (density == "dense" and not take
+                             and not inv["no_share"]
+                             and inv["group"] != "Immediate family")
         spare_kids = kids[ki:]
 
         seniors = [p for p in rest if p["band"] == "Senior"]
@@ -296,20 +317,105 @@ def plan_rooms(invites, people):
 
     for (side, group, gender, cls), members in sorted(
             pool.items(), key=lambda kv: str(kv[0])):
-        # Teens and friends are happy three to a room; family adults, two.
-        per = 3 if (cls == "Teen" or group in ("Friends", "Colleagues")) else 2
+        if density == "dense":
+            per = 4 if cls == "Teen" else 3
+        else:
+            per = 3 if (cls == "Teen" or group in ("Friends", "Colleagues")) else 2
         for j in range(0, len(members), per):
             chunk = members[j:j + per]
             inv = invites[chunk[0]["invite_id"]]
             mixed = len({p["invite_id"] for p in chunk}) > 1
             add(f"Shared · {gender or '?'} · {cls.lower()}s", chunk, inv, mixed=mixed)
 
+    if density == "dense":
+        rooms = _pair_up_couples(rooms)
     return rooms
+
+
+def _pair_up_couples(rooms):
+    """Merge childless couple rooms two at a time — four adults, two double beds.
+
+    Only couples from the same side and the same group are put together, so the
+    people sharing a bathroom at 06:30 are at least from the same branch of the
+    family and have met before.
+    """
+    merged, buckets = [], defaultdict(list)
+    for r in rooms:
+        if r.get("pairable"):
+            buckets[(r["invite"]["side"], r["invite"]["group"])].append(r)
+        else:
+            merged.append(r)
+
+    for _, group in sorted(buckets.items(), key=lambda kv: str(kv[0])):
+        for j in range(0, len(group), 2):
+            two = group[j:j + 2]
+            if len(two) == 1:
+                merged.append(two[0])       # odd one out keeps its own room
+                continue
+            a, b = two
+            occupants = a["occupants"] + b["occupants"]
+            beds = len(occupants)
+            merged.append({
+                "kind": "Two couples", "occupants": occupants, "invite": a["invite"],
+                "ground": False, "mixed": a["invite"] is not b["invite"],
+                "beds": beds, "two_doubles": True, "extra_beds": 0,
+            })
+    return merged
 
 
 # ───────────────────────────── report ─────────────────────────────
 
-def main(inv_path, ppl_path):
+def report_rooms(rooms, staying, density):
+    print(f"\n{BOLD}Room block{OFF}  {DIM}(1 & 2 Feb, two nights · "
+          f"{density} sharing){OFF}")
+    for k, n in Counter(r["kind"] for r in rooms).most_common():
+        print(f"  {n:>3} × {k}")
+
+    extra = sum(r["extra_beds"] for r in rooms)
+    ground = sum(1 for r in rooms if r["ground"])
+    doubles = [r for r in rooms if r["two_doubles"]]
+    mixed = [r for r in rooms if r["mixed"]]
+    print(f"  {BOLD}{len(rooms)} rooms{OFF} for {staying} staying guests "
+          f"{DIM}({staying / len(rooms):.1f} per room){OFF}")
+    if extra:
+        # Resorts bill a rollaway at ₹800–1,500 a night and it is the easiest
+        # thing on the invoice to get waived against an F&B commitment.
+        print(f"  {DIM}{extra} rollaway bed(s){OFF} "
+              f"{YEL}≈ ₹{extra * 2 * 1000:,} over two nights{OFF} "
+              f"{DIM}— get these waived{OFF}")
+    if ground:
+        print(f"  {DIM}{ground} ground-floor room(s) for seniors{OFF}")
+
+    if doubles:
+        print(f"\n{BOLD}What to ask the venue for{OFF}")
+        n_d = len(doubles)
+        print(f"  {YEL}{n_d} room{'s' if n_d != 1 else ''} "
+              f"{'must' if n_d == 1 else 'must'} have two double beds{OFF}, not two "
+              f"twins.\n  {DIM}Properties hold far fewer of these than they let on — "
+              f"ask for the\n  count in writing before you sign, because this is what "
+              f"the whole\n  plan rests on.{OFF}")
+        worst = max(r["beds"] for r in rooms)
+        four_plus = sum(1 for r in rooms if r["beds"] >= 4)
+        print(f"\n  {DIM}Bathrooms: {four_plus} room(s) put {worst} adults through one "
+              f"bathroom\n  between 06:30 and the 10:00 haldi. At 30–45 minutes each in "
+              f"formals,\n  that room is still dressing at 11:00. Stagger their breakfast "
+              f"slot.{OFF}")
+
+    if mixed:
+        print(f"\n  {YEL}{len(mixed)} room(s) share across families — ask first, "
+              f"do not assume{OFF}")
+        for r in mixed[:6]:
+            who = ", ".join(f"{p['name']} ({p['invite_id']})" for p in r["occupants"])
+            print(f"      {DIM}{who}{OFF}")
+
+    print(f"\n{BOLD}Which venues fit{OFF}  {DIM}(+3 buffer rooms held back){OFF}")
+    need = len(rooms) + 3
+    for name, n in VENUE_ROOMS:
+        mark = f"{GRN}fits{OFF}" if n >= need else f"{RED}short by {need - n}{OFF}"
+        print(f"  {name:<28} {n:>4} rooms   {mark}")
+
+
+def main(inv_path, ppl_path, density="dense"):
     invites = load_invitations(inv_path)
     people = load_people(ppl_path, invites)
 
@@ -339,35 +445,10 @@ def main(inv_path, ppl_path):
         for d, n in diets.most_common():
             print(f"  {d:<18} {n:>4}")
 
-    rooms = plan_rooms(invites, people)
+    rooms = plan_rooms(invites, people, density)
     staying = sum(len(people.get(i, [])) for i, v in invites.items() if v["needs_room"])
     if rooms:
-        print(f"\n{BOLD}Room block{OFF}  {DIM}(1 & 2 Feb, two nights){OFF}")
-        kinds = Counter(r["kind"] for r in rooms)
-        for k, n in kinds.most_common():
-            print(f"  {n:>3} × {k}")
-        extra = sum(r["extra_beds"] for r in rooms)
-        ground = sum(1 for r in rooms if r["ground"])
-        mixed = [r for r in rooms if r["mixed"]]
-        print(f"  {BOLD}{len(rooms)} rooms{OFF} for {staying} staying guests "
-              f"{DIM}({staying / len(rooms):.1f} per room){OFF}")
-        if extra:
-            print(f"  {DIM}{extra} extra bed(s) / rollaway(s) to request{OFF}")
-        if ground:
-            print(f"  {DIM}{ground} ground-floor room(s) for seniors{OFF}")
-        if mixed:
-            print(f"  {YEL}{len(mixed)} room(s) share across families — "
-                  f"confirm they are comfortable{OFF}")
-            for r in mixed[:6]:
-                who = ", ".join(f"{p['name']} ({p['invite_id']})" for p in r["occupants"])
-                print(f"      {DIM}{who}{OFF}")
-
-        print(f"\n{BOLD}Which venues fit{OFF}  "
-              f"{DIM}(+3 buffer rooms held back){OFF}")
-        need = len(rooms) + 3
-        for name, n in VENUE_ROOMS:
-            mark = f"{GRN}fits{OFF}" if n >= need else f"{RED}short by {need - n}{OFF}"
-            print(f"  {name:<28} {n:>4} rooms   {mark}")
+        report_rooms(rooms, staying, density)
 
     if warnings:
         print(f"\n{BOLD}{YEL}Worth a look ({len(warnings)}){OFF}")
@@ -448,7 +529,8 @@ def estimate(a):
         invites[iid] = {
             "_line": 0, "invite_id": iid, "household": iid, "side": "Bride",
             "group": group, "city": "", "phone": "", "phones": [],
-            "needs_room": needs, "invited": list(FUNCTIONS), "notes": "",
+            "needs_room": needs, "no_share": False,
+            "invited": list(FUNCTIONS), "notes": "",
         }
         ppl = [
             {"_line": 0, "name": f"{iid}-{i}", "invite_id": iid, "band": b,
@@ -485,32 +567,23 @@ def estimate(a):
 
     heads = sum(len(v) for v in people.values())
     staying = sum(len(people[i]) for i, v in invites.items() if v["needs_room"])
-    rooms = plan_rooms(invites, people)
-    if not rooms:
+    if not invites:
         die("Nothing to estimate — give it some counts.")
 
     print(f"\n{BOLD}Estimate{OFF}  {DIM}{heads} guests, "
           f"{staying} of them staying over{OFF}")
-    floor = sum(1 for r in rooms if r["kind"].startswith("Couple"))
-    for k, c in Counter(r["kind"] for r in rooms).most_common():
-        print(f"  {c:>3} × {k}")
-    print(f"  {BOLD}{len(rooms)} rooms{OFF} "
-          f"{DIM}({staying / len(rooms):.1f} per room, "
-          f"{sum(r['extra_beds'] for r in rooms)} extra beds){OFF}")
-    print(f"\n  {CYA}{floor} of those {len(rooms)} are married couples.{OFF} "
-          f"{DIM}That is the floor —{OFF}\n  {DIM}no amount of clever pairing "
-          f"compresses a couple into half a room.{OFF}")
+    rooms = plan_rooms(invites, people, a.density)
+    report_rooms(rooms, staying, a.density)
 
-    need = len(rooms) + 3
-    print(f"\n{BOLD}Which venues fit{OFF}  {DIM}(+3 buffer rooms held back){OFF}")
-    for name, cnt in VENUE_ROOMS:
-        mark = f"{GRN}fits{OFF}" if cnt >= need else f"{RED}short by {need - cnt}{OFF}"
-        print(f"  {name:<28} {cnt:>4} rooms   {mark}")
-    if not any(c >= need for _, c in VENUE_ROOMS):
-        print(f"\n  {YEL}No single shortlisted property holds this block.{OFF} "
-              f"{DIM}Either put the{OFF}\n  {DIM}friends and younger cousins in a "
-              f"second hotel with a shuttle, or{OFF}\n  {DIM}cut couples from the "
-              f"core list — they cost a room each.{OFF}")
+    # Show what the other profile would cost, so the trade is a number and not
+    # an argument.
+    other = "comfortable" if a.density == "dense" else "dense"
+    alt = len(plan_rooms(invites, people, other))
+    gap = alt - len(rooms)
+    if gap:
+        word = "more" if gap > 0 else "fewer"
+        print(f"\n  {CYA}{other.title()} sharing would need {alt} rooms{OFF} "
+              f"{DIM}— {abs(gap)} {word}.{OFF}")
     print()
     return 0
 
@@ -538,10 +611,13 @@ if __name__ == "__main__":
     ap.add_argument("--friends", type=int, default=0, help="friends and colleagues")
     ap.add_argument("--local", type=float, default=0.1,
                     help="fraction already in Udaipur who need no room (default 0.1)")
+    ap.add_argument("--density", choices=["dense", "comfortable"], default="dense",
+                    help="dense doubles couples up and needs two-double-bed rooms; "
+                         "comfortable gives every couple its own (default dense)")
     args = ap.parse_args()
 
     if args.estimate:
         sys.exit(estimate(args))
     if not (args.invitations and args.people):
         ap.error("give both CSVs, or use --estimate with counts")
-    sys.exit(main(args.invitations, args.people))
+    sys.exit(main(args.invitations, args.people, args.density))

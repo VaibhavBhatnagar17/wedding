@@ -175,20 +175,27 @@ suspicious. It earns its keep on duplicate phone numbers — `+91 98765 43210` a
 joins, where a person points at an `invite_id` that no longer exists.
 
 It also prints two things you will actually plan against: headcount per function
-versus your 300 and 650 caps, and **the size of the room block**, worked out under
-the sharing rules in `PLAN.md` — couples together, children folded into their
-parents' room, teens three to a room with same-gender cousins, seniors two to a
-ground-floor room. It ends by telling you which of the shortlisted venues can
-hold the block.
+versus your 180 and 650 caps, and **the size of the room block**, worked out under
+the sharing rules in `PLAN.md` §9a — couples doubled up two to a room, children
+folded in with their parents, teens four to a room, seniors two on the ground
+floor. It reports how many rooms need two double beds rather than two twins, how
+many rollaways to argue out of the bill, and which shortlisted venues hold the
+block.
 
-You can run that estimate before a single name exists, which is the point — the
-room count decides the venue, and the venue has to be booked first:
+Households you never want doubled up with another family — both sets of parents,
+the very elderly, the newly married — get `no_share` set to `yes` on tab 1 and the
+planner leaves them alone.
+
+You can run the estimate before a single name exists, which is the point:
 
 ```bash
 python3 tools/check-guests.py --estimate \
-  --couples 60 --families-with-kids 22 --seniors 14 \
-  --single-adults 30 --teens 14 --friends 30
+  --couples 32 --families-with-kids 14 --seniors 8 \
+  --single-adults 18 --teens 10 --friends 26 --local 0.12
 ```
+
+Add `--density comfortable` to price one-couple-per-room instead, which on these
+numbers is 67 rooms against 50.
 
 **Then load it.** A passing check writes `guest-list-flat.csv` next to your
 export. That is the two tabs collapsed to one row per invitation, which is what
