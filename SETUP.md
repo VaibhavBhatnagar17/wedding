@@ -114,18 +114,66 @@ by design. `schema.sql` gives it no access to any table. It can only call five
 functions, and the guest lookup returns a single row for a phone number the
 caller already typed in. See *Who can see what* below.
 
-### Step 4 — load your guest list
+### Step 4 — build and load the guest list
 
-1. Fill in your guests in the planning console (`planner.html` → **Guests**).
-   Every guest needs a **10-digit mobile number** — that is how they find
-   themselves.
-2. Click **Export for Supabase**. You get `guests-for-supabase.csv` with
-   columns already matching the database.
+Build the list in Google Sheets, not in the planner console. Two people can edit
+a sheet at once, it has history, and it works on a phone while you are on a call
+with a relative. The console is for the operational side later — rooms, tables,
+pickups.
+
+**Set the sheet up once.** In Google Sheets: **File → Import →** upload
+`tools/guest-list-template.csv` → *Replace current sheet*. That gives you the
+thirteen columns that matter now, with four example rows showing the
+conventions. Delete the examples when you start.
+
+| column | values |
+| --- | --- |
+| `name` | one row per **invitation**, not per person — `Sharma Family`, not six rows |
+| `side` | `Bride`, `Groom` or `Both` — exact spelling, the database rejects anything else |
+| `group` | `Immediate family`, `Extended family`, `Friends`, `Colleagues`, `Neighbours`, `Family friends` |
+| `city` | where they travel from; this is what sizes the travel desk |
+| `adults`, `kids` | heads on this row. `adults` counts the invitee too, so a couple is `2` |
+| `phone` | **10 digits, one per row, never repeated.** The portal's only key |
+| `diet` | `Veg`, `Jain`, `No onion/garlic`, `Vegan`, `Non-veg` |
+| `haldi`, `sangeet`, `phere`, `reception` | `yes` or `no` |
+| `notes` | anything — ground-floor room, wheelchair, allergy, who is chasing them |
+
+Add your own working columns freely — `owner`, `tier`, `called_on`, whatever
+helps. The importer only reads the columns above and ignores the rest, so your
+process notes never reach the site.
+
+**Split a row** when a group needs more than one room, or when someone needs
+their own portal page. Parents and a grown son on separate rows; a family of four
+sharing one room on a single row.
+
+**Check it before importing.** Export the sheet (**File → Download →
+Comma-separated values**) and run:
+
+```bash
+python3 tools/check-guests.py ~/Downloads/guest-list.csv
+```
+
+It refuses anything the database would reject and flags the things that are
+merely suspicious. The one it earns its keep on is duplicate phone numbers:
+`+91 98765 43210` and `9876543210` look different in a sheet but are the same
+key, and `phone` is `unique` in the schema, so one clash fails the entire
+import. It also prints headcount per function against your 300 and 650 caps, so
+you can see the reception filling up while there is still time to do something
+about it.
+
+**Then load it.**
+
+1. Planner console (`planner.html` → **Guests → Import CSV**) → upload the same
+   file. Use *Replace* so re-importing an updated sheet does not duplicate
+   everyone.
+2. Click **Export for Supabase**. You get `guests-for-supabase.csv` with the
+   column names and value vocabularies the database expects.
 3. In Supabase: **Table Editor → guests → Insert → Import data from CSV** →
    upload that file.
 
-To change something later, edit the row directly in the Table Editor. The guest
-sees it the next time they open the page — no deploy needed.
+Keep the sheet as the source of truth and repeat this whenever it changes. Once
+rooms and tables are allotted, edit those directly in the Table Editor — the
+guest sees it the next time they open their page, with no deploy.
 
 ### Step 5 — add the photo albums
 
