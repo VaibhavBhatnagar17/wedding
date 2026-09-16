@@ -388,7 +388,7 @@ window.W = window.W || {};
   const assumptions = [
     'Excluded from the ₹20L: heirloom/investment jewellery, shagun and cash gifts, guests\u2019 airfare and rail fare, guests\u2019 room tariffs, honeymoon.',
     'Included in the ₹20L: all four functions, both wardrobes, hair and makeup, décor, photography, entertainment, logistics.',
-    'Guest rooms are blocked at a negotiated rate and paid by guests. The host covers 10 rooms. The block is ~50 rooms — see PLAN.md §9a.',
+    'Guest rooms are blocked at a negotiated rate and paid by guests. The host covers 10 rooms. The block is ~52 rooms — see PLAN.md §9a.',
     'All functions at a single property. Food is all-vegetarian.',
     'No full planner fee is budgeted. A ₹50k day-of coordinator is its own line; contingency stays at 8% and untouched.'
   ];

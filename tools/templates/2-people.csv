@@ -1,11 +1,14 @@
 invite_id,name,age_band,gender,couple_with,diet,room_notes
-BH-DADI,Shanti Devi Bhatnagar,Senior,F,,Jain,Ground floor. Wheelchair at the mandap.
 KA-PARENTS,Kishore Kalra,Adult,M,Riya Kalra,Veg,
 KA-PARENTS,Riya Kalra,Adult,F,Kishore Kalra,No onion/garlic,
+BH-DADI,Shanti Devi Bhatnagar,Senior,F,,Jain,Ground floor. Wheelchair at the mandap.
+BH-TAUJI,Rajesh Bhatnagar,Adult,M,Kavita Bhatnagar,Veg,
+BH-TAUJI,Kavita Bhatnagar,Adult,F,Rajesh Bhatnagar,Veg,
+BH-TAUJI,Sushila Bhatnagar,Senior,F,,Jain,"84 — Rajesh and Kavita help her at night, so same room. Ground floor."
 BH-CHACHA,Vikram Bhatnagar,Adult,M,Neha Bhatnagar,Veg,
 BH-CHACHA,Neha Bhatnagar,Adult,F,Vikram Bhatnagar,Veg,
-BH-CHACHA,Aarav Bhatnagar,Child,M,,Veg,8 — shares with parents
-BH-CHACHA,Ishita Bhatnagar,Teen,F,,Veg,14 — would rather room with the cousins
+BH-CHACHA,Aarav Bhatnagar,Adult,M,,Veg,19 — put him with the other boys
+BH-CHACHA,Ishita Bhatnagar,Adult,F,,Veg,22 — would rather room with the cousins
 BH-MAMA,Suresh Bhatnagar,Adult,M,Anita Bhatnagar,Veg,
 BH-MAMA,Anita Bhatnagar,Adult,F,Suresh Bhatnagar,Veg,
 BH-FUFA,Deepak Verma,Adult,M,Sunita Verma,Non-veg,
@@ -14,4 +17,3 @@ GR-ROHIT,Rohit Sharma,Adult,M,,Non-veg,
 BR-PRIYA,Priya Nair,Adult,F,,Vegan,Vegan at every meal — confirm with the caterer twice
 JO-JOSHI,Meera Joshi,Adult,F,Anil Joshi,Jain,
 JO-JOSHI,Anil Joshi,Adult,M,Meera Joshi,Jain,
-JO-JOSHI,Kabir Joshi,Child,M,,Jain,6

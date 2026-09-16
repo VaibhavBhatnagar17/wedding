@@ -20,7 +20,7 @@ Three structural choices, in order of impact:
 A luxury property (Taj Lake Palace, Oberoi Udaivilas, Leela, Raffles) starts at ₹1Cr+. A premium resort (Trident, Ananta, Westin, Fateh Garh) runs ₹35–70L for a wedding of this size. Both are out. Your tier is a **heritage or mid-resort with a 700+ capacity lawn, or a marriage garden that permits your own caterer** — where ₹650–800/plate is genuinely achievable at volume. This is not a compromise on beauty; Udaipur's mid-tier properties have Aravalli backdrops and lake views that photograph better than most five-stars elsewhere. It *is* a compromise on brand name and room luxury.
 
 **(b) Guest rooms are blocked, not bought.**
-50 rooms × 2 nights is ₹7L on its own. Standard destination-wedding practice: you negotiate a block rate and guests pay their own rooms; the host covers only immediate family and VIPs. **This plan budgets 10 host-paid rooms** (₹60,000), assuming you extract 8–10 complimentary rooms against your ~₹8L F&B commitment. At 50 rooms rather than 115, host-paying a larger share is thinkable for the first time — 20 rooms is ₹2.8L. See §9a.
+52 rooms × 2 nights is ₹7.3L on its own. Standard destination-wedding practice: you negotiate a block rate and guests pay their own rooms; the host covers only immediate family and VIPs. **This plan budgets 10 host-paid rooms** (₹60,000), assuming you extract 8–10 complimentary rooms against your ~₹8L F&B commitment. At 52 rooms rather than 115, host-paying a larger share is thinkable for the first time — 20 rooms is ₹2.8L. See §9a.
 
 **(c) Engagement merges into the Sangeet evening.**
 A standalone engagement means another dinner for 285, another décor setup and another venue slot — about **₹2.6L**. Instead: a 30-minute ring ceremony at 19:00 on the sangeet stage, before the performances. It reads as intentional ("Ring Ceremony & Sangeet Night"), it's better paced for guests, and it is the single biggest saving available to you.
@@ -261,38 +261,40 @@ These are the right *tier* for your budget and capacity. Rates move constantly a
 
 **Ideally one property hosts all four functions.** Zero transport, one décor team, one banquet manager, and guests never leave.
 
-### 9a. The room block — 50 rooms, and who shares with whom
+### 9a. The room block — 52 rooms, and who shares with whom
 
-On a core list of 180 with about 160 people staying over, and doubling couples up as agreed, the block is **50 rooms at 3.2 people each**. Every property on the shortlist except Bhairavgarh can hold that, so the room count no longer constrains the venue choice — the lawn does. Run `python3 tools/check-guests.py --estimate` with your own counts to see the number move; `--density comfortable` shows what one-couple-per-room would cost, which on these numbers is **67 rooms, seventeen more**.
+On a core list of 180 with about 160 people staying over, and doubling couples up as agreed, the block is **52 rooms at 3.0 people each**. Every property on the shortlist except Bhairavgarh can hold that, so the room count no longer constrains the venue choice — the lawn does. Run `python3 tools/check-guests.py --estimate` with your own counts to see the number move; `--density comfortable` shows what one-couple-per-room would cost, which on these numbers is **73 rooms, twenty-one more**.
 
 Dense sharing is the right call here, and it comes with two conditions that are easy to miss and expensive to discover late.
 
-**Four adults need two double beds, not two twins.** This is the whole plan's load-bearing assumption. A twin bed is three feet wide; putting a married couple on one is not sharing, it is enduring. Of the 50 rooms, **16 must be twin-double or family category**, and properties hold far fewer of those than their website suggests. Ask every venue for the count in writing before signing, and walk one of the rooms.
+**Four adults need two double beds, not two twins.** This is the whole plan's load-bearing assumption. A twin bed is three feet wide; putting a married couple on one is not sharing, it is enduring. Of the 52 rooms, **about 15 must be twin-double or family category**, and properties hold far fewer of those than their website suggests. Ask every venue for the count in writing before signing, and walk one of the rooms.
 
-**The bathroom is the real bottleneck, not the bed.** Sixteen rooms will put four adults through one bathroom between 06:30 and a 10:00 haldi. In formals, with jewellery, that is 30–45 minutes each — the last person is dressing at 11:00. The fix is scheduling, not more rooms: give the four-adult rooms the earliest breakfast slot and the earliest of the two haldi sittings, and put a mirror and a plug point in the room so two people can get ready outside the bathroom.
+**The bathroom is the real bottleneck, not the bed.** Fifteen rooms will put four adults through one bathroom between 06:30 and a 10:00 haldi. In formals, with jewellery, that is 30–45 minutes each — the last person is dressing at 11:00. The fix is scheduling, not more rooms: give the four-adult rooms the earliest breakfast slot and the earliest of the two haldi sittings, and put a mirror and a plug point in the room so two people can get ready outside the bathroom.
 
 The combinations, densest first:
 
 | Who | Per room | Notes |
 |---|---|---|
-| Two couples, no children | 4 | The biggest saving in the block — 14 rooms' worth. Needs two double beds, same side and same branch of the family |
-| Couple + two children under 12 | 4 | Kids share the bed or one rollaway |
-| Teenagers, same gender | 4 | They actively prefer this. Ask, don't assume they want to be with their parents |
-| Unmarried adult cousins, same gender | 3 | One rollaway |
+| Two couples, no dependants | 4 | The biggest saving in the block — 15 rooms' worth. Needs two double beds, same side and same branch of the family |
+| Couple + the elderly parent they care for | 3 | **One room, not two.** Ground floor, one rollaway. Whoever helps at 02:00 has to be in the room |
+| Couple + their own parents as a couple | 4 | Same logic, four adults. Ground floor |
+| Unmarried nieces, nephews and cousins, same gender | 3–4 | All over 18, so this is the easiest group to compress |
 | Friends and colleagues, same gender | 3 | Out until 3 am regardless |
-| Seniors | 2 | Ground floor, near the lift. Never doubled up, never with children |
+| A senior travelling with nobody | 2 | Ground floor, near the lift, and near their own relatives' rooms |
 
-**The five rooms that stay at two, whatever the arithmetic says.** Both sets of parents — they are hosting, and their room is where relatives will come to sit. Anyone over about 70. Any couple married within the last year. Any couple where one of them is unwell or a light sleeper who would not say so. Mark these `no_share` in the invitations sheet and the planner will leave them alone.
+**Seniors go with their family, not into a seniors' block.** This is the one place where the room-saving arithmetic and the humane answer point the same way. An 84-year-old who needs help at night belongs with the son and daughter-in-law who provide it, which is one room of three instead of two rooms — worth about five rooms across the list. Put them on the same `invite_id` and the planner does it automatically. A senior who genuinely wants their own room gets it, but site them next to their own relatives rather than wherever there was space, and mark them `no_share`.
 
-**Two combinations I would not do**, despite the general licence. An older couple sharing with a younger couple: the sleep schedules are three hours apart and the younger couple loses every scrap of privacy, so pair like with like instead. And children under 12 in a room without an adult — teenagers four to a room is a treat, but an eight-year-old at 02:00 in an unfamiliar resort is a phone call you do not want during the sangeet.
+**The rooms that stay at two, whatever the arithmetic says.** Both sets of parents — they are hosting, and their room is where relatives will come and sit. Any couple married within the last year. Any couple where one of them is unwell or a light sleeper who would not say so. Mark these `no_share` in the invitations sheet and the planner will leave them alone.
+
+**The one combination to avoid** is two *unrelated* couples from different generations — an uncle and aunt in their sixties with a cousin's couple in their thirties, who happen to both need a bed. There is no caregiving reason for it and the sleep schedules are hours apart, so pair like with like. Within a family this does not apply, and there are no children under eighteen on this list, so none of the usual rules about kids' rooms bite.
 
 **Ask, never assign.** Two couples sharing has to be a conversation weeks in advance, not a discovery at the check-in desk. Frame it as "we have put you with the Vermas, tell us if you'd rather not" and budget three or four rooms for the people who say no — which is what the buffer below is for.
 
-**Two more things to name now.** The bride's room must be a large one near the makeup area with somewhere to sit, because it holds the HMU team, both mothers and four cousins for three hours on the morning of the 2nd. And **hold three rooms back, unallocated** — someone always arrives with an unannounced plus-one, someone falls ill, a vendor needs to crash. At 50 rooms that buffer is cheap and it is the difference between a solved problem and a scene.
+**Two more things to name now.** The bride's room must be a large one near the makeup area with somewhere to sit, because it holds the HMU team, both mothers and four cousins for three hours on the morning of the 2nd. And **hold three rooms back, unallocated** — someone always arrives with an unannounced plus-one, someone falls ill, a vendor needs to crash. At 52 rooms that buffer is cheap and it is the difference between a solved problem and a scene.
 
-**Get the rollaways waived.** The plan needs about 27 of them; at ₹800–1,500 a night that is ₹45–80k over two nights, and it is the single easiest line on a resort invoice to have struck against a ₹10L F&B commitment. Ask for it explicitly, in the same breath as the complimentary rooms.
+**Get the rollaways waived.** The plan needs about 29 of them; at ₹800–1,500 a night that is ₹45–85k over two nights, and it is the single easiest line on a resort invoice to have struck against an ₹8L F&B commitment. Ask for it explicitly, in the same breath as the complimentary rooms.
 
-Because guests pay their own tariff (§1b), a tighter block does not directly save you money — it saves *them* money and it keeps everyone on one property. But 50 rooms is small enough that host-paying a meaningful share becomes thinkable for the first time: 20 rooms × 2 nights at ₹7,000 is ₹2.8L. Hold the block with a release date of 15 December 2026 so unclaimed rooms go back without penalty.
+Because guests pay their own tariff (§1b), a tighter block does not directly save you money — it saves *them* money and it keeps everyone on one property. But 52 rooms is small enough that host-paying a meaningful share becomes thinkable for the first time: 20 rooms × 2 nights at ₹7,000 is ₹2.8L. Hold the block with a release date of 15 December 2026 so unclaimed rooms go back without penalty.
 
 ---
 

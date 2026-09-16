@@ -1,9 +1,10 @@
 invite_id,household,side,group,city,phone,phone_alt,needs_room,no_share,haldi,sangeet,phere,reception,notes
-BH-DADI,Shanti Devi Bhatnagar,Groom,Extended family,Jaipur,9876500007,9876500003,yes,yes,yes,yes,yes,yes,"82 — ground floor, near the lift, wheelchair at the mandap"
 KA-PARENTS,Kishore & Riya Kalra,Bride,Immediate family,Delhi,9876500004,9876500005,yes,yes,yes,yes,yes,yes,Bride's parents — host room, next to the bride
-BH-CHACHA,Vikram & Neha Bhatnagar,Groom,Extended family,Kota,9876500009,,yes,no,yes,yes,yes,yes,Chacha–chachi, driving down with both kids
-BH-MAMA,Suresh & Anita Bhatnagar,Groom,Extended family,Kota,9876500015,,yes,no,yes,yes,yes,yes,No kids travelling — fine to double up with the Vermas
-BH-FUFA,Deepak & Sunita Verma,Groom,Extended family,Indore,9876500017,,yes,no,yes,yes,yes,yes,No kids travelling — old friends of the Bhatnagars
+BH-DADI,Shanti Devi Bhatnagar,Groom,Extended family,Jaipur,9876500007,9876500003,yes,yes,yes,yes,yes,yes,"82, travelling with the Tauji family but wants her own room. Ground floor, near the lift"
+BH-TAUJI,Rajesh & Kavita Bhatnagar,Groom,Extended family,Jaipur,9876500021,,yes,no,yes,yes,yes,yes,"Bringing Rajesh's mother, who they look after — one room for the three of them"
+BH-CHACHA,Vikram & Neha Bhatnagar,Groom,Extended family,Kota,9876500009,,yes,no,yes,yes,yes,yes,"Chacha–chachi, driving down with both children (grown)"
+BH-MAMA,Suresh & Anita Bhatnagar,Groom,Extended family,Kota,9876500015,,yes,no,yes,yes,yes,yes,Just the two of them — fine to double up with the Vermas
+BH-FUFA,Deepak & Sunita Verma,Groom,Extended family,Indore,9876500017,,yes,no,yes,yes,yes,yes,Just the two of them — old friends of the Bhatnagars
 GR-ROHIT,Rohit Sharma,Groom,Friends,Mumbai,9876500011,,yes,no,no,yes,no,yes,Best man — happy to share with the boys
 BR-PRIYA,Priya Nair,Bride,Friends,Bengaluru,9876500013,,yes,no,no,yes,no,yes,Maid of honour
 JO-JOSHI,Meera & Anil Joshi,Bride,Family friends,Udaipur,9876500020,,no,no,yes,yes,yes,yes,Local — no room needed

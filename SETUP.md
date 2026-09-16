@@ -176,11 +176,15 @@ joins, where a person points at an `invite_id` that no longer exists.
 
 It also prints two things you will actually plan against: headcount per function
 versus your 180 and 650 caps, and **the size of the room block**, worked out under
-the sharing rules in `PLAN.md` §9a — couples doubled up two to a room, children
-folded in with their parents, teens four to a room, seniors two on the ground
-floor. It reports how many rooms need two double beds rather than two twins, how
-many rollaways to argue out of the bill, and which shortlisted venues hold the
-block.
+the sharing rules in `PLAN.md` §9a — couples doubled up two to a room, an elderly
+parent placed in with the couple who care for them rather than in a seniors'
+block, unmarried cousins three or four to a room. It reports how many rooms need
+two double beds rather than two twins, how many rollaways to argue out of the
+bill, and which shortlisted venues hold the block.
+
+Put a senior on the same `invite_id` as the family who look after them and they
+are roomed together automatically. That is both the right answer and about five
+rooms cheaper than a separate seniors' block.
 
 Households you never want doubled up with another family — both sets of parents,
 the very elderly, the newly married — get `no_share` set to `yes` on tab 1 and the
@@ -190,12 +194,12 @@ You can run the estimate before a single name exists, which is the point:
 
 ```bash
 python3 tools/check-guests.py --estimate \
-  --couples 32 --families-with-kids 14 --seniors 8 \
-  --single-adults 18 --teens 10 --friends 26 --local 0.12
+  --couples 34 --couples-with-parents 10 --seniors 4 \
+  --single-adults 44 --friends 32 --local 0.12
 ```
 
 Add `--density comfortable` to price one-couple-per-room instead, which on these
-numbers is 67 rooms against 50.
+numbers is 73 rooms against 52.
 
 **Then load it.** A passing check writes `guest-list-flat.csv` next to your
 export. That is the two tabs collapsed to one row per invitation, which is what
@@ -266,8 +270,16 @@ console will not save.
 ## Checking nothing is broken
 
 ```bash
+python3 tools/test-rooms.py   # the room-sharing rules from PLAN.md §9a
 python3 tools/cdp.py check    # 31 checks against a real headless browser
 python3 tools/cdp.py shots    # writes screenshots to /tmp/shots
 ```
 
-Needs Google Chrome installed. No other dependencies.
+`test-rooms.py` is worth running after any change to `check-guests.py`. It pins
+the decisions rather than the arithmetic — that an elderly parent stays in the
+same room as the family who care for them, that two unrelated seniors of
+different genders are never put together, and that both sets of parents are
+never doubled up with another family. Those are easy to optimise away by
+accident, because the room count improves when you do.
+
+The browser checks need Google Chrome. Nothing else has dependencies.

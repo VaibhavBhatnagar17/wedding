@@ -266,7 +266,6 @@ def plan_rooms(invites, people, density="dense"):
             continue
         ppl = list(people.get(iid, []))
 
-        # couples first — one room each, absorbing up to two of their children
         paired, seen = [], set()
         for p in ppl:
             if p["couple_with"] and p["name"] not in seen:
@@ -277,25 +276,63 @@ def plan_rooms(invites, people, density="dense"):
         rest = [p for p in ppl if p["name"] not in seen]
 
         kids = [p for p in rest if p["band"] in ("Infant", "Child")]
-        rest = [p for p in rest if p["band"] not in ("Infant", "Child")]
-        ki = 0
+        seniors = [p for p in rest if p["band"] == "Senior"]
+        rest = [p for p in rest if p["band"] not in ("Infant", "Child", "Senior")]
+
+        # Break the household into units that must not be split — a couple, or a
+        # senior travelling alone — then pack units into rooms of four adults.
+        # This is what puts a senior in with their own children rather than in a
+        # separate seniors' room: whoever helps them at 02:00 has to be in the
+        # room, and the same packing gives you parents plus their son and
+        # daughter-in-law as one four-adult room.
+        units, ki = [], 0
         for pair in paired:
             take = kids[ki:ki + 2]
             ki += len(take)
-            r = add("Couple" + (" + kids" if take else ""), pair + take, inv)
-            # A childless couple in an ordinary household is a candidate for
-            # being doubled up with another; everyone else is left alone.
-            r["pairable"] = (density == "dense" and not take
-                             and not inv["no_share"]
-                             and inv["group"] != "Immediate family")
+            units.append({"people": pair + take, "adults": 2,
+                          "senior": False, "couple": True})
+        for s in seniors:
+            units.append({"people": [s], "adults": 1,
+                          "senior": True, "couple": False})
         spare_kids = kids[ki:]
 
-        seniors = [p for p in rest if p["band"] == "Senior"]
-        rest = [p for p in rest if p["band"] != "Senior"]
-        for g in ("F", "M", ""):
-            same = [p for p in seniors if p["gender"] == g]
-            for j in range(0, len(same), 2):
-                add("Senior", same[j:j + 2], inv, ground=True)
+        bins = []
+        for u in sorted(units, key=lambda u: -u["adults"]):
+            for b in bins:
+                if b["adults"] + u["adults"] > 4:
+                    continue
+                # A lone senior joins a room that has a couple in it to look
+                # after them, or another senior of the same gender — never a
+                # stranger of the opposite one.
+                if u["senior"] and not any(x["couple"] for x in b["units"]):
+                    others = [x["people"][0] for x in b["units"] if x["senior"]]
+                    if any(o["gender"] != u["people"][0]["gender"] for o in others):
+                        continue
+                b["units"].append(u)
+                b["adults"] += u["adults"]
+                break
+            else:
+                bins.append({"units": [u], "adults": u["adults"]})
+
+        for b in bins:
+            occ = [p for u in b["units"] for p in u["people"]]
+            couples = sum(1 for u in b["units"] if u["couple"])
+            elders = sum(1 for u in b["units"] if u["senior"])
+            if couples >= 2:
+                kind = "Two couples"
+            elif couples and elders:
+                kind = "Couple + parent" + ("s" if elders > 1 else "")
+            elif couples:
+                kind = "Couple + kids" if len(occ) > 2 else "Couple"
+            else:
+                kind = "Senior"
+            r = add(kind, occ, inv, ground=bool(elders))
+            # A childless couple on its own is the only thing worth doubling up
+            # with another family. Anything holding a senior stays put.
+            r["pairable"] = (density == "dense" and b["adults"] == 2
+                             and not elders and len(occ) == 2
+                             and not inv["no_share"]
+                             and inv["group"] != "Immediate family")
 
         if spare_kids:
             # A child with no parent's room to fold into needs an adult with them.
@@ -552,6 +589,11 @@ def estimate(a):
         kids = [("Child", "M"), ("Child", "F")][:a.kids_per_family]
         household("Extended family", i < round(a.families_with_kids * stay),
                   pair + kids, couple=True)
+    # A couple travelling with an elderly parent they look after. One room of
+    # three, on the ground floor — not a couple's room plus a seniors' room.
+    for i in range(a.couples_with_parents):
+        household("Extended family", i < round(a.couples_with_parents * stay),
+                  pair + [("Senior", "F" if i % 2 else "M")], couple=True)
     for i in range(a.seniors):
         household("Extended family", i < round(a.seniors * stay),
                   [("Senior", "F" if i % 2 else "M")])
@@ -605,7 +647,11 @@ if __name__ == "__main__":
     ap.add_argument("--couples", type=int, default=0, help="married couples travelling without children")
     ap.add_argument("--families-with-kids", type=int, default=0, help="couples bringing children")
     ap.add_argument("--kids-per-family", type=int, default=2, choices=[1, 2])
-    ap.add_argument("--seniors", type=int, default=0, help="seniors not part of a couple above")
+    ap.add_argument("--couples-with-parents", type=int, default=0,
+                    help="couples travelling with an elderly parent they care for — "
+                         "one ground-floor room of three, not two rooms")
+    ap.add_argument("--seniors", type=int, default=0,
+                    help="seniors travelling with nobody to look after them")
     ap.add_argument("--single-adults", type=int, default=0, help="unmarried adult relatives")
     ap.add_argument("--teens", type=int, default=0, help="12–17, travelling without parents")
     ap.add_argument("--friends", type=int, default=0, help="friends and colleagues")

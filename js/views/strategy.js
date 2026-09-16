@@ -31,7 +31,7 @@ window.W = window.W || {}; W.views = W.views || {};
       ]),
       el('div', { class: 'qa' }, [
         el('b', { text: 'Guest rooms are blocked, not bought' }),
-        el('span', { html: 'Fifty rooms for two nights is ₹7 lakh on its own. Standard destination practice: negotiate a block rate, guests pay their own, you cover immediate family and VIPs. This plan budgets ten host-paid rooms. <strong>Doubling couples up two to a room is what takes the block from 67 rooms to 50</strong> — but four adults need a room with two double beds, not two twins, so that count has to be confirmed in writing before you sign.' })
+        el('span', { html: 'Fifty-two rooms for two nights is ₹7.3 lakh on its own. Standard destination practice: negotiate a block rate, guests pay their own, you cover immediate family and VIPs. This plan budgets ten host-paid rooms. <strong>Doubling couples up, and putting each elderly parent in with the family who care for them, is what takes the block from 73 rooms to 52</strong> — but four adults need a room with two double beds, not two twins, so that count has to be confirmed in writing before you sign.' })
       ]),
       el('div', { class: 'qa' }, [
         el('b', { text: 'The engagement merges into the sangeet evening' }),
