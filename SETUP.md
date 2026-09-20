@@ -218,6 +218,41 @@ Keep the sheet as the source of truth and repeat this whenever it changes. Once
 rooms and tables are allotted, edit those directly in the Table Editor — the
 guest sees it the next time they open their page, with no deploy.
 
+### Working out who is actually related to whom
+
+The guest list above is about invitations. Before that there is a prior question —
+who exists and how are they connected — and for a family that runs to three
+generations a flat list cannot answer it. `tools/templates/family-tree.csv` is the
+shape that can:
+
+| column | values |
+| --- | --- |
+| `id` | `F2-03` — family prefix and a sequence. **Never reuse or renumber one**, because every link points at it. Renaming a person is free, which matters while half the names are still "Shubham's Father" |
+| `name` | as you know them today; placeholders are fine |
+| `side` | `Groom` or `Bride` |
+| `family` | free text, your own grouping |
+| `gender` | `M` or `F` |
+| `age` | a number. Within five years is fine — it only has to land on the right side of 18 and 70 |
+| `spouse_id` | the id of their husband or wife, **set on both rows** |
+| `parent_id` | the id of **one** parent, whichever is the blood relative. The spouse link supplies the other, so a couple is never typed twice. Blank for the eldest generation and for anyone who married in |
+| `relation` | plain English, for your reading only — "Groom's chachi" |
+| `notes` | anything |
+
+Linking by `id` rather than by name is the whole trick. It means row order stops
+mattering, a person can be a child in one family and a spouse in another, and
+correcting a name never breaks anything.
+
+```bash
+python3 tools/check-family.py tools/templates/family-tree.csv
+```
+
+That draws the sheet back as a tree, which is the point — a wrong `parent_id` is
+invisible in a spreadsheet and obvious in a tree. It also catches the things that
+would quietly corrupt the list: duplicate ids, a `spouse_id` set on one row but
+not the other, a `parent_id` pointing at a deleted row, and loops. At the end it
+reports how many people still have no gender, since rooms cannot be shared out
+without it.
+
 ### Step 5 — add the photo albums
 
 As the photographers deliver, put the shared album links in the `albums` table:

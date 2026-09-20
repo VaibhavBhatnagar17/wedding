@@ -1,61 +1,61 @@
-Name,Family,Spouse,Child of,Gender,Age,Notes
-Dinesh Bhatnagar,Family 1 — Dinesh,Minakshi Bhatnagar,,Male,63,
-Minakshi Bhatnagar,Family 1 — Dinesh,Dinesh Bhatnagar,,Female,59,
-Anant Bhatnagar,Family 1 — Dinesh,,Dinesh Bhatnagar,Male,30,
-Mahima Bhatnagar,Family 1 — Dinesh,,Dinesh Bhatnagar,Female,28,
-Ved Prakash Bhatnagar,Family 2 — Ved Prakash,Kamla Srivastava,,Male,,Groom's father
-Kamla Srivastava,Family 2 — Ved Prakash,Ved Prakash Bhatnagar,,Female,,Groom's mother
-Vaibhav Bhatnagar,Family 2 — Ved Prakash,Mahak Kalra,Ved Prakash Bhatnagar,Male,29,THE GROOM — was missing from your sheet
-Pratichee Bhatnagar,Family 2 — Ved Prakash,Shubham Saxena,Ved Prakash Bhatnagar,Female,,Groom's sister — confirm
-Shubham Saxena,Family 2 — Ved Prakash,Pratichee Bhatnagar,Shubham's Father,Male,,Married in
-Diti Bhatnagar,Family 2 — Ved Prakash,,Pratichee Bhatnagar,,,Gender and age needed
-Shubham's Father,Family 2 — Ved Prakash,Shubham's Mother,,Male,,Real name needed
-Shubham's Mother,Family 2 — Ved Prakash,Shubham's Father,,Female,,Real name needed
-Subham's Sister,Family 2 — Ved Prakash,,Shubham's Father,Female,,Real name needed
-Vinay Bhatnagar,Family 3 — Vinay,Kusum Bhatnagar,,Male,,
-Kusum Bhatnagar,Family 3 — Vinay,Vinay Bhatnagar,,Female,,
-Shanu Bhatnagar,Family 3 — Vinay,Nimit Bhatnagar,Vinay Bhatnagar,,,Assumed Shanu is Vinay's child and Nimit married in — swap if it is the other way round
-Nimit Bhatnagar,Family 3 — Vinay,Shanu Bhatnagar,,,,Married in — see above
-Gauransh Bhatnagar,Family 3 — Vinay,,Shanu Bhatnagar,,,
-Vedansh Bhatnagar,Family 3 — Vinay,,Shanu Bhatnagar,,,
-Mayank Bhatnagar,Family 3 — Vinay,,,,,"WHOSE CHILD? Vinay and Kusum's son, or Shanu and Nimit's third?"
-Umesh Bhatnagar,Family 4 — Umesh,Sunita Bhatnagar,,Male,,
-Sunita Bhatnagar,Family 4 — Umesh,Umesh Bhatnagar,,Female,,
-Priyanka Srivastava,Family 4 — Umesh,,Umesh Bhatnagar,Female,,Surname suggests she is married — add her husband as a row
-Aashi Dhingra,Family 4 — Umesh,Shivam Dhingra,Umesh Bhatnagar,Female,,Confirm she is Umesh's daughter
-Shivam Dhingra,Family 4 — Umesh,Aashi Dhingra,,Male,,Married in
-Aarna Srivastava,Family 4 — Umesh,,,,,WHOSE CHILD? Listed under the Dhingras but a Srivastava — Priyanka's?
-Mannu Bhatnagar,Family 4 — Umesh,,,,,WHOSE CHILD? Listed under the Dhingras but a Bhatnagar — Umesh's?
-Pradeep Bhatnagar,Family 5 — Pradeep,,,,,Spouse and Child of still to fill
-Choti Taiji,Family 5 — Pradeep,,,,,
-Ena Saxena,Family 5 — Pradeep,,,,,
-Amit Saxena,Family 5 — Pradeep,,,,,
-Shubh Saxena,Family 5 — Pradeep,,,,,
-Eti Saxena,Family 5 — Pradeep,,,,,
-Tina Bhatnagar,Family 5 — Pradeep,,,,,
-Yogesh Bhatnagar,Family 5 — Pradeep,,,,,
-Vedika Bhatnagar,Family 5 — Pradeep,,,,,
-Shakti Bhatnagar,Family 5 — Pradeep,,,,,
-Naina Bhatnagar,Family 6 — Naina,,,,,Spouse and Child of still to fill
-Richa Bhatnagar,Family 6 — Naina,,,,,
-Ravi Kant Bhatnagar,Family 7 — Ravi Kant,,,,,Spouse and Child of still to fill
-Badi taiji,Family 7 — Ravi Kant,,,,,
-Somesh Bhatnagar,Family 7 — Ravi Kant,,,,,
-Anisha Bhatnagar,Family 7 — Ravi Kant,,,,,
-Tatya Bhatnagar,Family 7 — Ravi Kant,,,,,
-Aki Bhatnagar,Family 7 — Ravi Kant,,,,,
-Mona Bhatnagar,Family 7 — Ravi Kant,,,,,
-Rupesh Bhatnagar,Family 7 — Ravi Kant,,,,,
-Sparsh Bhatnagar,Family 7 — Ravi Kant,,,,,
-Girdhar Srivastava,Family 8 — Girdhar,,,,,Spouse and Child of still to fill
-Neeta Srivastava,Family 8 — Girdhar,,,,,
-Raja Srivastava,Family 8 — Girdhar,,,,,
-Shipli Srivastava,Family 8 — Girdhar,,,,,
-Shishir Srivastava,Family 8 — Girdhar,,,,,
-Billu Mama,Family 9 — Billu Mama,,,,,Spouse and Child of still to fill
-Mami,Family 9 — Billu Mama,,,,,
-Abhi Srivastava,Family 9 — Billu Mama,,,,,
-Gunjan Srivastava,Family 9 — Billu Mama,,,,,
-Kishore Kalra,Family 10 — Kalra (bride's side),Riya Kalra,,Male,,Bride's father
-Riya Kalra,Family 10 — Kalra (bride's side),Kishore Kalra,,Female,,Bride's mother
-Mahak Kalra,Family 10 — Kalra (bride's side),Vaibhav Bhatnagar,Kishore Kalra,Female,27,"THE BRIDE — her whole side is still missing, this is just the shape"
+id,name,side,family,gender,age,spouse_id,parent_id,relation,notes
+F1-01,Dinesh Bhatnagar,Groom,Family 1 — Dinesh,M,63,F1-02,,,
+F1-02,Minakshi Bhatnagar,Groom,Family 1 — Dinesh,F,59,F1-01,,,
+F1-03,Anant Bhatnagar,Groom,Family 1 — Dinesh,M,30,,F1-01,,
+F1-04,Mahima Bhatnagar,Groom,Family 1 — Dinesh,F,28,,F1-01,,
+F2-01,Ved Prakash Bhatnagar,Groom,Family 2 — Ved Prakash,M,,F2-02,,Groom's father,
+F2-02,Kamla Srivastava,Groom,Family 2 — Ved Prakash,F,,F2-01,,Groom's mother,
+F2-03,Vaibhav Bhatnagar,Groom,Family 2 — Ved Prakash,M,29,K1-03,F2-01,The groom,Was missing from your sheet entirely
+F2-04,Pratichee Bhatnagar,Groom,Family 2 — Ved Prakash,F,,F2-05,F2-01,Groom's sister,Confirm
+F2-05,Shubham Saxena,Groom,Family 2 — Ved Prakash,M,,F2-04,F2-07,Groom's brother-in-law,
+F2-06,Diti Bhatnagar,Groom,Family 2 — Ved Prakash,,,,F2-04,Groom's niece,Gender and age needed
+F2-07,Shubham's Father,Groom,Family 2 — Ved Prakash,M,,F2-08,,Pratichee's father-in-law,Real name needed
+F2-08,Shubham's Mother,Groom,Family 2 — Ved Prakash,F,,F2-07,,Pratichee's mother-in-law,Real name needed
+F2-09,Subham's Sister,Groom,Family 2 — Ved Prakash,F,,,F2-07,,Real name needed
+F3-01,Vinay Bhatnagar,Groom,Family 3 — Vinay,M,,F3-02,,,
+F3-02,Kusum Bhatnagar,Groom,Family 3 — Vinay,F,,F3-01,,,
+F3-03,Shanu Bhatnagar,Groom,Family 3 — Vinay,,,F3-04,F3-01,,Assumed Shanu is Vinay's child and Nimit married in — swap parent_id if reversed
+F3-04,Nimit Bhatnagar,Groom,Family 3 — Vinay,,,F3-03,,,Married in — see above
+F3-05,Gauransh Bhatnagar,Groom,Family 3 — Vinay,,,,F3-03,,
+F3-06,Vedansh Bhatnagar,Groom,Family 3 — Vinay,,,,F3-03,,
+F3-07,Mayank Bhatnagar,Groom,Family 3 — Vinay,,,,,,DECIDE: parent_id is F3-01 (Vinay's son) or F3-03 (Shanu's third child)?
+F4-01,Umesh Bhatnagar,Groom,Family 4 — Umesh,M,,F4-02,,,
+F4-02,Sunita Bhatnagar,Groom,Family 4 — Umesh,F,,F4-01,,,
+F4-03,Priyanka Srivastava,Groom,Family 4 — Umesh,F,,,F4-01,,Surname suggests she is married — add her husband as a new row and set spouse_id both ways
+F4-04,Aashi Dhingra,Groom,Family 4 — Umesh,F,,F4-05,F4-01,,Confirm she is Umesh's daughter
+F4-05,Shivam Dhingra,Groom,Family 4 — Umesh,M,,F4-04,,,Married in
+F4-06,Aarna Srivastava,Groom,Family 4 — Umesh,,,,,,DECIDE: listed under the Dhingras but a Srivastava — is parent_id F4-03?
+F4-07,Mannu Bhatnagar,Groom,Family 4 — Umesh,,,,,,DECIDE: listed under the Dhingras but a Bhatnagar — is parent_id F4-01?
+F5-01,Pradeep Bhatnagar,Groom,Family 5 — Pradeep,M,,F5-02,,,Spouse inferred from the name
+F5-02,Choti Taiji,Groom,Family 5 — Pradeep,F,,F5-01,,,Spouse inferred from the name
+F5-03,Ena Saxena,Groom,Family 5 — Pradeep,,,,,,
+F5-04,Amit Saxena,Groom,Family 5 — Pradeep,M,,,,,
+F5-05,Shubh Saxena,Groom,Family 5 — Pradeep,,,,,,
+F5-06,Eti Saxena,Groom,Family 5 — Pradeep,,,,,,
+F5-07,Tina Bhatnagar,Groom,Family 5 — Pradeep,F,,,,,
+F5-08,Yogesh Bhatnagar,Groom,Family 5 — Pradeep,M,,,,,
+F5-09,Vedika Bhatnagar,Groom,Family 5 — Pradeep,F,,,,,
+F5-10,Shakti Bhatnagar,Groom,Family 5 — Pradeep,,,,,,
+F6-01,Naina Bhatnagar,Groom,Family 6 — Naina,F,,,,,parent_id still to fill
+F6-02,Richa Bhatnagar,Groom,Family 6 — Naina,F,,,,,
+F7-01,Ravi Kant Bhatnagar,Groom,Family 7 — Ravi Kant,M,,F7-02,,,Spouse inferred from the name
+F7-02,Badi taiji,Groom,Family 7 — Ravi Kant,F,,F7-01,,,Spouse inferred from the name
+F7-03,Somesh Bhatnagar,Groom,Family 7 — Ravi Kant,M,,,,,
+F7-04,Anisha Bhatnagar,Groom,Family 7 — Ravi Kant,F,,,,,
+F7-05,Tatya Bhatnagar,Groom,Family 7 — Ravi Kant,,,,,,
+F7-06,Aki Bhatnagar,Groom,Family 7 — Ravi Kant,,,,,,
+F7-07,Mona Bhatnagar,Groom,Family 7 — Ravi Kant,F,,,,,
+F7-08,Rupesh Bhatnagar,Groom,Family 7 — Ravi Kant,M,,,,,
+F7-09,Sparsh Bhatnagar,Groom,Family 7 — Ravi Kant,,,,,,
+F8-01,Girdhar Srivastava,Groom,Family 8 — Girdhar,M,,F8-02,,,Spouse inferred from the name
+F8-02,Neeta Srivastava,Groom,Family 8 — Girdhar,F,,F8-01,,,Spouse inferred from the name
+F8-03,Raja Srivastava,Groom,Family 8 — Girdhar,M,,,,,
+F8-04,Shipli Srivastava,Groom,Family 8 — Girdhar,F,,,,,
+F8-05,Shishir Srivastava,Groom,Family 8 — Girdhar,M,,,,,
+F9-01,Billu Mama,Groom,Family 9 — Billu Mama,M,,F9-02,,Groom's maternal uncle,Spouse inferred from the name
+F9-02,Mami,Groom,Family 9 — Billu Mama,F,,F9-01,,Groom's maternal aunt,Spouse inferred from the name
+F9-03,Abhi Srivastava,Groom,Family 9 — Billu Mama,M,,,,,
+F9-04,Gunjan Srivastava,Groom,Family 9 — Billu Mama,,,,,,
+K1-01,Kishore Kalra,Bride,Family 10 — Kalra,M,,K1-02,,Bride's father,
+K1-02,Riya Kalra,Bride,Family 10 — Kalra,F,,K1-01,,Bride's mother,
+K1-03,Mahak Kalra,Bride,Family 10 — Kalra,F,27,F2-03,K1-01,The bride,Her whole side is still missing — this is just the shape to copy
