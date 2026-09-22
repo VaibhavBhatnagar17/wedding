@@ -35,6 +35,26 @@ The palette is maroon, sindoor red, saffron, marigold and gold — a shaadi joda
 not a Mughal one. Colours live in `assets/css/tokens.css` and nowhere else, so
 the whole site re-tints from that one file.
 
+The layout is editorial rather than centred. Every size on the page comes from
+one fluid scale in `tokens.css`, topping out around 9rem, because the page has no
+photography and the headlines have to do that work instead. Section heads set
+their title large and left against a hairline rule with an index number in the
+margin, and the standfirst in the opposite column — centring all of them was what
+made the page read as one flat band after another. The four function cards sit on
+a twelve-column bento in 4/8 then 8/4 widths, so they fill two rows rather than
+leaving a stranded fourth. A fixed film-grain layer over everything keeps the
+large flat fills from looking machine-made.
+
+Motion is tied to meaning rather than sprinkled on. The two script names are
+revealed by an ink wipe that uncovers them left to right, since the face joins
+its letters and cutting it into characters breaks the joins; the display-face
+headings, which have separated letterforms, do split and rise character by
+character. The running order draws its own rail as you scroll it, using native
+CSS `animation-timeline`. That last one is additive only: it is about 85% of
+browsers and Firefox still has it behind a flag, so it sits inside an
+`@supports (animation-timeline: scroll())` block and the rail simply stays fully
+drawn everywhere else.
+
 The doors are layered rather than drawn as one image: the wood gradient, the
 tiled lattice and the gold frame are CSS, and only the arch and the medallion are
 SVG, each with `preserveAspectRatio="…meet"`. That is deliberate — a single
@@ -133,14 +153,17 @@ Netlify, Vercel or Cloudflare Pages. Step-by-step instructions are in
 Two layers, neither needing any installed packages.
 
 ```sh
-# 63 unit checks — no browser
+# 74 unit checks — no browser
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tools/smoke-test.js
 
-# 31 checks in a real headless Chrome
+# 55 checks in a real headless Chrome
 python3 tools/cdp.py check
 
 # screenshots of every page, desktop and mobile, into /tmp/shots
 python3 tools/cdp.py shots
+
+# one section at a time, framed and full-height — for judging type and spacing
+python3 tools/cdp.py zoom
 ```
 
 The unit tests cover the budget still summing to ₹20,00,000, per-plate figures
@@ -153,5 +176,10 @@ zero guests, twenty and four hundred.
 The browser tests drive a real Chrome over the DevTools protocol: they tap the
 doors open, type a number into the portal, check an unknown number is refused
 and a real one loads the right guest, save an RSVP, and assert that no element
-is ever left invisible by a failed animation. `tools/cdp.py` is a small
-from-scratch WebSocket and CDP client, so there is nothing to install.
+is ever left invisible by a failed animation. They also hold the layout in
+place: that the four function cards pair into two even rows rather than leaving
+an orphan, that section heads stay asymmetric and at display scale, that split
+headings keep an `aria-label` while their characters stay hidden from assistive
+tech, that the script names are wiped rather than cut into characters, and that
+neither page scrolls sideways at 360px. `tools/cdp.py` is a small from-scratch
+WebSocket and CDP client, so there is nothing to install.

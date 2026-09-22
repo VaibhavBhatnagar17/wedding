@@ -72,8 +72,44 @@ window.W = window.W || {};
     el.dataset.split = 'done';
   }
 
+  /* Per-character splitting, for the display face only. Cinzel has separated
+     letterforms so it survives being cut up; the script face does not, and gets
+     an ink wipe instead (see .names__n in invite.css). */
+  function splitChars(el) {
+    if (!el || el.dataset.splitDone === 'chars') return;
+    const text = el.textContent.trim();
+    /* A row of one-character spans reads as gibberish aloud, so the real string
+       goes on as a label and the pieces are taken out of the tree. */
+    el.setAttribute('aria-label', text);
+    el.textContent = '';
+    let i = 0;
+    text.split(/(\s+)/).forEach(function (chunk) {
+      if (!chunk) return;
+      if (/^\s+$/.test(chunk)) { el.appendChild(document.createTextNode(' ')); return; }
+      const word = document.createElement('span');
+      word.className = 'c-word';
+      word.setAttribute('aria-hidden', 'true');
+      chunk.split('').forEach(function (ch) {
+        const outer = document.createElement('span');
+        outer.className = 'c-out';
+        const inner = document.createElement('span');
+        inner.className = 'c-in';
+        inner.style.setProperty('--ci', String(i++));
+        inner.textContent = ch;
+        outer.appendChild(inner);
+        word.appendChild(outer);
+      });
+      el.appendChild(word);
+    });
+    el.dataset.splitDone = 'chars';
+  }
+
   function initSplit(root) {
-    (root || document).querySelectorAll('[data-split]').forEach(splitWords);
+    Array.prototype.slice.call((root || document).querySelectorAll('[data-split]'))
+      .forEach(function (el) {
+        if (el.getAttribute('data-split') === 'chars') splitChars(el);
+        else splitWords(el);
+      });
   }
 
   /* ---------------- falling marigold petals ---------------- */
@@ -329,7 +365,7 @@ window.W = window.W || {};
     reduced: reduced,
     boot: boot,
     initReveal: initReveal, applyStagger: applyStagger, initSplit: initSplit,
-    splitWords: splitWords,
+    splitWords: splitWords, splitChars: splitChars,
     petals: petals, tilt: tilt, initTilt: initTilt, initParallax: initParallax,
     initProgress: initProgress, openDoors: openDoors, rollTo: rollTo,
     initSmoothLinks: initSmoothLinks, initStickyNav: initStickyNav,

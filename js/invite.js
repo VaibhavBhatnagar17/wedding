@@ -120,6 +120,7 @@
         el('div', { class: 'fn__no', text: 'Function ' + String(i + 1).padStart(2, '0') }),
         el('h3', { class: 'fn__name', text: f.name }),
         el('div', { class: 'fn__tag', text: f.tagline }),
+        f.blurb ? el('p', { class: 'fn__blurb', text: f.blurb }) : null,
         rows,
         f.optional ? el('div', { class: 'fn__note', text: 'Optional and informal — for guests already in Udaipur.' }) : null
       ]));
@@ -182,11 +183,13 @@
       ['By train', '<strong>' + t.rail + '</strong><br>Pickups from the station too — just tell us your train and arrival time.'],
       ['By road', t.road + '<br>Parking is available at the venue.'],
       ['Weather &amp; packing', t.weather + '<br><strong>' + t.pack + '</strong>'],
-      ['Where to stay', 'You are staying with us — rooms are held for you at the wedding venue itself, so there is nothing for you to book.<br>Room details go out with the formal invitation, and your own room shows up on <a href="guest.html">your guest page</a> once it is allotted.'],
+      ['Where to stay', 'You are staying with us — rooms are held for you at the wedding venue itself, so there is nothing for you to book.<br>Room details go out with the formal invitation, and your own room shows up on <a href="guest.html">your guest page</a> once it is allotted.', 'half'],
       ['While you are here', WHILE_HERE, 'wide']
     ].forEach(function (c) {
+      // The four travel modes are short enough to sit four across; the two prose
+      // cards need a wider column or the lines wrap every four words.
       host.appendChild(el('div', {
-        class: 'info sweep' + (c[2] === 'wide' ? ' info--wide' : ''),
+        class: 'info sweep' + (c[2] ? ' info--' + c[2] : ''),
         'data-reveal': 'up', 'data-tilt': c[2] === 'wide' ? null : '5'
       }, [
         el('div', { class: 'tilt-sheen' }),

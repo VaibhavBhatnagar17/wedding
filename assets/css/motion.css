@@ -32,6 +32,33 @@ html.js-anim [data-split]:not(.is-revealed) .w-in { transform: translateY(105%) 
 }
 html.js-anim [data-split]:not(.is-revealed) { opacity: 1; }
 
+/* ---------- split characters ----------
+   Letters rise out of their own clipping box on a short stagger, so a heading
+   assembles itself instead of sliding in as one block. Words stay unbreakable
+   so a name never splits across two lines mid-letter. */
+
+.c-word { display: inline-block; white-space: nowrap; }
+.c-out { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .09em; }
+.c-in { display: inline-block; will-change: transform; }
+[data-split="chars"] .c-in {
+  transition: transform 1s var(--ease-out);
+  transition-delay: calc(var(--ci) * 28ms);
+}
+html.js-anim [data-split="chars"]:not(.is-revealed) .c-in {
+  transform: translateY(110%) rotate(3deg);
+}
+
+/* ---------- ink wipe, for the script names ----------
+   The script face joins its letters, so it is revealed by uncovering the word
+   left to right — like it is being written — rather than by splitting it. */
+
+[data-reveal="ink"] { transition: clip-path 1.6s var(--ease-out), opacity .6s linear; }
+html.js-anim [data-reveal="ink"]:not(.is-revealed) {
+  clip-path: inset(-18% 102% -18% -4%);
+  opacity: 1;
+}
+html.js-anim [data-reveal="ink"].is-revealed { clip-path: inset(-18% -4% -18% -4%); }
+
 /* ---------- the gate (jharokha doors) ---------- */
 
 body.is-locked { overflow: hidden; }
@@ -281,7 +308,8 @@ html.gate-open .hero .card-invite {
     clip-path: none !important; filter: none !important;
   }
   html.js-anim [data-split]:not(.is-revealed) .w-in { transform: none !important; }
-  .gate__door, [data-reveal], [data-tilt] { transition: none !important; }
+  html.js-anim [data-split="chars"]:not(.is-revealed) .c-in { transform: none !important; }
+  .gate__door, [data-reveal], [data-tilt], .c-in { transition: none !important; }
   .spin-slow, .spin-slow-rev, .float, .garland .strand,
   .gate__ring, .gate__hint, .gold-shimmer { animation: none !important; }
   .sweep:hover::after { animation: none !important; }
