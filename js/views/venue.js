@@ -63,7 +63,7 @@ W.views.venue = function () {
 
   /* shortlist */
   wrap.appendChild(UI.panel('Shortlist', {
-    sub: 'The right <em>tier</em> for ₹20 lakh with a 650-guest reception. February 2027 is peak season — treat this as a call list, not a price list, and verify every rate yourself.',
+    sub: 'Call list for a block of about 50–60 rooms, checked against each hotel’s own site on 6 Oct 2026. The workbook <em>venues/udaipur-resorts-1-2-feb-2027.xlsx</em> has the sources. February 2027 prices are not published — the yellow columns in that file are where a quote goes.',
     flush: true
   }, UI.table([
     { key: 'name', label: 'Property', render: function (r) { return el('span', { class: 'nm', text: r.name }); } },
@@ -88,8 +88,8 @@ W.views.venue = function () {
   wrap.appendChild(UI.panel('Deliberately not on the shortlist', {}, [
     el('p', { html: 'Being straight with you about what ₹20 lakh cannot buy in Udaipur, so you do not lose weeks discovering it:' }),
     el('ul', { class: 'ul-clean' }, [
-      el('li', { class: 'na', html: '<strong>Taj Lake Palace, Oberoi Udaivilas, The Leela, Raffles</strong> — a wedding of this size starts at ₹1 crore and up.' }),
-      el('li', { class: 'na', html: '<strong>Trident, Ananta, The Westin, Fateh Garh</strong> — ₹35–70 lakh for 650 guests. Possible only for a single function with no rooms, which defeats the single-venue logic.' }),
+      el('li', { class: 'na', html: '<strong>Taj Lake Palace (83 keys), The Leela Palace (83), Raffles (137), Oberoi Udaivilas</strong> — palace hotels. None is a 50–60 room property, and none has published a price for these dates. They sit outside a ₹20 lakh plan.' }),
+      el('li', { class: 'na', html: '<strong>Ananta (244 keys), Radisson Blu (about 240), Trident (about 141 on a booking site)</strong> — a 50-room block here means sharing the resort. Shikarbadi has 25 keys and Shiv Niwas 36, so they cannot house the block at all.' }),
       el('li', { class: 'na', html: '<strong>Any hotel banquet at ₹1,400+ per plate</strong> — at 1,130 covers that is ₹15.8 lakh in food alone.' })
     ]),
     el('p', { style: 'margin-bottom:0', html: 'What you lose is a brand name and room luxury. What you keep is the Aravalli backdrop, the lake light and a garden setting that photographs better than most five-stars anywhere else in the country.' })

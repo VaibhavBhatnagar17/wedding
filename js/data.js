@@ -307,14 +307,16 @@ window.W = window.W || {};
       'Décor: in-house or preferred decorator, no outside-vendor entry fee'
     ],
     shortlist: [
-      { name: 'Labh Garh Palace Resort', zone: 'Eklingji Road', capacity: '1000+', rooms: '~100', note: 'The classic fit for this exact budget tier' },
-      { name: 'Shouryagarh Resort & Spa', zone: 'Sisarma', capacity: '~800', rooms: '82', note: 'Aravalli backdrop' },
-      { name: 'Bhairavgarh Palace', zone: 'Ahar', capacity: '~700', rooms: '~45', note: 'Strong heritage look' },
-      { name: 'Ramada Udaipur Resort & Spa', zone: 'Kodiyat / Sisarma', capacity: '~800', rooms: '~90', note: 'Reliable banquet operation' },
-      { name: 'The Lalit Laxmi Vilas Palace', zone: 'Fateh Sagar', capacity: '~800', rooms: '55', note: 'Heritage — likely top of your range' },
-      { name: 'Justa Rajputana Resort', zone: 'Bedla', capacity: '~600', rooms: '65', note: 'Tight for 650, check seated count' },
-      { name: 'Chunda Palace / Shikarbadi', zone: 'Bedla / Goverdhan Vilas', capacity: '500–800', rooms: '~60', note: 'Heritage character' },
-      { name: 'Vardhman Vatika / Vatika Gardens', zone: 'Bedla', capacity: '1000+', rooms: '—', note: 'Pure garden venue, own caterer allowed — cheapest per-plate route' }
+      { name: 'jüSTa Rajputana Resort', zone: 'Hiran Magri', capacity: 'Amber Lawn 22,000 sq ft; Darbar Hall 250 round-table', rooms: '54', note: 'Affordable: 4-star, rooms ₹3,500–5,200 online. Five lawns, and the hotel says select outside vendors are allowed.' },
+      { name: 'Padmini Bagh Resort', zone: 'Airport road', capacity: 'Lawn 21,000 sq ft; 3 halls, largest 13,000 sq ft', rooms: '57', note: 'Affordable: 4-star, rooms ₹5,000–5,500 for February dates. The hotel gives two different lawn capacities — ask.' },
+      { name: 'Rupis Resort', zone: 'Dabok, by the airport', capacity: 'Two lawns, 1,000+ seated each (listings); halls about 200', rooms: '70', note: 'Affordable: 3-star, standard room ₹2,000 + tax. Publishes 3- and 4-sharing rooms, which suits the room plan.' },
+      { name: 'Labh Garh Palace Resort', zone: 'Eklingji Road', capacity: 'Labh Vatika 1,000; Helipad Garden 2,500; Darbar Hall 350', rooms: '80', note: 'Affordable: 4-star, rooms ₹2,800–5,000 online. Hotel venue figures. TA 4.6.' },
+      { name: 'Oriental Palace Resort', zone: 'Subhash Nagar', capacity: 'Three lawns, 64,000 sq ft; two halls', rooms: '48', note: 'Affordable: 3-star, deluxe ₹3,999 with breakfast. In the city.' },
+      { name: 'jüSTa Ssatva Resort', zone: 'Savina', capacity: 'Urja Lawn 20,020 sq ft; Utsav Banquet 350', rooms: '50', note: 'Affordable: 4-star, ₹4,744 with tax on its site. Four family rooms.' },
+      { name: 'The Fern Residency Udaipur', zone: 'Hiran Magri', capacity: 'Lawn listed for 2,000; halls 100–150', rooms: '55', note: 'Affordable: 4-star tier, rooms ₹3,300–5,600. TA 4.7. Indoor space is small.' },
+      { name: 'Spectrum Resort', zone: 'NH-76, Kavita', capacity: 'Aravali Bagh 750 at banquet rounds; ballroom 350', rooms: '180', note: 'Affordable on rate (₹3,500–6,100), though one site sells it as 5-star. The only published seated-dinner figure above 650.' },
+      { name: 'Amargarh Resort', zone: 'NH-8, Sethji Ki Kundal', capacity: 'Ambar lawn 40,000 sq ft; Antilia hall up to 800', rooms: '53', note: 'Mid-range: 4-star but rooms ₹5,000–10,000. The hall for 800 is the most credible indoor rain plan for 650.' },
+      { name: 'The Royal Retreat Resort', zone: 'Badi Hawala Road', capacity: 'Queen\u2019s Garden and others; hall 550 round-table', rooms: '100+', note: 'Mid-range: 5-star, rooms ₹5,900–8,300, January its dearest month. The hall nearly covers a rainy reception.' }
     ],
     travel: {
       airport: 'Maharana Pratap Airport (UDR), Dabok — 22 km, 40 min',

@@ -48,12 +48,20 @@ NO = {"", "n", "no", "false", "0"}
 CAPS = {"core": 180, "reception": 650}
 GUARANTEES = {"core": 170, "reception": 600}
 
-# Rooms at the shortlisted venues, so the estimate lands as a decision.
+# Published room counts for the first ten calls on the shortlist, as of 6 Oct
+# 2026. This only answers "can the building hold the block". Whether the lawn
+# holds 650 is in venues/udaipur-resorts-1-2-feb-2027.xlsx.
 VENUE_ROOMS = [
-    ("Labh Garh Palace Resort", 100), ("Ramada Udaipur", 90),
-    ("Shouryagarh Resort & Spa", 82), ("Justa Rajputana", 65),
-    ("Chunda Palace / Shikarbadi", 60), ("The Lalit Laxmi Vilas", 55),
-    ("Bhairavgarh Palace", 45),
+    ("Oriental Palace", 48),
+    ("jüSTa Ssatva", 50),
+    ("Amargarh", 53),
+    ("jüSTa Rajputana", 54),
+    ("The Fern Residency", 55),
+    ("Padmini Bagh", 57),
+    ("Rupis", 70),
+    ("Labh Garh", 80),
+    ("The Royal Retreat", 100),
+    ("Spectrum", 180),
 ]
 
 # Most restrictive first — a household's flat diet has to be the safest one.
@@ -445,7 +453,8 @@ def report_rooms(rooms, staying, density):
             who = ", ".join(f"{p['name']} ({p['invite_id']})" for p in r["occupants"])
             print(f"      {DIM}{who}{OFF}")
 
-    print(f"\n{BOLD}Which venues fit{OFF}  {DIM}(+3 buffer rooms held back){OFF}")
+    print(f"\n{BOLD}Which buildings can hold the block{OFF}  {DIM}(+3 buffer rooms){OFF}")
+    print(f"  {DIM}Room count only. Lawn and hall sizes are on the resort sheet.{OFF}")
     need = len(rooms) + 3
     for name, n in VENUE_ROOMS:
         mark = f"{GRN}fits{OFF}" if n >= need else f"{RED}short by {need - n}{OFF}"

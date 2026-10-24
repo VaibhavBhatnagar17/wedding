@@ -17,7 +17,7 @@ Before anything else, be clear about what this budget can and cannot buy in peak
 Three structural choices, in order of impact:
 
 **(a) The venue must be a garden / mid-tier resort, not a palace.**
-A luxury property (Taj Lake Palace, Oberoi Udaivilas, Leela, Raffles) starts at ₹1Cr+. A premium resort (Trident, Ananta, Westin, Fateh Garh) runs ₹35–70L for a wedding of this size. Both are out. Your tier is a **heritage or mid-resort with a 700+ capacity lawn, or a marriage garden that permits your own caterer** — where ₹650–800/plate is genuinely achievable at volume. This is not a compromise on beauty; Udaipur's mid-tier properties have Aravalli backdrops and lake views that photograph better than most five-stars elsewhere. It *is* a compromise on brand name and room luxury.
+Palace hotels are a different product from this budget: Taj Lake Palace and The Leela Palace are 83 keys each, Raffles is 137, and Oberoi Udaivilas does not publish a total. Large resorts (Ananta 244, Radisson Blu about 240) can spare 50 rooms and will not feel like yours. None of them has published a price for 1–2 Feb 2027, so the old “₹1 crore / ₹35–70 lakh” bands are a planning judgement, not a quote. Your tier is a **heritage or mid-resort that can actually contract about 50–60 rooms and seat 650**, or a marriage garden that permits your own caterer — where ₹650–800/plate is the target to negotiate, not a rate anyone has confirmed. The worked comparison is `venues/udaipur-resorts-1-2-feb-2027.xlsx`. This is not a compromise on beauty; Udaipur's mid-tier properties have Aravalli backdrops and lake views that photograph better than most five-stars elsewhere. It *is* a compromise on brand name and room luxury.
 
 **(b) Guest rooms are blocked, not bought.**
 52 rooms × 2 nights is ₹7.3L on its own. Standard destination-wedding practice: you negotiate a block rate and guests pay their own rooms; the host covers only immediate family and VIPs. **This plan budgets 10 host-paid rooms** (₹60,000), assuming you extract 8–10 complimentary rooms against your ~₹8L F&B commitment. At 52 rooms rather than 115, host-paying a larger share is thinkable for the first time — 20 rooms is ₹2.8L. See §9a.
@@ -244,18 +244,26 @@ Dal Baati Churma, Gatte ki Sabzi, Ker Sangri, Papad ki Sabzi, Bajra and missi ro
 
 ## 9. Venue shortlist — verify every rate
 
-These are the right *tier* for your budget and capacity. Rates move constantly and Feb 2027 is peak; treat these as a call list, not a price list. Ask each for: lawn capacity seated, per-plate for 600 all-veg on a Tuesday, décor policy (in-house vs outside), room block rate with breakfast, complimentary rooms against F&B commitment, indoor backup capacity, and music cut-off policy.
+The working sheet is `venues/udaipur-resorts-1-2-feb-2027.xlsx`, checked 6 Oct 2026. Every shortlisted property publishes at least 40 rooms and both a garden and a banquet hall: 46 pass (22 affordable, 7 mid-range, 17 premium), 2 have disputed room counts, and the rest of the 166 names checked are on the rejected tab with the reason. A property is **affordable** when it is listed as 3- or 4-star, is not sold as 5-star, and its standard rooms usually go for under about ₹6,000 a night with tax on booking sites. Resorts sold as 5-star — The Royal Retreat, Ramee Royal, Daulatgarh among them — are mid-range or premium whatever a directory says their plate costs. Room rates were read on 6 Oct 2026 for ordinary dates; February is peak season, and KAYAK shows it as the dearest month at Bhairavgarh (about ₹15,800) and Fateh Vilas (about ₹15,300). February 2027 availability and prices are not published anywhere.
 
-| Property | Zone | Why it's on the list |
-|---|---|---|
-| Labh Garh Palace Resort | Eklingji Road | Large lawns (1000+), ~100 rooms — the classic fit for this exact budget tier |
-| Shouryagarh Resort & Spa | Sisarma | Lawn ~800, 82 rooms, Aravalli backdrop |
-| Bhairavgarh Palace | Ahar | Lawns ~700, ~45 rooms, strong heritage look |
-| Ramada Udaipur Resort & Spa | Kodiyat/Sisarma | Lawn ~800, reliable banquet operation |
-| The Lalit Laxmi Vilas Palace | Fateh Sagar | Heritage, lawn ~800 — likely at the top of your range |
-| Justa Rajputana Resort | Bedla | Lawn ~600, 65 rooms |
-| Chunda Palace / Shikarbadi | Bedla / Goverdhan Vilas | Heritage character, lawns 500–800 |
-| Vardhman Vatika / Vatika Gardens | Bedla | Pure garden venue, 1000+, your own caterer allowed — the cheapest per-plate route |
+Call in this order. “Seated” means a dinner with the mandap, dance floor and buffets already taken out.
+
+| Order | Band | Property | Rooms | What decides the call |
+|---|---|---|---|---|
+| 1 | Affordable | jüSTa Rajputana, Hiran Magri | 54 | 4-star; rooms ₹3,500–5,200. Five lawns (Amber 22,000 sq ft). Darbar Hall 250 round-table. |
+| 2 | Affordable | Padmini Bagh, airport road | 57 | 4-star; rooms ₹5,000–5,500 for February dates. 21,000 sq ft lawn; the largest hall is 13,000 sq ft. The hotel gives two lawn capacities. |
+| 3 | Affordable | Rupis, Dabok | 70 | 3-star; standard room ₹2,000 + tax on its site. Publishes 3- and 4-sharing rooms. Next to the airport. |
+| 4 | Affordable | Labh Garh, Eklingji Road | 80 | 4-star; rooms ₹2,800–5,000. Labh Vatika 1,000; Helipad Garden 2,500; Darbar Hall 350 (hotel figures). |
+| 5 | Affordable | Oriental Palace, Subhash Nagar | 48 | 3-star; deluxe ₹3,999 with breakfast on its site. Three lawns, 64,000 sq ft. |
+| 6 | Affordable | jüSTa Ssatva, Savina | 50 | 4-star; ₹4,744 with tax on its site. Urja Lawn 20,020 sq ft; Utsav Banquet 350. |
+| 7 | Affordable | The Fern Residency, Hiran Magri | 55 | 4-star tier; rooms ₹3,300–5,600. Lawn listed for 2,000; halls only 100–150. TA 4.7. |
+| 8 | Affordable | Spectrum, NH-76 | 180 | Class disputed (3-star on Hotwire, 5-star on Yatra); rooms ₹3,500–6,100. Aravali Bagh seats 750 at banquet rounds; ballroom 350. |
+| 9 | Mid-range | Amargarh, NH-8 | 53 | 4-star but rooms ₹5,000–10,000. 40,000 sq ft lawn; Antilia hall up to 800 — a real indoor rain plan. |
+| 10 | Mid-range | The Royal Retreat, Badi | 100+ | 5-star; rooms ₹5,900–8,300, January its dearest month. Hall seats 550 at round tables. |
+
+Fourteen more affordable properties are on the sheet: Bhairavgarh, Gold Nest Rubystone, Inder Residency, Mewar Palace, Aaram Baagh, Palm Valley by Skua World, Sterling Balicha, The Udai Bagh, Green Royal, Devi Palace, MD Valley, Hotel YOIS, Amantra Shilpi and Paras Mahal. The last three publish venues too small for a 650 reception, so they are room overflow or a smaller-function venue only.
+
+Indoor cover for a rainy 650 reception is published only at Amargarh (hall up to 800), Padmini Bagh (13,000 sq ft hall) and Royal Retreat (550 at round tables), and possibly Inder Residency (a listing says 1,000). Everywhere else it is an open question.
 
 **Target deal to chase:** F&B commitment of ~₹10L in exchange for waived lawn rental, 8–10 complimentary rooms, a guest block at ₹6,500–8,000 including breakfast, and free use of the second lawn so the mandap and reception don't have to share a space (which would force a brutal 3-hour décor flip on 2 Feb).
 
@@ -263,7 +271,7 @@ These are the right *tier* for your budget and capacity. Rates move constantly a
 
 ### 9a. The room block — 52 rooms, and who shares with whom
 
-On a core list of 180 with about 160 people staying over, and doubling couples up as agreed, the block is **52 rooms at 3.0 people each**. Every property on the shortlist except Bhairavgarh can hold that, so the room count no longer constrains the venue choice — the lawn does. Run `python3 tools/check-guests.py --estimate` with your own counts to see the number move; `--density comfortable` shows what one-couple-per-room would cost, which on these numbers is **73 rooms, twenty-one more**.
+On a core list of 180 with about 160 people staying over, and doubling couples up as agreed, the block is **52 rooms at 3.0 people each**. Of the first ten calls on the shortlist, eight publish 52 rooms or more. Oriental Palace (48) and jüSTa Ssatva (50) would need four and two rooms at a neighbouring hotel. Run `python3 tools/check-guests.py --estimate` with your own counts to see the number move; `--density comfortable` shows what one-couple-per-room would cost, which on these numbers is **73 rooms, twenty-one more**.
 
 Dense sharing is the right call here, and it comes with two conditions that are easy to miss and expensive to discover late.
 
