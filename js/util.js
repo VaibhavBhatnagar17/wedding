@@ -165,6 +165,16 @@ window.W = window.W || {};
     return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + 'T' + p(d.getHours()) + p(d.getMinutes()) + '00';
   }
 
+  /* An end time earlier than the start ("23:00" to "01:00") ends the next day. */
+  function endDateFor(dateISO, start, end) {
+    if (!end || end >= start) return dateISO;
+    const d = parseISO(dateISO);
+    d.setDate(d.getDate() + 1);
+    const p = function (n) { return String(n).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  /* e.alarm (minutes) adds a reminder that fires that long before the start. */
   function buildICS(events, calName) {
     const lines = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Vaibhav & Mahak//Wedding//EN',
@@ -175,10 +185,14 @@ window.W = window.W || {};
       lines.push('UID:' + (e.uid || uid('evt')) + '@vaibhav-mahak');
       lines.push('DTSTAMP:' + icsStamp(e.date, e.start) + 'Z');
       lines.push('DTSTART:' + icsStamp(e.date, e.start));
-      lines.push('DTEND:' + icsStamp(e.date, e.end || e.start));
+      lines.push('DTEND:' + icsStamp(endDateFor(e.date, e.start, e.end), e.end || e.start));
       lines.push('SUMMARY:' + icsText(e.title));
       if (e.location) lines.push('LOCATION:' + icsText(e.location));
       if (e.description) lines.push('DESCRIPTION:' + icsText(e.description));
+      if (e.alarm) {
+        lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER:-PT' + Number(e.alarm) + 'M',
+          'DESCRIPTION:' + icsText(e.title), 'END:VALARM');
+      }
       lines.push('END:VEVENT');
     });
     lines.push('END:VCALENDAR');
@@ -231,7 +245,7 @@ window.W = window.W || {};
     fmtDate: fmtDate, daysUntil: daysUntil, parseISO: parseISO, MONTHS: MONTHS, DAYS: DAYS,
     uid: uid, slug: slug,
     toCSV: toCSV, parseCSV: parseCSV, download: download,
-    buildICS: buildICS,
+    buildICS: buildICS, endDateFor: endDateFor,
     debounce: debounce, sum: sum, groupBy: groupBy, toast: toast
   };
 })(window.W);

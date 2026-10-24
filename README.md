@@ -24,12 +24,42 @@ Then open <http://localhost:8899/index.html>.
 
 ## The invitation
 
-It opens on a pair of carved doors that swing apart onto the invitation — an
-arch card with your names and both sets of parents in gold, marigold strands
-swaying overhead and petals drifting down. Below that: a live countdown, cards
-for all four functions, the full running order for both days, travel and packing
-notes, and an RSVP form. Guests can add every function to their phone calendar
-in one tap.
+It opens on a pair of carved jharokha doors sealed with a wax seal — the V·M
+monogram inside a ring of Mewar sun rays. Tapping it cracks the seal in two, a
+soft shehnai begins (with a pause button in the nav, remembered for next time),
+and the doors swing apart onto an arch card with your names and both sets of
+parents in gold. Below that, everything a guest needs, in this order:
+
+- **The programme** — all 22 events across 1–3 February, with time, place, what
+  to wear, "be seated by" times and who each is for. The eleven moments people
+  travel for each carry a Mewar-style miniature painting in a cusped Rajput arch.
+- **The venue** — a drone flight: a real 3D map (satellite imagery over
+  elevation data) that the guest flies by scrolling, from Lake Pichola past the
+  City Palace and Fateh Sagar, east over the Aravallis, down onto Hotel
+  Khumani's rooftop, where the painted hotel rises over the real one. Then the
+  address, directions, a call button, what happens where, and distances.
+- **Stay, travel and weather** — arrival and early-arrival rooms, checkout,
+  meals, pickups, routes by road, packing, and a live forecast that switches on
+  in the last two weeks (Open-Meteo, no key).
+- **What to wear** — five looks with colour swatches.
+- **Questions** — 18 answers with a search box that works in both scripts.
+- **Help desk** — tap-to-call hotel numbers, the nearest 24-hour hospital
+  (500 m) and 112.
+- **RSVP**, and a link to the guest's own page.
+
+The whole page switches between **English and Hindi** from the nav (or the gate)
+and remembers the choice. The Hindi is written, not machine-translated, and set
+properly: Devanagari is never letter-spaced or split into characters, because
+both break the headline the letters hang from.
+
+On the wedding days a **live ribbon** shows what is happening now and what is
+next, and highlights it in the programme. Try it with
+`index.html?open=1&now=2027-02-01T20:10`. The calendar file carries every event
+with a reminder 10–30 minutes before each key one — the main defence against
+people arriving late, along with published times that never overlap.
+
+The paintings are in `assets/art/`, the shehnai in `assets/audio/`, and the
+WhatsApp preview image is `assets/og.jpg`. Credits are in the footer.
 
 The palette is maroon, sindoor red, saffron, marigold and gold — a shaadi joda,
 not a Mughal one. Colours live in `assets/css/tokens.css` and nowhere else, so
@@ -40,10 +70,11 @@ one fluid scale in `tokens.css`, topping out around 9rem, because the page has n
 photography and the headlines have to do that work instead. Section heads set
 their title large and left against a hairline rule with an index number in the
 margin, and the standfirst in the opposite column — centring all of them was what
-made the page read as one flat band after another. The four function cards sit on
-a twelve-column bento in 4/8 then 8/4 widths, so they fill two rows rather than
-leaving a stranded fourth. A fixed film-grain layer over everything keeps the
-large flat fills from looking machine-made.
+made the page read as one flat band after another. In the programme the painted
+moments alternate either side of a gold thread on wide screens and stack along
+it on phones; meals and rest sit on the thread as small cards. A fixed
+film-grain layer over everything keeps the large flat fills from looking
+machine-made.
 
 Motion is tied to meaning rather than sprinkled on. The two script names are
 revealed by an ink wipe that uncovers them left to right, since the face joins
@@ -136,7 +167,11 @@ To turn on the "Send on WhatsApp" button, set `RSVP_WHATSAPP` at the top of
 
 ## Changing the plan
 
-All content is in **`js/data.js`** — couple details, functions, schedules, décor, menus, budget lines, venue shortlist, vendors, checklist, risks. Edit that one file and both pages update. No build, no restart.
+All content is in **`js/data.js`** — couple details, functions, décor, menus, budget lines, venue, vendors, checklist, risks — and above all **`programme`**, the single list of every event and its time. The invitation, the guest portal, the calendar file and the planner's run sheets all read it, so a time only ever changes in one place. Each entry has `[english, hindi]` text; `ops` holds a planner-only note that guests never see.
+
+The rest of the guest copy — stay, travel, the five looks, the questions, the help desk and the flight's waypoints — is in **`js/content.js`**, and the interface strings are in **`js/i18n.js`**, both in English and Hindi. The smoke test fails if a Hindi line is missing.
+
+`toConfirm` at the bottom of `data.js` lists what the site already publishes but you have not settled yet (the muhurat, help-desk numbers, which space each event uses). It shows on the planner dashboard; delete each line once it is confirmed.
 
 If you change budget amounts, keep the total at ₹20,00,000 or the dashboard will tell you it does not add up.
 
@@ -153,10 +188,10 @@ Netlify, Vercel or Cloudflare Pages. Step-by-step instructions are in
 Two layers, neither needing any installed packages.
 
 ```sh
-# 74 unit checks — no browser
+# 95 unit checks — no browser
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tools/smoke-test.js
 
-# 55 checks in a real headless Chrome
+# 82 checks in a real headless Chrome
 python3 tools/cdp.py check
 
 # screenshots of every page, desktop and mobile, into /tmp/shots
@@ -171,15 +206,28 @@ matching the budget lines, Indian number formatting, CSV round-trips through
 commas and quotes, the store's add/update/remove/import/backup paths, phone
 number normalisation, guest lookup (including that private notes never reach
 the portal), the Supabase export column names, and every screen rendering with
-zero guests, twenty and four hundred.
+zero guests, twenty and four hundred. They also hold the schedule to its rules:
+the programme is in time order, published times never overlap the moments
+guests must attend, each breakfast closes on paper before the next event, the
+bride has at least two and a half hours between the tel ceremony and the
+varmala, and planner notes never leak into guest text. Every guest-facing line
+must exist in both languages, and a completeness audit fails the build if any of
+27 questions a guest will ask — arrival, checkout, pickups, dress, meals, drinks,
+weather, children, elders, the hospital — has no answer on the site.
 
-The browser tests drive a real Chrome over the DevTools protocol: they tap the
-doors open, type a number into the portal, check an unknown number is refused
-and a real one loads the right guest, save an RSVP, and assert that no element
-is ever left invisible by a failed animation. They also hold the layout in
-place: that the four function cards pair into two even rows rather than leaving
-an orphan, that section heads stay asymmetric and at display scale, that split
+The browser tests drive a real Chrome over the DevTools protocol: they break the
+seal and open the doors, render all 22 events and load all eleven paintings,
+switch the page to Hindi and back, fake the clock to the evening of 1 February to
+check the live ribbon, fly the map to the hotel, read the calendar file for its
+reminders and the after-party's 1 am finish, type a number into the portal, check
+an unknown number is refused and a real one loads the right guest, save an RSVP,
+and assert that no element is ever left invisible by a failed animation. They
+also hold the layout in place: that the paintings alternate sides on a wide
+screen, that section heads stay asymmetric and at display scale, that split
 headings keep an `aria-label` while their characters stay hidden from assistive
 tech, that the script names are wiped rather than cut into characters, and that
-neither page scrolls sideways at 360px. `tools/cdp.py` is a small from-scratch
+neither page scrolls sideways at 360px. The names must be written by the scroll
+observer rather than its safety timer, and held behind the doors until they part.
+On the flight, no landmark label may sit on the caption or hang off an edge.
+`tools/cdp.py` is a small from-scratch
 WebSocket and CDP client, so there is nothing to install.

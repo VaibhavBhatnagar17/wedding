@@ -20,7 +20,7 @@ window.W = window.W || {};
     city: 'Udaipur, Rajasthan',
     weddingDate: '2027-02-02',
     pheraStart: '11:00',
-    pheraEnd: '13:30',
+    pheraEnd: '13:00',
     budgetTotal: 2000000,
     guestCountCore: 180,
     guestCountReception: 650,
@@ -33,41 +33,34 @@ window.W = window.W || {};
 
   /* ---------------- Functions ---------------- */
 
-  /* Schedule rows are [time, guestText, plannerNote].
-     guestText === null keeps the row off the invitation — those are pure vendor
-     beats (décor builds, makeup call times, lighting tests) that no guest should
-     have to read. plannerNote is the operational detail and shows only in the
-     private planner console. Write guestText as if a guest is reading it, because
-     they are. */
+  /* Four invitation groups. A guest is invited to a group (inv.haldi and so
+     on), and every programme event below that names the group belongs to it.
+     Pairs are [english, hindi]. `ops` rows are vendor beats no guest should
+     read; they only appear in the planner's run sheet, which is built from the
+     programme plus these rows at the bottom of this file. */
 
   const functions = [
     {
       id: 'haldi',
-      name: 'Haldi',
-      tagline: 'Marigold Morning',
-      blurb: 'A separate haldi for each of us first, then a joint one with dhol, a flower shower and a water-splash zone. Brunch counters stay open through it, so come hungry and wear something you do not mind staining.',
+      name: 'Haldi', nameHi: 'हल्दी',
+      tagline: 'Marigold Morning', taglineHi: 'गेंदे की सुबह',
+      blurb: 'A haldi for each of us, then one together, with dhol and a shower of flowers. Lunch is served right beside it, so come as you are.',
+      blurbHi: 'पहले हम दोनों की अलग-अलग हल्दी, फिर एक साथ — ढोल और फूलों की बौछार के साथ। भोजन वहीं पास में परोसा जाएगा, तो जैसे हैं वैसे ही आइए।',
       date: '2027-02-01',
-      start: '10:00',
-      end: '13:30',
-      area: 'Garden lawn / poolside',
+      start: '11:00',
+      end: '15:30',
+      area: 'The lawn, Hotel Khumani', areaHi: 'लॉन, होटल खुमानी',
       guests: 180,
-      dressCode: 'Yellow & marigold orange · cottons',
+      dressCode: 'Yellow & marigold orange · cottons', dressHi: 'पीला और गेंदा-नारंगी · सूती कपड़े',
       publicInvite: true,
       decorBudget: 35000,
       perPlate: 475,
       guarantee: 170,
       summary:
-        'Rooms open at 06:00 so everyone can shift in, eat and dress without rushing — which is why the haldi starts at 10:00 rather than 09:30. It stays a daylight brunch rather than a lunch: daylight means no lighting spend, and a brunch at ₹475 instead of a full lunch at ₹1,100 saves about ₹1.7 lakh on its own.',
-      schedule: [
-        ['06:00', 'Rooms open — check in, drop your bags, breakfast is already on'],
-        ['06:30', 'Chai, poha and breakfast counters on the lawn — open till 09:30'],
-        ['07:30', 'Ganesh Puja & Griha Shanti — immediate families, poolside'],
-        ['08:00', null, 'Welcome desk hands out keys in arrival order. 2 staff per 100 guests, luggage runners on standby, and a bag-hold counter for anyone whose room is not ready.'],
-        ['09:00', 'Time to change — yellows and oranges, and something you do not mind staining'],
-        ['10:00', 'Separate haldi for bride and groom'],
-        ['11:00', 'Joint haldi · dhol · flower shower · water-splash zone'],
-        ['12:00', 'Brunch counters open'],
-        ['13:30', 'Close — go rest, the evening is a long one']
+        'The hotel opens to our guests at 08:00, ten rooms are held from the night of 31 January for early arrivals, and the haldi starts at 11:00 so everyone can check in, eat and dress without rushing. Lunch is served beside the haldi lawn from 13:30, so nobody has to change first. The budget line still assumes a ₹475 brunch; a full lunch will cost more — re-cost it with the caterer.',
+      ops: [
+        ['08:00', 'Welcome desk hands out keys in arrival order. 2 staff per 100 guests, luggage runners on standby, and a bag-hold counter for anyone whose room is not ready.'],
+        ['15:30', 'Lawn reset for the evening: strip the haldi décor, build the stage, the folk-act floor and the dinner counters by 18:30.']
       ],
       decor: [
         'Marigold and genda torans throughout',
@@ -76,13 +69,12 @@ window.W = window.W || {};
         'Umbrella ceiling over the seating',
         'Tyre swing and dhol corner',
         'Hand-painted "Haldi" board',
-        'No lighting rig — it is a morning function'
+        'No lighting rig — it is a daylight function'
       ],
       menu: [
         'Kesar lassi, jaljeera, nimbu shikanji',
         'Chaat counter — raj kachori, dahi bhalla, papdi',
         'Live aloo tikki and chole bhature',
-        'Poha, upma, medu vada',
         '2 mains + dal + rice + live paratha counter',
         'Live jalebi-rabri, moong dal halwa',
         'Sweet paan'
@@ -90,32 +82,25 @@ window.W = window.W || {};
     },
     {
       id: 'sangeet',
-      name: 'Ring Ceremony & Sangeet',
-      tagline: 'Engagement and the big night, together',
-      blurb: 'The ring ceremony and the sangeet on one evening. A Kalbelia and Ghoomar act warms the floor up first, then the families dance, then the cousins, then the siblings \u2014 and after that the floor is open to everybody.',
+      name: 'Sagaai, Sangeet & After-party', nameHi: 'सगाई, संगीत और आफ़्टर-पार्टी',
+      tagline: 'One long, glorious night', taglineHi: 'एक लंबी, शानदार रात',
+      blurb: 'Kalbeliya and Ghoomar dancers open the evening, the rings are exchanged at eight, the families take the floor at nine, and the night carries on downstairs until one.',
+      blurbHi: 'कालबेलिया और घूमर से शाम की शुरुआत, आठ बजे सगाई, नौ बजे परिवारों का संगीत — और फिर रात एक बजे तक नीचे पार्टी।',
       date: '2027-02-01',
-      start: '18:30',
-      end: '00:30',
-      area: 'Main lawn, after-party in the banquet',
+      start: '19:00',
+      end: '01:00',
+      area: 'The lawn · underground banquet hall', areaHi: 'लॉन · अंडरग्राउंड बैंक्वेट हॉल',
       guests: 180,
-      dressCode: 'Fuchsia, marigold & gold · indo-western welcome',
+      dressCode: 'Fuchsia, marigold & gold · party wear after 11', dressHi: 'फ़ुशिया, गेंदा और सुनहरा · रात 11 के बाद पार्टी वियर',
       publicInvite: true,
       decorBudget: 45000,
       perPlate: 700,
       guarantee: 180,
       summary:
-        'The engagement is a 30-minute ring ceremony at 19:00 on the sangeet stage rather than a separate function. That single merge saves roughly ₹2.6 lakh — another dinner for 285, another décor setup, another venue slot — and it paces the evening better. The folk act now runs first, as a warm-up: a Kalbelia troupe that pulls people out of their chairs makes the family performances far easier to follow, because nobody wants to be the first one dancing in front of 180 seated relatives.',
-      schedule: [
-        ['18:30', 'Guest arrival · welcome drinks'],
-        ['19:00', 'RING CEREMONY — couple entry, ring exchange, blessings, cake'],
-        ['19:35', 'Kalbelia & Ghoomar folk act — 25 minutes, and they will pull you up to dance'],
-        ['20:00', 'Bar opens', 'Bar open 2 hours only. Brief the captain — soft close at 22:00.'],
-        ['20:10', 'Sangeet begins — the families, then the cousins, then the siblings'],
-        ['21:00', 'The couple perform'],
-        ['21:15', 'Dinner opens, in stages'],
-        ['21:40', 'Open floor — everybody dances'],
-        ['22:00', 'The night moves indoors to the banquet', 'Outdoor sound OFF at 22:00 — legal cut-off, no exceptions. Sound team shifts to the indoor rig by 21:45 so there is no gap.'],
-        ['00:30', 'Close']
+        'The folk act runs first, as a warm-up and as the buffer for anyone arriving late: a Kalbeliya troupe that pulls people out of their chairs makes the family performances far easier to follow. Sagaai at 20:00 with dinner opening alongside, the sangeet at 21:00, and the cocktail after-party moves indoors to the underground banquet hall at 23:00. The bar line in the budget still assumes two hours; the after-party runs two hours from 23:00 — re-cost the drinks.',
+      ops: [
+        ['17:00', 'Lighting test at 17:00 — sunset is 18:19, and you cannot aim a fixture in the dark.'],
+        ['22:30', 'Bar, DJ and late-night snacks ready in the underground banquet hall. Guests drift down after the last family performance.']
       ],
       decor: [
         'A lighting function, not a flower function',
@@ -125,7 +110,8 @@ window.W = window.W || {};
         '12×8 ft LED wall (~₹18k) — also the video screen and monogram display',
         'Fuchsia, marigold and gold drapes',
         'Low seating with bolsters, mirrored tables, hanging umbrellas',
-        'Ring ceremony uses the same stage plus one 4×4 ft floral arch rolled on and off'
+        'Sagaai uses the same stage plus one 4×4 ft floral arch rolled on and off',
+        'After-party: the underground banquet hall, lanterns and a small bar'
       ],
       menu: [
         '6 veg starters, 2 of them live',
@@ -135,38 +121,32 @@ window.W = window.W || {};
         'ONE live international counter — Chinese or Italian, not both (saves ₹60/plate)',
         'Tandoori roti and naan counter · biryani',
         'Gulab jamun, baked rasmalai, live kulfi falooda, ice cream cart',
-        'Bar: 2 whisky, 1 vodka, 1 gin, 1 rum, beer, 2 wines — all IMFL'
+        'After-party: late-night snacks and the bar — 2 whisky, 1 vodka, 1 gin, 1 rum, beer, 2 wines'
       ]
     },
     {
       id: 'phere',
-      name: 'Baraat, Varmala & Phere',
-      tagline: 'The wedding',
-      blurb: 'The baraat sets off mid-morning with a brass band and dhols, varmala happens on a raised stage, and the pheras run inside the muhurat window. Live shehnai through the ceremony and no DJ.',
+      name: 'Baraat, Varmala & Phere', nameHi: 'बारात, वरमाला और फेरे',
+      tagline: 'The wedding', taglineHi: 'विवाह',
+      blurb: 'The baraat sets off at half past nine, the varmala is at half past ten, and the pheras begin at eleven. Vidaai follows lunch, in the afternoon light.',
+      blurbHi: 'साढ़े नौ बजे बारात, साढ़े दस बजे वरमाला और ग्यारह बजे से फेरे। दोपहर के भोजन के बाद, दिन की रोशनी में विदाई।',
       date: '2027-02-02',
       start: '09:30',
-      end: '16:00',
-      area: 'Lawn A — mandap',
+      end: '15:00',
+      area: 'The lawn — mandap', areaHi: 'लॉन — मंडप',
       guests: 180,
-      dressCode: 'Traditional · pastels and ivory for the day',
+      dressCode: 'Traditional · pastels and ivory for the day', dressHi: 'पारंपरिक · दिन के लिए पेस्टल और आइवरी',
       publicInvite: true,
       decorBudget: 110000,
       perPlate: 550,
       guarantee: 180,
-      muhurat: '11:00 – 13:30',
+      muhurat: '11:00 – 13:00',
       summary:
-        'Your muhurat is 11:00–13:30. Brief the pandit for a 90-minute core ceremony with 60 minutes of buffer — rushed pheras photograph badly and upset elders. Lunch afterwards is a curated Rajasthani thali rather than a 14-counter buffet: cheaper, more authentic, and exactly what guests want after 2.5 hours at a mandap.',
-      schedule: [
-        ['05:00', null, 'Décor team completes the mandap. Structure goes up overnight on 1 Feb while the sangeet after-party is indoors; flowers dressed from 05:00, signed off by 08:00.'],
-        ['07:30', null, "Bride's hair and makeup begins — 3 hours, ready by 10:45. Groom from 08:30."],
-        ['08:00', 'Breakfast for everyone', 'Negotiate breakfast into the room tariff rather than paying per plate.'],
-        ['09:30', 'BARAAT — brass band, 2 dhols, ghodi or vintage car, 300m loop on the property'],
-        ['10:15', 'Toran / Dwar Puja + Milni'],
-        ['10:35', 'VARMALA on a raised stage — flower shower, 2 cold-pyro bursts'],
-        ['11:00', 'Guests seated at the mandap'],
-        ['11:00', 'PHERE — Kanyadaan, Granthi Bandhan, Havan, Pheras, Saptapadi, Sindoor & Mangalsutra, Ashirwad. Live shehnai, no DJ.'],
-        ['13:30', 'Wedding lunch — Rajasthani thali — plus family portraits'],
-        ['16:00', 'Close · rest before the reception']
+        'The bride\u2019s family begin with Ganesh puja at 07:00 and the tel ceremony at 07:30, which is why the varmala is 10:30 rather than 10:00: bridal hair and makeup needs about three hours, plus a hair wash after the oil. Ask the pandit to confirm the muhurat in writing — published panchangs list the 2 February vivah muhurat from 17:47 (Delhi), and Abhijit muhurat in Udaipur is about 12:26–13:10. Vidaai follows lunch at 14:30, the traditional order: wedding, vidaai, then a reception hosted by the groom\u2019s family.',
+      ops: [
+        ['05:00', 'Décor team completes the mandap. The structure goes up overnight while the after-party is downstairs; flowers dressed from 05:00, signed off by 08:00.'],
+        ['07:45', 'Bride\u2019s hair and makeup 07:45–10:30, straight after the tel and a hair wash. Groom ready by 09:00, sehra by 09:10.'],
+        ['15:00', 'Lawn reset from mandap to reception — 650 seated — finished by 18:30.']
       ],
       decor: [
         'The hero setup — do not cut this',
@@ -190,31 +170,27 @@ window.W = window.W || {};
     },
     {
       id: 'reception',
-      name: 'Reception',
-      tagline: 'Everyone, all at once',
-      blurb: 'Everyone we know, in one evening. Greetings on stage run as two queues so nobody queues for long, dinner opens at eight, and a live ghazal duo plays while it carries on.',
+      name: 'Reception', nameHi: 'रिसेप्शन',
+      tagline: 'Everyone, all at once', taglineHi: 'सब एक साथ',
+      blurb: 'Everyone we know, in one evening. The couple arrive at quarter to eight, dinner opens at eight, and greetings on stage run as two queues so nobody waits long.',
+      blurbHi: 'हमारे सभी परिचित, एक ही शाम। पौने आठ बजे नवदंपति का आगमन, आठ बजे से भोजन, और मंच पर बधाई के लिए दो कतारें, ताकि किसी को देर तक इंतज़ार न करना पड़े।',
       date: '2027-02-02',
       start: '19:00',
-      end: '23:15',
-      area: 'Lawn B / banquet',
+      end: '23:00',
+      area: 'The lawn', areaHi: 'लॉन',
       guests: 650,
-      dressCode: 'Formal Indian or western black-tie optional',
+      dressCode: 'Formal Indian or western black-tie optional', dressHi: 'औपचारिक भारतीय पोशाक या ब्लैक-टाई',
       publicInvite: true,
       decorBudget: 43000,
       perPlate: 700,
       guarantee: 600,
       summary:
-        'The largest function and the one most likely to go wrong. 650 guests through a single stage line takes 90–110 minutes and will swallow the evening — run two photo queues, have the anchor call guests table-block by table-block, and put a separate photo booth near the entrance for people who do not need a stage picture.',
-      schedule: [
-        ['16:00', null, "Bride's reception look — outfit and jewellery change, makeup refresh only. Saves 60 minutes over a full reset."],
-        ['17:00', null, 'Lighting test at 17:00, not 19:00. Sunset is 18:10 and you cannot aim a fixture in the dark.'],
-        ['19:00', 'Guest arrival · welcome drinks · photo wall'],
-        ['19:45', 'Couple entry'],
-        ['20:00', 'Dinner opens · greetings on stage in two queues, so the wait is short'],
-        ['21:00', 'Cake, then a few short speeches', 'Exactly 3 speeches × 2 minutes. Brief the anchor to close them out — this is where receptions overrun.'],
-        ['21:15', 'Live ghazal and semi-classical duo · dinner continues'],
-        ['22:45', 'Vidaai', 'Or move vidaai to the morning of 3 Feb — recommended. At 22:45 half the guests have left and everyone is exhausted.'],
-        ['23:15', 'Close']
+        'The largest function and the one most likely to go wrong. 650 guests through a single stage line takes 90–110 minutes and will swallow the evening — run two photo queues, have the anchor call guests table-block by table-block, and put a photo booth near the entrance for people who do not need a stage picture. One listing gives Khumani parking for about 30 cars: agree overflow parking and valets with the hotel.',
+      ops: [
+        ['16:00', 'Bride\u2019s reception look — outfit and jewellery change, makeup refresh only. Saves 60 minutes over a full reset.'],
+        ['17:00', 'Lighting test at 17:00, not 19:00. Sunset is 18:20 and you cannot aim a fixture in the dark.'],
+        ['21:00', 'Cake, then exactly 3 speeches × 2 minutes. Brief the anchor to close them out — this is where receptions overrun.'],
+        ['22:00', 'The legal cut-off for outdoor amplified sound is 22:00. Keep the music low after that.']
       ],
       decor: [
         'After dark, lighting does all the work',
@@ -223,7 +199,7 @@ window.W = window.W || {};
         'Entrance arch + 6 photo-wall panels',
         'Candles and tall centrepieces on 30 cocktail tables',
         "Reuse: haldi's cane props become the photo corner, sangeet's fairy lights become the ceiling",
-        '12 patio heaters — nights are 10–12°C'
+        '12 patio heaters — nights are 9–12°C'
       ],
       menu: [
         '6 starters, 2 live',
@@ -235,6 +211,143 @@ window.W = window.W || {};
         '5 desserts including one live · paan counter'
       ]
     }
+  ];
+
+  /* ---------------- The programme ---------------- */
+
+  /* Every event a guest might need to be at, in order. This is the one source
+     of truth for times: the invitation, the guest portal, the calendar file and
+     the planner's run sheet all read it.
+
+     fn      invitation group the event belongs to (who can see it in the portal)
+     sheet   for events open to every staying guest (meals, rest), the run sheet
+             it is filed under
+     who     'stay' hotel guests · 'bride' the bride's family · 'adults'
+     key     a moment people are turning up for
+     art     painting in assets/art/art-<art>.webp
+     seated  "be seated by" / "gather at" time, published to guests
+     alarm   minutes before start for the calendar reminder
+     ops     a planner-only note on the same beat
+
+     Published times never overlap the next thing guests must be at. Where a
+     breakfast quietly runs longer for late risers, that is in `ops`, not here. */
+
+  const programme = [
+    { id: 'rooms', date: '2027-02-01', start: '08:00', sheet: 'haldi', who: 'stay',
+      t: ['Rooms open · check in', 'कमरे तैयार · चेक-इन'],
+      where: ['Hotel Khumani reception', 'होटल खुमानी का रिसेप्शन'],
+      note: ['Come straight to the hotel whenever you arrive — your room is ready from 8 am.',
+        'पहुँचते ही सीधे होटल आइए — सुबह 8 बजे से आपका कमरा तैयार रहेगा।'] },
+    { id: 'bf1', date: '2027-02-01', start: '08:00', end: '10:30', sheet: 'haldi', who: 'stay', meal: true,
+      t: ['Breakfast', 'नाश्ता'],
+      where: ['The hotel restaurant', 'होटल का रेस्तराँ'],
+      note: ['Eat before you change for the haldi.', 'हल्दी के कपड़े पहनने से पहले नाश्ता कर लीजिए।'],
+      ops: 'Published as closing at 10:30. Keep it open quietly until 11:30 for late arrivals — do not announce it.' },
+    { id: 'haldi', fn: 'haldi', date: '2027-02-01', start: '11:00', end: '13:30', key: true, art: 'haldi', alarm: 30,
+      t: ['Haldi', 'हल्दी'],
+      where: ['The lawn', 'लॉन'],
+      dress: ['Yellow and marigold — cottons you won’t mind staining', 'पीला और गेंदा-नारंगी — ऐसे सूती कपड़े जिन पर दाग़ की चिंता न हो'],
+      note: ['A haldi for each of us, then one together — dhol, a shower of flowers and a great deal of yellow.',
+        'पहले हम दोनों की अलग-अलग हल्दी, फिर एक साथ — ढोल, फूलों की बौछार और ढेर सारा पीला रंग।'] },
+    { id: 'lunch1', fn: 'haldi', date: '2027-02-01', start: '13:30', end: '15:30', meal: true,
+      t: ['Lunch', 'दोपहर का भोजन'],
+      where: ['Beside the haldi lawn', 'हल्दी वाले लॉन के पास'],
+      note: ['Served right there, so nobody has to change first.', 'वहीं परोसा जाएगा — पहले कपड़े बदलने की ज़रूरत नहीं।'],
+      ops: 'Towels and a wash station at the lawn edge.' },
+    { id: 'rest1', date: '2027-02-01', start: '15:30', end: '19:00', sheet: 'haldi', who: 'stay',
+      t: ['Rest', 'विश्राम'],
+      where: ['Your room · the rooftop pool', 'आपका कमरा · छत का स्विमिंग पूल'],
+      note: ['Wash off the haldi, rest, and dress for the evening. Sunset is at 6:19.',
+        'हल्दी धोइए, आराम कीजिए और शाम के लिए तैयार हो जाइए। सूर्यास्त 6:19 बजे।'] },
+    { id: 'folk', fn: 'sangeet', date: '2027-02-01', start: '19:00', end: '20:00', key: true, art: 'folk', alarm: 15,
+      t: ['A Rajasthani folk evening', 'राजस्थानी लोक संध्या'],
+      where: ['The lawn', 'लॉन'],
+      dress: ['Fuchsia, marigold and gold — indo-western welcome', 'फ़ुशिया, गेंदा और सुनहरा — इंडो-वेस्टर्न भी स्वागत है'],
+      note: ['Kalbeliya and Ghoomar dancers open the night — and they will pull you in to dance.',
+        'कालबेलिया और घूमर नृत्य से शाम की शुरुआत — और वे आपको भी नचाएँगे।'] },
+    { id: 'sagaai', fn: 'sangeet', date: '2027-02-01', start: '20:00', end: '21:00', key: true, art: 'sagaai', alarm: 20, seated: '19:50',
+      t: ['Sagaai', 'सगाई'],
+      where: ['The lawn — the stage', 'लॉन — मंच'],
+      note: ['The ring ceremony, with both families around us.', 'अँगूठी की रस्म — दोनों परिवारों के बीच।'] },
+    { id: 'dinner1', fn: 'sangeet', date: '2027-02-01', start: '20:00', end: '23:00', meal: true,
+      t: ['Dinner', 'रात्रि भोज'],
+      where: ['The lawn', 'लॉन'],
+      note: ['Snacks and a full wedding dinner, open from the sagaai right through the sangeet.',
+        'सगाई से लेकर संगीत तक — स्नैक्स और पूरा शादी का भोजन।'] },
+    { id: 'sangeet', fn: 'sangeet', date: '2027-02-01', start: '21:00', end: '23:00', key: true, art: 'sangeet', alarm: 10,
+      t: ['Sangeet', 'संगीत'],
+      where: ['The lawn', 'लॉन'],
+      note: ['The families perform, then the cousins — and then the floor belongs to everyone.',
+        'पहले परिवार, फिर कज़िन्स — और फिर डांस फ़्लोर सबका।'],
+      ops: 'You are running the sangeet outdoors to about 23:00. The legal cut-off for outdoor sound is 22:00 (Noise Rules 2000, rule 5(2)) and Udaipur police have seized equipment at weddings — keep the volume down after 22:00 and the indoor rig ready.' },
+    { id: 'afterparty', fn: 'sangeet', date: '2027-02-01', start: '23:00', end: '01:00', key: true, art: 'afterparty', who: 'adults',
+      t: ['Cocktail after-party', 'कॉकटेल आफ़्टर-पार्टी'],
+      where: ['The underground banquet hall', 'अंडरग्राउंड बैंक्वेट हॉल'],
+      dress: ['Party wear', 'पार्टी वियर'],
+      note: ['Drinks, late-night snacks and a DJ, indoors until 1 am.', 'ड्रिंक्स, देर रात के स्नैक्स और डीजे — अंदर, रात 1 बजे तक।'],
+      ops: 'Khumani has no in-house bar and permits outside alcohol: the liquor, bar staff and a Rajasthan occasional excise licence (apply about two weeks before) are ours.' },
+
+    { id: 'ganesh', fn: 'phere', date: '2027-02-02', start: '07:00', end: '07:30', art: 'ganesh', who: 'bride',
+      t: ['Ganesh Puja', 'गणेश पूजा'],
+      where: ['With the bride’s family', 'वधू पक्ष के साथ'],
+      note: ['The wedding day begins with Ganesh ji’s blessings.', 'विवाह के दिन की शुरुआत गणेश जी के आशीर्वाद से।'] },
+    { id: 'tel', fn: 'phere', date: '2027-02-02', start: '07:30', end: '08:00', who: 'bride',
+      t: ['Tel ceremony', 'तेल की रस्म'],
+      where: ['With the bride’s family', 'वधू पक्ष के साथ'],
+      note: ['Elders bless the bride with oil in her hair before she gets ready.',
+        'तैयार होने से पहले बड़े-बुज़ुर्ग वधू के बालों में तेल लगाकर आशीर्वाद देते हैं।'] },
+    { id: 'bf2', date: '2027-02-02', start: '07:30', end: '09:00', sheet: 'phere', who: 'stay', meal: true,
+      t: ['Breakfast', 'नाश्ता'],
+      where: ['The hotel restaurant', 'होटल का रेस्तराँ'],
+      note: ['Closes at 9 — the baraat gathers at 9:15.', '9 बजे बंद — बारात 9:15 पर इकट्ठा होगी।'],
+      ops: 'Published as closing at 9:00. Keep it open quietly until 10:00 — do not announce it.' },
+    { id: 'baraat', fn: 'phere', date: '2027-02-02', start: '09:30', end: '10:15', key: true, art: 'baraat', alarm: 30, seated: '09:15', gather: true,
+      t: ['Baraat', 'बारात'],
+      where: ['From the hotel porch to the lawn gate', 'होटल के पोर्च से लॉन के द्वार तक'],
+      dress: ['Traditional — pastels and ivory, and a safa if you have one', 'पारंपरिक — पेस्टल और आइवरी, और साफ़ा हो तो ज़रूर'],
+      note: ['The groom’s side gathers at the porch; dhol, band and ghodi set off at 9:30. The bride’s side waits at the gate to welcome them.',
+        'वर पक्ष पोर्च पर इकट्ठा होगा; ढोल, बैंड और घोड़ी 9:30 पर रवाना होंगे। वधू पक्ष द्वार पर स्वागत करेगा।'] },
+    { id: 'milni', fn: 'phere', date: '2027-02-02', start: '10:15', end: '10:30',
+      t: ['Milni & dwar puja', 'मिलनी और द्वार पूजा'],
+      where: ['The lawn gate', 'लॉन का द्वार'],
+      note: ['The two families meet and embrace at the gate.', 'दोनों परिवार द्वार पर एक-दूसरे से गले मिलते हैं।'] },
+    { id: 'varmala', fn: 'phere', date: '2027-02-02', start: '10:30', end: '11:00', key: true, art: 'varmala', alarm: 15,
+      t: ['Varmala', 'वरमाला'],
+      where: ['The lawn — the stage', 'लॉन — मंच'],
+      note: ['Garlands, a shower of petals — and a great deal of cheering.', 'वरमाला, फूलों की बौछार — और ख़ूब तालियाँ।'] },
+    { id: 'phere', fn: 'phere', date: '2027-02-02', start: '11:00', end: '13:00', key: true, art: 'phere', alarm: 20, seated: '10:55',
+      t: ['Phere', 'फेरे'],
+      where: ['The mandap, on the lawn', 'लॉन पर सजा मंडप'],
+      note: ['Kanyadaan, the seven pheras and saptapadi, sindoor and mangalsutra. The muhurat does not wait, so please be in your seat on time.',
+        'कन्यादान, सात फेरे और सप्तपदी, सिंदूर और मंगलसूत्र। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण करें।'],
+      ops: 'Pandit to confirm the muhurat in writing. Published panchangs list the 2 Feb vivah muhurat from 17:47 (Delhi); Abhijit muhurat in Udaipur is about 12:26–13:10. Time the pheras themselves inside the window he gives.' },
+    { id: 'lunch2', fn: 'phere', date: '2027-02-02', start: '13:00', end: '14:30', meal: true,
+      t: ['Wedding lunch', 'विवाह का भोज'],
+      where: ['Beside the mandap', 'मंडप के पास'],
+      note: ['Served as the pheras close.', 'फेरे संपन्न होते ही भोजन।'] },
+    { id: 'vidaai', fn: 'phere', date: '2027-02-02', start: '14:30', end: '15:00', key: true, art: 'vidaai', alarm: 15,
+      t: ['Vidaai', 'विदाई'],
+      where: ['The hotel porch', 'होटल का पोर्च'],
+      note: ['Mahak says goodbye to her family — and the Bhatnagars welcome her home.',
+        'महक की अपने परिवार से विदाई — और भटनागर परिवार में उसका स्वागत।'],
+      ops: 'Decorated car or doli at the porch by 14:15; a thali of rice for the bride; the groom\u2019s mother ready for griha pravesh at the family suite.' },
+    { id: 'rest2', date: '2027-02-02', start: '15:00', end: '19:00', sheet: 'phere', who: 'stay',
+      t: ['Rest', 'विश्राम'],
+      where: ['Your room', 'आपका कमरा'],
+      note: ['Rest before the reception. It turns cold after dark — bring a shawl.',
+        'रिसेप्शन से पहले आराम कीजिए। अँधेरा होते ही ठंड बढ़ जाती है — शॉल साथ रखें।'] },
+    { id: 'reception', fn: 'reception', date: '2027-02-02', start: '19:00', end: '23:00', key: true, art: 'reception', alarm: 30,
+      t: ['Reception', 'रिसेप्शन'],
+      where: ['The lawn', 'लॉन'],
+      dress: ['Formal Indian, or black-tie', 'औपचारिक भारतीय पोशाक या ब्लैक-टाई'],
+      note: ['Everyone we love, in one evening. The couple arrive at 7:45 and dinner opens at 8.',
+        'हमारे सभी प्रियजन, एक ही शाम। नवदंपति 7:45 पर आएँगे और भोजन 8 बजे से।'] },
+
+    { id: 'bf3', date: '2027-02-03', start: '07:30', end: '10:00', sheet: 'reception', who: 'stay', meal: true,
+      t: ['Breakfast & checkout', 'नाश्ता और चेक-आउट'],
+      where: ['The hotel restaurant', 'होटल का रेस्तराँ'],
+      note: ['Checkout is at 10 am. Tell us your train or flight and we will arrange your drop.',
+        'चेक-आउट सुबह 10 बजे। अपनी ट्रेन या फ़्लाइट बता दीजिए, आपको छोड़ने की व्यवस्था हम करेंगे।'] }
   ];
 
   /* ---------------- Budget ---------------- */
@@ -296,7 +409,38 @@ window.W = window.W || {};
   /* ---------------- Venue ---------------- */
 
   const venue = {
-    status: 'Not booked — shortlist below, rates to be verified',
+    status: 'Booked — Hotel Khumani by Hills N Dunes, Bhuwana Bypass',
+    /* The booked property. Facts are from the hotel's own site unless marked as
+       a listing; the coordinates are the rooftop, read off satellite imagery,
+       not the road junction a map search returns. */
+    booked: {
+      name: 'Hotel Khumani by Hills N Dunes Hotels',
+      short: 'Hotel Khumani',
+      zone: 'Bhuwana Bypass, Sukher',
+      address: 'Plot 2, Bhuwana Bypass, Bhuwana, Udaipur, Rajasthan 313004',
+      lat: 24.6263, lon: 73.7139,
+      phones: ['+91 76651 78660', '+91 90018 30714'],
+      email: 'reservation@hillsnduneshotels.com',
+      web: 'https://hillsnduneshotels.com/',
+      rooms: 54,
+      earlyRooms: 10,           // held from the night of 31 Jan for early arrivals
+      opensForGuests: '08:00',  // on 1 Feb, as agreed with the hotel
+      checkout: '10:00',        // on 3 Feb — the hotel's standard checkout
+      spaces: [
+        'Lawn — 700 seated, 800 floating (listing)',
+        'Underground banquet hall — 300 seated, 350 floating (listing)',
+        'Rooftop pool, restaurant, meeting room, parking (hotel)'
+      ],
+      distances: {
+        airport: 17.8, udaipurCity: 6.7, ranaPratapNagar: 5.1, cityPalace: 9.2, fatehSagar: 7.4, pichola: 10
+      },
+      policies: [
+        'Outside catering only — the caterer is ours (listing)',
+        'No in-house bar; outside alcohol permitted (listing)',
+        'Outside decorators permitted (listing)',
+        'Parking for about 30 cars on one listing — agree overflow parking and valets for the reception'
+      ]
+    },
     brief: [
       'Capacity: 700+ seated on the lawn, plus a second lawn or banquet so the mandap and reception do not share a space',
       'Per-plate: ₹650–800 for 600 all-veg on a Tuesday',
@@ -319,10 +463,10 @@ window.W = window.W || {};
       { name: 'The Royal Retreat Resort', zone: 'Badi Hawala Road', capacity: 'Queen\u2019s Garden and others; hall 550 round-table', rooms: '100+', note: 'Mid-range: 5-star, rooms ₹5,900–8,300, January its dearest month. The hall nearly covers a rainy reception.' }
     ],
     travel: {
-      airport: 'Maharana Pratap Airport (UDR), Dabok — 22 km, 40 min',
-      rail: 'Udaipur City Railway Station (UDZ) — city centre',
+      airport: 'Maharana Pratap Airport (UDR), Dabok — 18 km from Hotel Khumani, about 35 min',
+      rail: 'Udaipur City (UDZ) — 7 km · Rana Pratap Nagar (RPZ) — 5 km',
       road: 'Neemuch 3 hr · Ahmedabad 4.5 hr (NH-48) · Kota 5 hr · Jaipur 6 hr (NH-58) · Indore 6.5 hr',
-      weather: 'Early Feb: days 25–27°C, nights 10–12°C. Sunrise 07:05, sunset 18:10.',
+      weather: 'Early Feb: days 24–27°C, nights 9–12°C. Sunrise 07:16, sunset 18:19.',
       pack: 'Layers. A shawl or jacket for both evenings is not optional.'
     }
   };
@@ -380,9 +524,11 @@ window.W = window.W || {};
   /* ---------------- Risks ---------------- */
 
   const risks = [
-    { risk: 'Outdoor loudspeakers must stop at 22:00', action: 'Rajasthan PCB rules following the Supreme Court order. The schedule moves the after-party indoors at 22:00 — get the venue policy in writing.' },
-    { risk: 'Night temperatures of 10–12°C', action: '12 patio heaters at ₹800–1,200/day (~₹15k for two nights, from contingency) plus shawl favours. Guests remember being cold.' },
-    { risk: 'Sunset at 18:10', action: 'All outdoor daytime functions finish by 17:30. Test reception lighting at 17:00.' },
+    { risk: 'Outdoor loudspeakers must stop at 22:00', action: 'Noise Rules 2000, rule 5(2): after 22:00 amplified sound only in closed premises such as a banquet hall. You are running the sangeet outdoors to about 23:00 and managing it yourselves; the after-party is already indoors in the underground banquet hall. Udaipur police have seized equipment at weddings, so keep the volume down after 22:00.' },
+    { risk: 'Night temperatures of 9–12°C', action: '12 patio heaters at ₹800–1,200/day (~₹15k for two nights, from contingency) plus shawl favours. Guests remember being cold.' },
+    { risk: 'Sunset at 18:19', action: 'All outdoor daytime functions finish well before dark. Test the evening lighting at 17:00.' },
+    { risk: 'The phere muhurat', action: 'Published panchangs give the 2 Feb 2027 vivah muhurat as 17:47 onwards (Delhi). The 11:00–13:00 phere relies on the pandit — get the exact window in writing. Abhijit muhurat in Udaipur is about 12:26–13:10.' },
+    { risk: 'Guests late to the moments that cannot move', action: 'Published times never overlap; breakfasts close before the next event on paper and stay open quietly. The folk evening and the baraat are deliberate soft starts. Calendar reminders go out 15–30 minutes before each key event.' },
     { risk: 'Drone airspace near Dabok airport and the lakes', action: 'Confirm a DGCA-compliant registered drone and get written venue clearance.' },
     { risk: 'Unseasonal rain', action: 'Written confirmation the venue can move 180 (sangeet) and 650 (reception) indoors.' },
     { risk: 'Old-city traffic in peak season', action: 'Keep the venue out of the old city, or add 45 minutes to every transfer.' },
@@ -395,16 +541,14 @@ window.W = window.W || {};
     'Excluded from the ₹20L: heirloom/investment jewellery, shagun and cash gifts, guests\u2019 airfare and rail fare, guests\u2019 room tariffs, honeymoon.',
     'Included in the ₹20L: all four functions, both wardrobes, hair and makeup, décor, photography, entertainment, logistics.',
     'Guest rooms are blocked at a negotiated rate and paid by guests. The host covers 10 rooms. The block is ~52 rooms — see PLAN.md §9a.',
-    'All functions at a single property. Food is all-vegetarian.',
+    'All functions at a single property — Hotel Khumani, Bhuwana Bypass. Food is all-vegetarian.',
     'No full planner fee is budgeted. A ₹50k day-of coordinator is its own line; contingency stays at 8% and untouched.'
   ];
 
   const openQuestions = [
     'Is jewellery inside the ₹20L? If yes, the guest count must drop. Biggest unknown in the plan.',
     'Who pays for guest rooms? The plan assumes guests do, with the host covering 10.',
-    'Alcohol — 2-hour open bar (budgeted), cash bar, or dry?',
     'Non-veg at any function? It adds 25–35% per plate where served.',
-    'Vidaai on 2 Feb night, or 3 Feb morning (recommended)?',
     'How many of the 180 are outstation, and flying vs driving? This sizes the travel desk and room block.'
   ];
 
@@ -459,11 +603,11 @@ window.W = window.W || {};
       phone: String(9876500000 + n), email: '',
       diet: r[6], rsvp: r[7],
       inv: { haldi: !!r[8], sangeet: !!r[9], phere: !!r[10], reception: !!r[11] },
-      // Rooms open at 06:00 on 1 Feb, so that is the default arrival.
+      // The hotel opens to guests at 08:00 on 1 Feb, so that is the default arrival.
       arrival: local ? '' : '2027-02-01', arrivalTime: '', departure: local ? '' : '2027-02-03',
       mode: local ? 'Car' : '', travelDetail: '', pickup: '',
       needsRoom: !local,
-      hotel: local ? '' : 'Wedding venue — guest room block',
+      hotel: local ? '' : 'Hotel Khumani — guest room block',
       room: '', checkIn: local ? '' : '2027-02-01', checkOut: local ? '' : '2027-02-03',
       hostPaid: /host room/.test(r[12]),
       table: r[11] ? 'T-' + String(Math.ceil(n / 3)) : '',
@@ -490,21 +634,22 @@ window.W = window.W || {};
   ];
 
   const announcements = [
-    { title: 'Save the date', created_at: '2026-09-01',
-      body: 'Haldi and Sangeet on 1 February, Phere on 2 February at 11 am, ' +
-            'Reception the same evening at 7 pm — all at one venue in Udaipur.' }
+    { title: 'The venue is Hotel Khumani', created_at: '2026-10-25',
+      body: 'Everything happens at Hotel Khumani on the Bhuwana Bypass, Udaipur. Haldi, sagaai, sangeet ' +
+            'and the after-party on 1 February; baraat, varmala, phere, vidaai and the reception on 2 February.' }
   ];
 
-  /* The wedding guide shown in every guest's portal. */
+  /* The wedding guide shown in every guest's portal. The invitation page has
+     the full bilingual version in content.js; this is the short English one. */
   const guide = [
     {
       title: 'Arriving on 1 February',
       icon: 'kalash',
       items: [
-        ['Rooms open at 6 am', 'Come straight to the venue whenever you land or arrive. You can check in, shower and change before anything starts — no waiting in a lobby.'],
-        ['Breakfast from 6:30', 'Chai, poha and hot counters on the lawn until 9:30. Eat first, unpack later.'],
-        ['Dress by 9:30', 'The haldi starts at 10. That is deliberate: it gives you three and a half hours between arriving and being needed anywhere.'],
-        ['If you arrive the night before', 'Tell us in your RSVP and we will sort a room for the 31st. Do not book anything yourself.'],
+        ['The hotel opens at 8 am', 'Come straight to Hotel Khumani whenever you land or arrive. You can check in, shower and change before anything starts.'],
+        ['Breakfast until 10:30', 'In the hotel restaurant. Eat first, unpack later.'],
+        ['Haldi at 11', 'That is deliberate: three hours between the hotel opening and anyone being needed anywhere.'],
+        ['If you arrive the night before', 'Ten rooms are held from the night of 31 January for family arriving early. Tell us in your RSVP — do not book anything yourself.'],
         ['Mehndi', 'Happening quietly at home with close family before we all travel, so there is no mehndi function at the venue.']
       ]
     },
@@ -513,8 +658,9 @@ window.W = window.W || {};
       icon: 'paisley',
       items: [
         ['Haldi, 1 Feb morning', 'Yellow, marigold orange, white. Cottons you do not mind staining — haldi does not come out.'],
-        ['Ring ceremony & Sangeet, 1 Feb evening', 'Fuchsia, marigold, gold. Indo-western is very welcome. Shoes you can dance in.'],
-        ['Phere, 2 Feb morning', 'Traditional. Pastels and ivory look wonderful in daylight photographs.'],
+        ['Folk evening, sagaai & sangeet, 1 Feb', 'Fuchsia, marigold, gold. Indo-western is very welcome. Shoes you can dance in.'],
+        ['After-party, from 11 pm', 'Party wear.'],
+        ['Baraat, varmala & phere, 2 Feb morning', 'Traditional. Pastels and ivory look wonderful in daylight — and a safa for the baraat if you have one.'],
         ['Reception, 2 Feb evening', 'Formal Indian, or black-tie if you prefer. It will be cold — plan a shawl or a jacket.']
       ]
     },
@@ -522,22 +668,23 @@ window.W = window.W || {};
       title: 'Weather & packing',
       icon: 'kalash',
       items: [
-        ['Days', '25–27°C and sunny. Sunglasses, and sunscreen for the haldi lawn.'],
-        ['Nights', '10–12°C. Both evening functions are outdoors. A shawl or jacket is genuinely necessary.'],
-        ['Also bring', 'Comfortable shoes for the lawns, any medication you need, and a power bank.']
+        ['Days', '24–27°C and sunny. Sunglasses, and sunscreen for the haldi lawn.'],
+        ['Nights', '9–12°C. The evening functions are outdoors. A shawl or jacket is genuinely necessary.'],
+        ['Also bring', 'Comfortable shoes for the lawn, any medication you need, and a power bank.']
       ]
     },
     {
       title: 'Good to know',
       icon: 'mandala',
       items: [
-        ['Everything is at one venue', 'No travelling between functions. Your room is a short walk from every lawn.'],
-        ['Food', 'All functions are pure vegetarian. Jain and no-onion-garlic thalis are arranged — tell us in advance and it will be at your table.'],
-        ['Bar', 'At the Sangeet only, from 8 pm. The music moves indoors at 10 and carries on there.'],
-        ['The sangeet', 'A Kalbelia folk troupe opens the evening and will pull you up to dance, so nobody has to be the first one on the floor. Family performances follow.'],
-        ['Children', 'Very welcome. There is a supervised play corner during the phere.'],
+        ['Everything is at one venue', 'Hotel Khumani, Bhuwana Bypass. No travelling between functions.'],
+        ['Food', 'All functions are pure vegetarian. Jain and no-onion-garlic food is arranged — tell us in advance.'],
+        ['Drinks', 'At the cocktail after-party on 1 February, from 11 pm, in the underground banquet hall.'],
+        ['The folk evening', 'Kalbeliya and Ghoomar dancers open the evening of 1 February and will pull you up to dance.'],
+        ['Children', 'Welcome. Tell us how many, and their ages, in your RSVP.'],
         ['Gifts', 'Your presence is the gift. If you insist, a blessing envelope at the reception is more than enough.'],
-        ['Photographs', 'Please stay seated during the phere so everyone can see. Our crew will get the shots, and every album lands in this portal.']
+        ['Photographs', 'Please stay seated during the phere so everyone can see. Our crew will get the shots, and every album lands in this portal.'],
+        ['Help', 'Hotel Khumani reception: +91 76651 78660 or +91 90018 30714.']
       ]
     },
     {
@@ -557,9 +704,57 @@ window.W = window.W || {};
     }
   ];
 
+  /* ---------------- Still to confirm ---------------- */
+
+  /* Everything the website publishes but the families have not yet settled.
+     The planner dashboard lists these and the smoke test counts them, so a
+     guess cannot quietly become a fact. Remove a line once it is confirmed. */
+  const toConfirm = [
+    { what: 'Phere muhurat', detail: 'Pandit to confirm 11:00–13:00 on 2 Feb for Udaipur in writing. Published panchangs list the vivah muhurat from 17:47; Abhijit muhurat is about 12:26–13:10.' },
+    { what: 'Family help-desk numbers', detail: 'The site shows the hotel reception for now. Add one number per side.' },
+    { what: 'Where each event happens inside Khumani', detail: 'The site places the haldi, sangeet, phere and reception on the lawn, lunches beside them, the after-party in the underground banquet hall and vidaai at the porch. Confirm with the hotel.' },
+    { what: 'Reception parking', detail: 'One listing gives parking for about 30 cars. Agree overflow parking and valets for 650 guests.' },
+    { what: 'Caterer and bar', detail: 'Khumani is outside-catering only and has no in-house bar. Book both, plus the occasional excise licence.' },
+    { what: 'Budget lines that moved', detail: 'The haldi meal is now a full lunch (budget assumes a ₹475 brunch) and the bar runs at the after-party from 23:00 to 01:00 (budget assumes 2 hours). Re-cost both.' },
+    { what: 'Vidaai at 14:30', detail: 'Placed after the wedding lunch, before the reception. Confirm with both families.' },
+    { what: 'Permission for the venue painting', detail: 'The Mewar-style painting is made from the hotel\u2019s own photograph. Tell the hotel and get a yes.' }
+  ];
+
+  /* ---------------- Run sheets ---------------- */
+
+  /* The planner reads fn.schedule as [time, guestText, plannerNote] rows. Build
+     them from the programme so a time can only ever be changed in one place.
+     Rows after midnight sort to the end of the evening; a beat on a later date
+     (the 3 Feb checkout, filed under the reception) sorts after everything. */
+  (function buildRunSheets() {
+    function key(e, base) {
+      const p = String(e.time).split(':');
+      let m = Number(p[0]) * 60 + Number(p[1] || 0);
+      if (m < 240) m += 1440;
+      if (e.date && e.date > base) m += 2880;
+      return m;
+    }
+    functions.forEach(function (f) {
+      const rows = programme
+        .filter(function (e) { return (e.fn || e.sheet) === f.id; })
+        .map(function (e) {
+          const when = e.date !== f.date ? e.start + ' (' + Number(e.date.slice(8)) + ' Feb)' : e.start;
+          const guest = e.t[0] + (e.end ? ' ' + e.start + '–' + e.end : '') + ' · ' + e.where[0];
+          return { time: e.start, date: e.date, row: [when, guest, e.ops || ''] };
+        });
+      (f.ops || []).forEach(function (o) {
+        rows.push({ time: o[0], date: f.date, row: [o[0], null, o[1]] });
+      });
+      rows.sort(function (a, b) { return key(a, f.date) - key(b, f.date); });
+      f.schedule = rows.map(function (r) { return r.row; });
+    });
+  })();
+
   W.data = {
     couple: couple,
     functions: functions,
+    programme: programme,
+    toConfirm: toConfirm,
     budget: budget,
     cuts: cuts,
     protect: protect,

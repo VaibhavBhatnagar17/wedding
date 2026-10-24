@@ -316,6 +316,73 @@ window.W = window.W || {};
       '</svg>';
   }
 
+  /* ---------- the Mewar sun ----------
+     Udaipur's royal emblem is a sun face; ours is the abstract version, a disc
+     inside alternating straight and flame rays, with the monogram in the disc. */
+
+  function sunRays(cx, cy, rIn, rOut, n, stroke) {
+    let out = '';
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+      const a1 = a - Math.PI / n * 0.42, a2 = a + Math.PI / n * 0.42;
+      const long = i % 2 === 0;
+      const ro = long ? rOut : rIn + (rOut - rIn) * 0.62;
+      const p = function (r, ang) { return (cx + r * Math.cos(ang)).toFixed(2) + ' ' + (cy + r * Math.sin(ang)).toFixed(2); };
+      out += long
+        ? '<path d="M' + p(rIn, a1) + ' L' + p(ro, a) + ' L' + p(rIn, a2) + ' Z" fill="' + stroke + '"/>'
+        : '<path d="M' + p(rIn, a1) + ' Q' + p(ro * 0.96, a + 0.05) + ' ' + p(ro, a) + ' Q' + p(ro * 0.96, a - 0.05) + ' ' + p(rIn, a2) + ' Z" fill="' + stroke + '" opacity=".7"/>';
+    }
+    return out;
+  }
+
+  function sun(stroke) {
+    const st = stroke || 'currentColor';
+    return '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+      sunRays(60, 60, 30, 56, 24, st) +
+      '<circle cx="60" cy="60" r="27" fill="none" stroke="' + st + '" stroke-width="1.6"/>' +
+      '<circle cx="60" cy="60" r="22" fill="none" stroke="' + st + '" stroke-width=".7" opacity=".7"/>' +
+      '</svg>';
+  }
+
+  /* ---------- the wax seal on the gate ----------
+     A pressed blob of sealing wax: an irregular rim (a circle with a seeded
+     wobble), a raised bevel, a ring of sun rays and the V · M monogram. Two
+     copies are stacked and clipped down a jagged crack so the seal can break
+     in two; the clip lives in CSS so both halves share one drawing. */
+
+  function seal(id) {
+    const sid = id || 'seal';
+    const rnd = mulberry(29);
+    const pts = [];
+    const n = 44;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const r = 92 + (rnd() - 0.5) * 9 + Math.sin(a * 5) * 2.2;
+      pts.push((100 + r * Math.cos(a)).toFixed(2) + ',' + (100 + r * Math.sin(a)).toFixed(2));
+    }
+    return '<svg viewBox="0 0 200 200" aria-hidden="true">' +
+      '<defs>' +
+        '<radialGradient id="' + sid + '-wax" cx="38%" cy="32%" r="78%">' +
+          '<stop offset="0" stop-color="#c2333f"/><stop offset=".45" stop-color="#8f1a26"/>' +
+          '<stop offset="1" stop-color="#4a0911"/></radialGradient>' +
+        '<radialGradient id="' + sid + '-dish" cx="50%" cy="50%" r="50%">' +
+          '<stop offset=".72" stop-color="#7a1520"/><stop offset=".93" stop-color="#5c0d16"/>' +
+          '<stop offset="1" stop-color="#a5303a"/></radialGradient>' +
+        '<linearGradient id="' + sid + '-gold" x1="0" y1="0" x2="1" y2="1">' +
+          '<stop offset="0" stop-color="#f6dc8e"/><stop offset=".5" stop-color="#c9a227"/>' +
+          '<stop offset="1" stop-color="#8f6b16"/></linearGradient>' +
+      '</defs>' +
+      '<polygon points="' + pts.join(' ') + '" fill="url(#' + sid + '-wax)"/>' +
+      '<circle cx="100" cy="100" r="70" fill="url(#' + sid + '-dish)"/>' +
+      '<circle cx="100" cy="100" r="70" fill="none" stroke="#d9535d" stroke-opacity=".35" stroke-width="1.4"/>' +
+      '<g opacity=".95">' + sunRays(100, 100, 40, 64, 24, 'url(#' + sid + '-gold)') + '</g>' +
+      '<circle cx="100" cy="100" r="37" fill="#6b111b" stroke="url(#' + sid + '-gold)" stroke-width="2"/>' +
+      '<text x="100" y="111" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="29" ' +
+        'letter-spacing="1" fill="url(#' + sid + '-gold)">V·M</text>' +
+      '<ellipse cx="78" cy="62" rx="28" ry="12" fill="#fff" opacity=".12" transform="rotate(-28 78 62)"/>' +
+      '</svg>';
+  }
+
   W.motifs = {
     jaaliPattern: jaaliPattern,
     mandala: mandala, mandalaSvg: mandalaSvg,
@@ -325,6 +392,7 @@ window.W = window.W || {};
     garlandRow: garlandRow, garlandStrand: garlandStrand, marigoldDefs: marigoldDefs,
     doorPanel: doorPanel, cuspArch: cuspArch,
     archFrame: archFrame,
-    corner: corner
+    corner: corner,
+    sun: sun, seal: seal
   };
 })(window.W);

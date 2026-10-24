@@ -180,8 +180,11 @@ class Tab:
 
 
 def start_chrome():
+    # Software WebGL (SwiftShader) rather than --disable-gpu, so the 3D flight
+    # over Udaipur actually renders in headless runs instead of falling back.
     args = [CHROME, "--headless=new", f"--remote-debugging-port={PORT}",
-            "--disable-gpu", "--hide-scrollbars", "--no-first-run",
+            "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist",
+            "--hide-scrollbars", "--no-first-run",
             "--user-data-dir=/tmp/cdp-profile", "--window-size=1440,900"]
     p = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     for _ in range(60):
@@ -272,6 +275,28 @@ def task_shots(tab):
     shot("11-gate-ultrawide", "/index.html", w=1800, h=620, full=False, fresh=True)
     shot("12-hero-wide", "/index.html?open=1", w=1024, h=540, full=False)
 
+    print("hindi")
+    shot("13-hindi-hero", "/index.html?open=1", h=950, full=False,
+         before="W.i18n.set('hi')")
+    shot("14-hindi-full", "/index.html?open=1", h=900, before="W.i18n.set('hi')")
+    tab.eval("W.i18n.set('en')")
+
+    print("flight")
+    for name, p in (("15-fly-palace", 0.24), ("16-fly-hills", 0.72), ("17-fly-khumani", 0.94), ("18-fly-landed", 0.995)):
+        tab.call("Emulation.setDeviceMetricsOverride", width=1440, height=900, deviceScaleFactor=1, mobile=False)
+        tab.goto(base() + "/index.html?open=1", settle=1.6)
+        tab.eval("var t=document.getElementById('fly');window.scrollTo(0,t.getBoundingClientRect().top+window.scrollY+5)")
+        tab.wait_for("/is-live|is-static/.test(document.getElementById('venue').className)", timeout=20)
+        tab.eval("""(function(p){var t=document.getElementById('fly');var top=t.getBoundingClientRect().top+window.scrollY;
+          window.scrollTo(0, top + (t.offsetHeight-window.innerHeight)*p);})(%s)""" % p)
+        time.sleep(5.0)
+        tab.screenshot(f"{OUT}/{name}.png", width=1440, height=900, full=False)
+        print("  " + name)
+
+    print("live day")
+    shot("19-live-ribbon", "/index.html?open=1&now=2027-02-01T20:10", h=900, full=False,
+         before="document.getElementById('ev-sagaai').scrollIntoView({block:'center'})")
+
     print("mobile")
     shot("20-m-gate", "/index.html", w=414, h=896, full=False, fresh=True)
     shot("21-m-hero", "/index.html?open=1", w=414, h=896, full=False)
@@ -292,9 +317,13 @@ def task_zoom(tab):
             os.remove(os.path.join(out, f))
 
     targets = [
-        ("functions", "/index.html?open=1", "#functions"),
-        ("schedule", "/index.html?open=1", "#schedule"),
+        ("programme", "/index.html?open=1", "#programme"),
+        ("venue", "/index.html?open=1", "#venue-info"),
+        ("stay", "/index.html?open=1", "#stay"),
         ("travel", "/index.html?open=1", "#travel"),
+        ("dress", "/index.html?open=1", "#dress"),
+        ("faq", "/index.html?open=1", "#faq"),
+        ("help", "/index.html?open=1", "#help"),
         ("rsvp", "/index.html?open=1", "#rsvp"),
     ]
     for w, tag in ((1440, "d"), (414, "m")):
@@ -341,42 +370,41 @@ def task_check(tab):
     print("invitation")
     tab.call("Runtime.enable")
     tab.goto(base() + "/index.html?open=1", settle=3.2)
-    tab.eval("window.scrollTo(0,document.body.scrollHeight);")
-    time.sleep(1.2)
-    tab.eval("window.scrollTo(0,0);")
-    time.sleep(0.6)
+    tab.eval("localStorage.removeItem('vm-lang'); W.i18n.set('en');")
+    tab.eval("""(function(){var h=document.documentElement.scrollHeight,y=0;
+      var id=setInterval(function(){y+=700;window.scrollTo(0,y);
+        if(y>h){clearInterval(id);window.scrollTo(0,0);}},20);})()""")
+    time.sleep(2.6)
 
-    check("function cards render", tab.eval("document.querySelectorAll('.fn').length") == 4,
-          tab.eval("document.querySelectorAll('.fn').length"))
-    check("both sets of parents on the card",
-          tab.eval("document.querySelectorAll('.parents__side b').length") == 2)
-    check("timeline days render", tab.eval("document.querySelectorAll('.day').length") >= 2)
-    check("timeline rows render", tab.eval("document.querySelectorAll('.tl li').length") > 20)
-    # The sangeet closes at 00:30, which is the end of 1 Feb rather than its dawn.
-    day1 = tab.eval("Array.from(document.querySelectorAll('.day')[0]"
-                    ".querySelectorAll('time')).map(function(t){return t.textContent})")
-    check("day 1 opens with the 06:00 room opening", day1[0] == "06:00", day1[:3])
-    check("the after-midnight close sorts last", day1[-1] == "00:30", day1[-3:])
-    check("travel cards render", tab.eval("document.querySelectorAll('#travel-grid .info').length") == 6)
+    n_prog = tab.eval("W.data.programme.length")
+    check("three days render (1, 2 and the 3 Feb checkout)", tab.eval("document.querySelectorAll('.pday').length") == 3)
+    check("every programme event renders", tab.eval("document.querySelectorAll('.ev').length") == n_prog,
+          (tab.eval("document.querySelectorAll('.ev').length"), n_prog))
+    check("eleven painted moments", tab.eval("document.querySelectorAll('.ev--art img').length") == 11)
+    tab.wait_for("Array.from(document.querySelectorAll('.ev--art img')).every(function(i){return i.complete && i.naturalWidth>0})", timeout=12)
+    check("every painting loads", tab.eval(
+        "Array.from(document.querySelectorAll('.ev--art img')).every(function(i){return i.complete && i.naturalWidth>0})"))
+    day1 = tab.eval("Array.from(document.querySelectorAll('#day-2027-02-01 .ev__time')).map(function(t){return t.textContent})")
+    check("day 1 opens with the 8 am room opening", day1[0] == "8:00 am", day1[:2])
+    check("the after-party runs past midnight and sorts last", day1[-1] == "11:00 pm – 1:00 am", day1[-2:])
+    check("both sets of parents on the card", tab.eval("document.querySelectorAll('.parents__side b').length") == 2)
+    check("venue directions point at the hotel rooftop",
+          "24.6263,73.7139" in (tab.eval("(document.querySelector('#venue-body a[href*=\"maps/dir\"]')||{}).href") or ""))
+    check("the hotel can be called from the page",
+          tab.eval("document.querySelectorAll('a[href^=\"tel:\"]').length") >= 4)
+    check("stay cards render", tab.eval("document.querySelectorAll('#stay-grid .card').length") == 6)
+    check("travel, weather and Udaipur cards render", tab.eval("document.querySelectorAll('#travel-grid .card').length") == 6)
+    check("five looks render", tab.eval("document.querySelectorAll('#looks .look').length") == 5)
+    check("the questions render", tab.eval("document.querySelectorAll('#faq-list .qa').length") >= 16)
+    check("the help desk renders", tab.eval("document.querySelectorAll('#help-grid .helpc').length") == 4)
+    tab.eval("var q=document.getElementById('faq-q'); q.value='parking'; q.dispatchEvent(new Event('input'));")
+    shown = tab.eval("Array.from(document.querySelectorAll('#faq-list .qa')).filter(function(d){return !d.hidden}).length")
+    check("question search narrows the list", 0 < shown < 4, shown)
+    tab.eval("var q=document.getElementById('faq-q'); q.value=''; q.dispatchEvent(new Event('input'));")
 
     # ── layout and typography ──
-    # Four cards used to come out three-across plus a stranded fourth. The bento
-    # widths must pair up into two full rows instead.
-    spans = tab.eval("Array.from(document.querySelectorAll('.fn')).map(function(c){"
-                     "return getComputedStyle(c).gridColumnStart + '/' + getComputedStyle(c).gridColumnEnd})")
-    tops = tab.eval("Array.from(document.querySelectorAll('.fn')).map(function(c){"
-                    "return Math.round(c.getBoundingClientRect().top)})")
-    check("function cards form two even rows, no orphan",
-          len(set(tops)) == 2 and tops[0] == tops[1] and tops[2] == tops[3], (tops, spans))
-    check("every function card carries a description",
-          tab.eval("document.querySelectorAll('.fn__blurb').length") == 4)
-    check("'where to stay' gets a readable measure, not a narrow ribbon",
-          tab.eval("document.querySelector('.info--half').getBoundingClientRect().width") > 400)
-
-    # Section heads are asymmetric now: the title sits left of its standfirst
-    # rather than both being centred.
     off = tab.eval("""(function(){
-      var h=document.querySelector('#functions .sec__head');
+      var h=document.querySelector('#programme .sec__head');
       var t=h.querySelector('h2').getBoundingClientRect();
       var p=h.querySelector('p').getBoundingClientRect();
       return {titleLeft: Math.round(t.left), paraLeft: Math.round(p.left),
@@ -384,58 +412,63 @@ def task_check(tab):
     })()""")
     check("section head is asymmetric, not centred", off["paraLeft"] > off["titleLeft"] + 200, off)
     check("section titles are display-scale", off["titleSize"] >= 56, off["titleSize"])
-    check("section heads are numbered",
-          tab.eval("getComputedStyle(document.querySelector('#functions .sec__head'),'::before')"
-                   ".content").strip('"') in ("01", "attr(data-index)"))
-
-    # Kinetic type: split into characters, but still one string to a screen reader.
     check("headings split into characters",
           tab.eval("document.querySelectorAll('[data-split=\"chars\"] .c-in').length") > 30)
     check("split headings keep an accessible label",
-          tab.eval("document.querySelector('[data-split=\"chars\"]').getAttribute('aria-label')")
-          == "Four functions, two days")
+          tab.eval("document.querySelector('#programme [data-split=\"chars\"]').getAttribute('aria-label')")
+          == "Two days, in order")
     check("split characters are hidden from assistive tech",
           tab.eval("Array.from(document.querySelectorAll('[data-split=\"chars\"] .c-word'))"
                    ".every(function(w){return w.getAttribute('aria-hidden')==='true'})"))
-    # The script names must not be split — the face joins its letters.
     check("script names are wiped, not split",
           tab.eval("document.querySelectorAll('.names__n .c-in, .names__n .w-in').length") == 0
           and tab.eval("document.querySelector('.names__n').getAttribute('data-reveal')") == "ink")
-
-    # The drawn rail: either scroll-driven, or fully drawn where unsupported.
-    rail = tab.eval("""(function(){
-      var s=getComputedStyle(document.querySelector('.tl'),'::after');
-      return {tl: s.animationTimeline, t: s.transform,
-              supported: CSS.supports('animation-timeline','scroll()')};
-    })()""")
-    check("timeline rail draws on scroll where supported",
-          (rail["supported"] and "view" in str(rail["tl"])) or rail["t"] in ("none", "matrix(1, 0, 0, 1, 0, 0)"),
-          rail)
-
-    # The grain overlay sits above the content, so it must not eat clicks.
+    # The wipe's own clip-path hides the names from IntersectionObserver; if
+    # only the 2.6 s safety timer reveals them, a returning guest sees a blank card.
+    # So the timer is dropped here, and the page's own copy from boot waited out.
+    tab.wait_for("performance.now() > performance.getEntriesByType('navigation')[0].domContentLoadedEventEnd + 2800", timeout=10)
+    tab.eval("document.querySelector('.names').scrollIntoView({block:'center'})")
+    inked = tab.eval("""new Promise(function(res){
+      var ns=Array.from(document.querySelectorAll('.names__n'));
+      ns.forEach(function(n){ n.style.transition='none'; n.classList.remove('is-revealed');
+        void n.offsetWidth; n.style.transition=''; });
+      var st=window.setTimeout;
+      window.setTimeout=function(f, ms){ return ms===2600 ? 0 : st.apply(window, arguments); };
+      W.motion.initReveal(document.querySelector('.names'));
+      window.setTimeout=st;
+      var t0=performance.now();
+      (function poll(){
+        if (ns.every(function(n){ return n.classList.contains('is-revealed'); })) return res(true);
+        if (performance.now()-t0 > 5000) return res(false);
+        st(poll, 100);
+      })();
+    })""", await_promise=True)
+    check("the names are written on arrival, not after the safety timer", inked)
+    alt = tab.eval("""(function(){var a=document.querySelectorAll('.ev--art');
+      var x=Array.from(a).slice(0,2).map(function(e){return Math.round(e.querySelector('.ev__art').getBoundingClientRect().left)});
+      return x;})()""")
+    check("paintings alternate sides on a wide screen", alt[0] != alt[1], alt)
     check("grain overlay does not swallow clicks",
           tab.eval("getComputedStyle(document.body,'::after').pointerEvents") == "none")
     check("countdown ticking", tab.eval("Number(document.querySelector('.cd b').textContent) > 0"))
     check("rsvp form present", tab.eval("!!document.getElementById('rsvp-form')"))
     check("garland strands", tab.eval("document.querySelectorAll('#hero-garland .strand').length") >= 9)
     check("door carving drawn", tab.eval("document.querySelectorAll('#door-l svg').length") == 2)
+    check("the wax seal is drawn in two halves", tab.eval("document.querySelectorAll('.seal__half svg').length") == 2)
     check("no door svg stretches",
           tab.eval("Array.from(document.querySelectorAll('#door-l svg,#door-r svg'))"
                    ".every(function(s){return s.getAttribute('preserveAspectRatio')"
-                   "&&s.getAttribute('preserveAspectRatio').indexOf('meet')>-1})")) 
+                   "&&s.getAttribute('preserveAspectRatio').indexOf('meet')>-1})"))
     check("nothing guest-facing mentions vendor noise",
-          not tab.eval("/legal cut-?off|sound OFF|D\u00e9cor team|negotiated rate|booking link/i"
+          not tab.eval("/legal cut-?off|sound OFF|D\u00e9cor team|negotiated rate|booking link|do not announce|quietly/i"
                        ".test(document.body.innerText)"),
-          tab.eval("(document.body.innerText.match(/legal cut-?off|sound OFF|negotiated rate|booking link/i)||[])[0]"))
+          tab.eval("(document.body.innerText.match(/legal cut-?off|sound OFF|negotiated rate|booking link|do not announce|quietly/i)||[])[0]"))
     check("Kota, Indore and Neemuch are in the road directions",
           tab.eval("['Kota','Indore','Neemuch'].every(function(c)"
                    "{return document.body.innerText.indexOf(c)>-1})"))
-    check("no Mehndi function on the invitation",
-          not tab.eval("/\\bMehndi\\b/.test(document.getElementById('fn-grid').innerText)"))
-    # The reveal safety net runs from DOMContentLoaded, so poll rather than
-    # guess at a sleep: the guarantee is that nothing stays invisible.
-    tab.wait_for("document.querySelectorAll('[data-reveal]').length > 0 && "
-                 "Array.from(document.querySelectorAll('[data-reveal]'))"
+    check("no Mehndi function in the programme",
+          not tab.eval("/\\bMehndi\\b/i.test(document.getElementById('prog').innerText)"))
+    tab.wait_for("Array.from(document.querySelectorAll('[data-reveal]'))"
                  ".every(function(e){return getComputedStyle(e).opacity !== '0'})")
     hidden = tab.eval(
         "Array.from(document.querySelectorAll('[data-reveal]'))"
@@ -443,18 +476,104 @@ def task_check(tab):
         ".map(function(e){return e.className||e.tagName}).slice(0,5)")
     check("no element left invisible", not hidden, hidden)
 
+    # ── calendar ──
+    ics = tab.eval("W.util.buildICS(W.invite.calendarEvents(),'x')")
+    alarms = tab.eval("W.data.programme.filter(function(e){return e.alarm}).length")
+    check("calendar has one entry per event", ics.count("BEGIN:VEVENT") == n_prog)
+    check("key events carry a reminder", ics.count("BEGIN:VALARM") == alarms and alarms >= 8, (ics.count("BEGIN:VALARM"), alarms))
+    check("the after-party ends at 1 am on 2 Feb in the calendar", "DTEND:20270202T010000" in ics)
+
+    # ── Hindi ──
+    tab.eval("W.i18n.set('hi')")
+    time.sleep(0.8)
+    hi = tab.eval("""(function(){
+      var h=document.querySelector('#programme h2');
+      var eb=getComputedStyle(document.querySelector('.eyebrow')).letterSpacing;
+      return {lang: document.documentElement.lang, title: h.textContent,
+              split: h.querySelectorAll('.c-in').length, eyebrow: eb,
+              haldi: document.querySelector('#ev-haldi .ev__title').textContent,
+              rsvp: document.querySelector('#rsvp-form .field span').textContent,
+              names: document.querySelector('.names__n').textContent};
+    })()""")
+    check("Hindi switches the page language", hi["lang"] == "hi", hi)
+    check("Hindi headings are whole, never split into letters", hi["split"] == 0 and "क्रम" in hi["title"], hi)
+    check("Devanagari is never letter-spaced", hi["eyebrow"] in ("normal", "0px"), hi["eyebrow"])
+    check("programme, card and form are in Hindi",
+          hi["haldi"] == "हल्दी" and "नाम" in hi["rsvp"] and "वैभव" in hi["names"], hi)
+    tab.eval("W.i18n.set('en')")
+    time.sleep(0.6)
+    check("switching back restores English", tab.eval("document.querySelector('#ev-haldi .ev__title').textContent") == "Haldi")
+
     errs = tab.console_errors()
     check("no console errors", len(errs) == 0, errs[:3])
 
+    print("live day")
+    tab.goto(base() + "/index.html?open=1&now=2027-02-01T20:10", settle=2.6)
+    live = tab.eval("""(function(){var n=document.getElementById('now');
+      return {hidden: n.hidden, text: n.innerText, cur: !!document.querySelector('#ev-sagaai.is-now')};})()""")
+    check("the ribbon shows what is happening now", not live["hidden"] and "Sagaai" in live["text"], live)
+    check("and what is next", "Sangeet" in live["text"], live)
+    check("the current event is highlighted in the programme", live["cur"], live)
+    tab.goto(base() + "/index.html?open=1&now=2026-12-01T10:00", settle=2.0)
+    check("the ribbon stays hidden before the wedding", tab.eval("document.getElementById('now').hidden"))
+
+    print("flight")
+    tab.goto(base() + "/index.html?open=1", settle=2.4)
+    tab.eval("var t=document.getElementById('fly');window.scrollTo(0,t.getBoundingClientRect().top+window.scrollY+5)")
+    state = tab.wait_for("(function(){var c=document.getElementById('venue').className;"
+                         "return /is-live|is-static/.test(c)?c:null})()", timeout=20)
+    check("the flight starts, or falls back to the painting", bool(state), state)
+    if state and "is-live" in state:
+        check("landmark pins are placed", tab.eval("document.querySelectorAll('.fly__pin').length") == 4)
+        # At the palace stop Lake Pichola's label used to sit in the caption, and
+        # Fateh Sagar's hung half off the left edge.
+        clash, cut = [], []
+        for p in (0.24, 0.48, 0.72):
+            tab.eval("""(function(p){var t=document.getElementById('fly');var top=t.getBoundingClientRect().top+window.scrollY;
+              window.scrollTo(0, top + (t.offsetHeight-window.innerHeight)*p);})(%s)""" % p)
+            time.sleep(3.0)
+            r = tab.eval("""(function(){
+              var c=document.querySelector('#fly-caps .fly__cap.is-on'), r=c?c.getBoundingClientRect():null;
+              var nav=document.getElementById('nav').getBoundingClientRect().bottom, out={clash:[],cut:[]};
+              Array.from(document.querySelectorAll('.fly__pin:not(.is-off) span')).forEach(function(s){
+                var b=s.getBoundingClientRect();
+                if(!r || (b.right>r.left && b.left<r.right && b.bottom>r.top && b.top<r.bottom)) out.clash.push(s.textContent);
+                if(b.left<0 || b.right>innerWidth || b.top<nav) out.cut.push(s.textContent);
+              });
+              return out;})()""")
+            clash += [f"{l} at {p}" for l in r["clash"]]
+            cut += [f"{l} at {p}" for l in r["cut"]]
+        check("no landmark label sits on the caption", not clash, clash)
+        check("no landmark label is cut off by an edge or the nav", not cut, cut)
+        tab.eval("""(function(){var t=document.getElementById('fly');var top=t.getBoundingClientRect().top+window.scrollY;
+          window.scrollTo(0, top + (t.offsetHeight-window.innerHeight)*0.995);})()""")
+        time.sleep(1.4)
+        check("the flight lands on the painted hotel",
+              "is-landed" in tab.eval("document.getElementById('venue').className"))
+    errs = tab.console_errors()
+    check("the flight has no console errors", len(errs) == 0, errs[:3])
+
     print("gate")
+    tab.goto(base() + "/index.html", settle=0.8)
+    tab.eval("sessionStorage.clear()")
     tab.goto(base() + "/index.html", settle=2.4)
     check("gate is showing", tab.eval("!document.getElementById('gate').classList.contains('is-done')"))
+    ink = "Array.from(document.querySelectorAll('.names__n')).map(function(n){return getComputedStyle(n).clipPath})"
+    # Long enough after the reveal for an unheld 1.6 s wipe to have finished.
+    tab.wait_for("document.querySelectorAll('.names__n.is-revealed').length === 2", timeout=6)
+    time.sleep(1.8)
+    check("the names wait behind the doors, even once revealed",
+          tab.eval("document.querySelectorAll('.names__n.is-revealed').length") == 2
+          and all("102%" in c for c in tab.eval(ink)), tab.eval(ink))
     tab.eval("document.getElementById('gate-ring').click()")
-    time.sleep(0.4)
-    check("doors swing on tap", tab.eval("document.getElementById('gate').classList.contains('is-open')"))
+    time.sleep(0.3)
+    check("the seal breaks on tap", tab.eval("document.getElementById('gate-ring').classList.contains('is-broken')"))
+    time.sleep(0.6)
+    check("doors swing after the seal", tab.eval("document.getElementById('gate').classList.contains('is-open')"))
     time.sleep(2.4)
     check("gate clears away", tab.eval("document.getElementById('gate').classList.contains('is-done')"))
     check("body unlocked", tab.eval("!document.body.classList.contains('is-locked')"))
+    check("the names are written as the doors part", not any("102%" in c for c in tab.eval(ink)), tab.eval(ink))
 
     print("portal lookup")
     tab.events.clear()

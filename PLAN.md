@@ -1,7 +1,8 @@
 # Vaibhav & Mahak — Udaipur Wedding Plan
 
-**Dates:** 1 Feb (rooms open 06:00 · Haldi · Ring Ceremony + Sangeet) · 2 Feb 2027 (Phere, Reception). Mehndi happens at home beforehand.
-**Phere muhurat:** 2 Feb 2027, 11:00 – 13:30
+**Dates:** 1 Feb (hotel opens 08:00 · Haldi · Folk evening, Sagaai, Sangeet, After-party) · 2 Feb 2027 (Baraat, Varmala, Phere, Vidaai, Reception). Mehndi happens at home beforehand.
+**Phere:** 2 Feb 2027, 11:00 – 13:00 — muhurat to be confirmed by the pandit (see §5)
+**Venue:** Hotel Khumani by Hills N Dunes, Plot 2, Bhuwana Bypass, Udaipur — booked
 **City:** Udaipur, Rajasthan
 **Budget:** ₹20,00,000 all-in
 **Guests:** ~180 (family, both sides) for Haldi / Ring + Sangeet / Phere · ~650 for Reception
@@ -36,7 +37,7 @@ Bride's and groom's outfits, hair and makeup, and all four venue functions **are
 
 1 Feb 2027 is a **Monday**, 2 Feb a **Tuesday**. Weekday weddings in Udaipur price 10–15% below Saturday–Sunday, and the good vendors are available. On a budget this tight, a weekday date is worth roughly ₹1.2L — do not move it to a weekend.
 
-February is peak season, so book early anyway. Weather: days 25–27°C, nights 10–12°C, sunrise ~07:05, **sunset ~18:10**. Two consequences built into the schedule below: outdoor daytime functions must wrap by 17:30, and every evening function needs patio heaters and a shawl favour.
+February is peak season, so book early anyway. Weather: days 24–27°C, nights 9–12°C, sunrise ~07:16, **sunset ~18:19**. Two consequences built into the schedule below: outdoor daytime functions finish well before dark, and every evening function needs patio heaters and a shawl favour.
 
 **Verify with your pandit and a 2027 panchang:** whether 2 Feb sits in a shubh vivah muhurat window, and whether Basant Panchami (approximately 11 Feb 2027) or another abooj muhurat falls close enough to cluster vendor bookings. If 1–2 Feb turns out to be a heavy muhurat date, expect +15% on rates and book 14+ months out.
 
@@ -112,66 +113,60 @@ Kept off the venue entirely, at your call. Bridal mehndi needs 12+ hours to dark
 
 Keep the photographer for two hours of it. Mehndi at home photographs better than mehndi at a resort.
 
+### Before — Sunday 31 January
+
+Ten rooms at Hotel Khumani are held from the night of the 31st for early arrivals: the immediate families, the elderly, anyone flying in late. Everyone else arrives on the morning of 1 February, when the hotel opens to our guests at 08:00.
+
 ### Day 1 — Monday 1 February
 
-The room block starts at **06:00 on 1 February**, not the night before. That saves roughly 90 room-nights, which is the largest single saving available to you outside food — but it only works if the early check-in is written into the contract and the morning is staffed for it. See the note below the table.
+The whole programme now lives in `js/data.js` → `programme`. The invitation, the guest portal, the calendar file and the planner's run sheets all read it, so a time only ever changes in one place. **Published times never overlap the next thing a guest must be at**; where a breakfast quietly runs longer for late risers, that is a planner-only note, not something the website says.
 
-| Time | What |
-|---|---|
-| 06:00 | **Rooms open** — check-in desk live, 2 staff per 100 guests, luggage runners, bag-hold counter for rooms not yet ready |
-| 06:30–09:30 | Welcome breakfast on the lawn — chai, poha, hot counters. Guests eat while rooms are turned around |
-| 07:30–08:15 | **Ganesh Puja / Griha Shanti** — immediate families, ~40 people, poolside |
-| 09:00–10:00 | Guests dress. This buffer is the whole reason the haldi moved to 10:00 |
-| 10:00–11:00 | **HALDI** — separate haldi for bride and groom |
-| 11:00–12:00 | Joint haldi, dhol, flower shower, water-splash zone |
-| 12:00–13:30 | Brunch counters open |
-| 13:30–16:30 | **Rest** — non-negotiable; bride goes into hair and makeup at 16:00 |
-| 16:00–17:00 | Family portraits in coordinated colours (free, highest-ROI hour of the day) |
-| 18:30–19:00 | Guest arrival, welcome drinks |
-| 19:00–19:30 | **RING CEREMONY** — couple entry, ring exchange, blessings, cake |
-| 19:35–20:00 | **Kalbelia / Ghoomar folk act** — 25 min, opens the evening, troupe pulls guests up to dance |
-| 20:00–22:00 | Bar open (2 hours only) |
-| 20:10–21:00 | **SANGEET** — families, then cousins, then siblings |
-| 21:00–21:15 | The couple's performance |
-| 21:15 | Dinner service opens, staggered |
-| 21:40 | Open floor |
-| **22:00** | **Outdoor sound off** — legal cut-off, see §8. Sound team shifts to the indoor rig by 21:45 so there is no gap |
-| 22:00–00:30 | After-party in the banquet/lounge |
+| Time | What | Where |
+|---|---|---|
+| 08:00 | **Rooms open** — check-in desk live, 2 staff per 100 guests, luggage runners, bag-hold counter | Reception |
+| 08:00–10:30 | Breakfast *(published to 10:30; keep it open quietly until 11:30)* | Restaurant |
+| **11:00–13:30** | **HALDI** — a haldi for each of us, then one together; dhol, flower shower | Lawn |
+| 13:30–15:30 | Lunch, served beside the haldi so nobody changes first | Beside the lawn |
+| 15:30–19:00 | Rest. Lawn reset for the evening by 18:30. Sunset 18:19 | Rooms · rooftop pool |
+| **19:00–20:00** | **Rajasthani folk evening** — Kalbeliya and Ghoomar; the soft start for late arrivals | Lawn |
+| **20:00–21:00** | **SAGAAI** — guests seated by 19:50. Dinner opens alongside | Lawn — stage |
+| 20:00–23:00 | Dinner — snacks and a full wedding dinner through the sagaai and sangeet | Lawn |
+| **21:00–23:00** | **SANGEET** — families, then cousins, then open floor | Lawn |
+| **23:00–01:00** | **Cocktail after-party** — drinks, late-night snacks, DJ | Underground banquet hall |
 
-**On the 06:00 room opening.** It is the right call, with three conditions. First, get it in the contract in words — "rooms available from 06:00 on 1 Feb, no early-check-in charge" — because most Udaipur resorts price a 6 am check-in as a full extra night, and they will only waive it against your F&B commitment. Second, book 25–30 rooms for the night of 31 January anyway, for the immediate families, the elderly, and anyone flying in late; they cannot be checking in at dawn on the day they are needed at a 07:30 puja. Third, accept that not every room will be ready at 06:00 if the property had guests on the 31st — hence the bag-hold counter and the two-hour breakfast, so nobody is standing in a lobby holding a suitcase.
+**On outdoor sound.** The sangeet runs outdoors to about 23:00 and you are managing the sound yourselves. The legal cut-off for amplified outdoor sound is 22:00 (Noise Rules 2000, rule 5(2)), and Udaipur police have seized equipment at weddings, so keep the volume down after 22:00 and have the indoor rig ready. The after-party is indoors already, which is the right call.
 
-**On the sangeet running order.** The folk act now goes *first*, not at 20:45. A Kalbelia troupe that pulls people out of their chairs solves the problem every sangeet has: nobody wants to be the first person dancing in front of 180 seated relatives. Warm the room up with professionals, then the family performances land, then close with the couple.
-
-*Haldi dress code:* yellow and marigold orange, cottons. *Sangeet:* fuchsia, marigold, gold — indo-western welcome.
+*Haldi:* yellow and marigold orange, cottons. *Evening:* fuchsia, marigold, gold — indo-western welcome. *After-party:* party wear.
 
 ### Day 2 — Tuesday 2 February
 
-| Time | What |
-|---|---|
-| 05:00–09:00 | Décor team completes mandap (structure built overnight on 1 Feb) |
-| 07:30 | Bride's hair and makeup begins — 3 hours, ready by 10:45 |
-| 08:00–09:30 | Breakfast for all guests (negotiate this into the room tariff) |
-| 09:30–10:15 | **BARAAT** — brass band, 2 dhols, ghodi or vintage car, 300m loop on the property |
-| 10:15–10:35 | **Toran / Dwar Puja + Milni** |
-| 10:35–10:55 | **VARMALA** on a raised stage — flower shower, 2 cold-pyro bursts |
-| 11:00 | Guests seated at the mandap |
-| **11:00–13:30** | **PHERE** — Kanyadaan, Granthi Bandhan, Havan, Pheras, Saptapadi, Sindoor & Mangalsutra, Ashirwad. Live shehnai throughout, no DJ. |
-| 13:30–16:00 | **Wedding lunch** — Rajasthani thali — plus family portraits |
-| 16:00–18:30 | Rest. Bride's reception look = outfit and jewellery change, makeup refresh only (saves 60 min) |
-| 19:00–19:45 | **RECEPTION** guest arrival (650), welcome drinks, photo wall |
-| 19:45 | Couple entry |
-| 20:00 | Dinner opens; stage greetings run in **two parallel queues** |
-| 21:00 | Cake, then exactly 3 speeches × 2 minutes |
-| 21:15–22:30 | Live ghazal / semi-classical duo, dinner continues |
-| 22:45 | Vidaai — *or* move it to Day 3 morning (recommended) |
-| 23:15 | Close |
+| Time | What | Where |
+|---|---|---|
+| 05:00–08:00 | Décor team completes the mandap (structure built overnight) | Lawn |
+| 07:00–07:30 | **Ganesh Puja** — bride's family | With the bride's family |
+| 07:30–08:00 | **Tel ceremony** — bride's family; hair wash straight after | With the bride's family |
+| 07:30–09:00 | Breakfast *(published to 09:00; keep it open quietly until 10:00)* | Restaurant |
+| 07:45–10:30 | Bride's hair and makeup. Groom ready by 09:00, sehra by 09:10 | — |
+| 09:15 | Baraat gathers | Hotel porch |
+| **09:30–10:15** | **BARAAT** — dhol, band, ghodi | Porch → lawn gate |
+| 10:15–10:30 | **Milni & dwar puja** | Lawn gate |
+| **10:30–11:00** | **VARMALA** — flower shower | Lawn — stage |
+| **11:00–13:00** | **PHERE** — guests seated by 10:55. Kanyadaan, Granthi Bandhan, Havan, Pheras, Saptapadi, Sindoor & Mangalsutra, Ashirwad | Mandap, on the lawn |
+| 13:00–14:30 | Wedding lunch | Beside the mandap |
+| **14:30–15:00** | **VIDAAI** — decorated car or doli at the porch; griha pravesh at the family suite | Hotel porch |
+| 15:00–19:00 | Rest. Lawn reset from mandap to reception (650) by 18:30. Bride's reception look 16:00 | Rooms |
+| **19:00–23:00** | **RECEPTION** — couple enter 19:45, dinner 20:00, two greeting queues, cake and 3 speeches at 21:00 | Lawn |
 
-Brief the pandit for a **90-minute core ceremony with 60 minutes of buffer**. Your 2.5-hour window is generous, which is good — rushed pheras photograph badly and upset elders.
+**Why the varmala is 10:30, not 10:00.** Bridal hair and makeup needs about three hours, plus a hair wash after the oil of the tel ceremony. With Ganesh puja at 07:00 and tel at 07:30, she can be ready by 10:30 without starting at dawn. The varmala itself needs thirty minutes, not an hour.
 
-650 guests through a single stage line takes 90–110 minutes and will swallow the evening. Run two photo queues, have the anchor call guests table-block by table-block, and put a separate photo booth near the entrance as an alternative for people who don't need a stage picture.
+**The muhurat.** Published panchangs (Drik Panchang, Purohit, Swarnsiddhi, VedicMatch — all computed for Delhi) give the 2 February 2027 vivah muhurat as **17:47 on 2 Feb to 07:08 on 3 Feb** (Mula nakshatra, Krishna Dwadashi). The 11:00–13:00 phere sits outside that. The daytime option families use is **Abhijit muhurat — about 12:26–13:10 in Udaipur** on that date — so if your pandit works with it, the pheras themselves should fall in that slot, which your 11:00 start allows. The next listed daytime window is 3 Feb, 07:08–12:26. Get the exact window from the pandit in writing.
 
-### Day 3 — Wednesday 3 February (recommended)
-10:00 Vidaai · 11:00 farewell brunch · 12:00 check-out. Doing the vidaai the next morning instead of at 22:45 gives you daylight photographs, an unhurried goodbye, and a couple who aren't running on 16 hours awake. It costs one extra night only for the immediate families.
+**Vidaai after the phere** is the traditional order — wedding, vidaai, then a reception hosted by the groom's family — and in daylight it photographs well. At a single hotel it is symbolic: a decorated car or doli loops the drive.
+
+650 guests through a single stage line takes 90–110 minutes and will swallow the evening. Run two photo queues, have the anchor call guests table-block by table-block, and put a separate photo booth near the entrance for people who don't need a stage picture.
+
+### Day 3 — Wednesday 3 February
+07:30–10:00 breakfast · 10:00 checkout. Airport and station drops are arranged.
 
 ---
 
@@ -224,11 +219,11 @@ Dal Baati Churma, Gatte ki Sabzi, Ker Sangri, Papad ki Sabzi, Bajra and missi ro
 
 ## 8. Risks, and what to do about them
 
-**Outdoor loudspeakers must stop at 22:00.** Rajasthan Pollution Control Board rules, following the Supreme Court order, prohibit open-air amplified sound between 22:00 and 06:00. Udaipur venues enforce this. The schedule already moves the after-party indoors at 22:00 — get the venue's indoor-music policy **in writing**.
+**Outdoor loudspeakers must stop at 22:00.** Rajasthan Pollution Control Board rules, following the Supreme Court order, prohibit open-air amplified sound between 22:00 and 06:00. Udaipur venues enforce this. The after-party is indoors in Khumani's underground banquet hall from 23:00; the sangeet runs outdoors to about 23:00, which you have chosen to manage yourselves — keep the volume down after 22:00 and get the hotel's indoor-music policy **in writing**.
 
-**Night temperatures of 10–12°C.** Budget 12 patio heaters at ₹800–1,200/day (~₹15k for two nights, from contingency) and give shawls or stoles as reception favours. Guests will remember being cold far longer than they'll remember the centrepieces.
+**Night temperatures of 9–12°C.** Budget 12 patio heaters at ₹800–1,200/day (~₹15k for two nights, from contingency) and give shawls or stoles as reception favours. Guests will remember being cold far longer than they'll remember the centrepieces.
 
-**Sunset at 18:10.** All outdoor daytime functions finish by 17:30. Test the reception lighting at 17:00, not at 19:00.
+**Sunset at 18:19.** All outdoor daytime functions finish well before dark. Test the evening lighting at 17:00, not at 19:00.
 
 **Drone permissions.** Udaipur has restricted airspace near Dabok airport and over the lakes. Confirm your cinematographer flies a DGCA-compliant, registered drone and get written venue clearance.
 

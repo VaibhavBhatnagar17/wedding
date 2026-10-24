@@ -22,18 +22,28 @@ window.W = window.W || {};
     if (reduced || !('IntersectionObserver' in window)) { items.forEach(show); return; }
     document.documentElement.classList.add('js-anim');
 
+    // A clip-path that hides an element hides it from the observer too, so an
+    // ink wipe is set off by its parent coming into view instead.
+    const watch = new Map();
+    items.forEach(function (el) {
+      const t = el.getAttribute('data-reveal') === 'ink' && el.parentElement ? el.parentElement : el;
+      if (!watch.has(t)) watch.set(t, []);
+      watch.get(t).push(el);
+    });
+
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
-        const el = en.target;
-        const d = Number(el.getAttribute('data-delay')) || 0;
-        if (d) setTimeout(function () { show(el); }, d);
-        else show(el);
-        io.unobserve(el);
+        watch.get(en.target).forEach(function (el) {
+          const d = Number(el.getAttribute('data-delay')) || 0;
+          if (d) setTimeout(function () { show(el); }, d);
+          else show(el);
+        });
+        io.unobserve(en.target);
       });
     }, { rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
 
-    items.forEach(function (el) { io.observe(el); });
+    watch.forEach(function (els, t) { io.observe(t); });
 
     // Nothing may ever stay invisible, whatever the observer does.
     setTimeout(function () { items.forEach(show); }, 2600);
@@ -104,9 +114,14 @@ window.W = window.W || {};
     el.dataset.splitDone = 'chars';
   }
 
+  /* Devanagari is never cut up: its letters hang from one shared headline and
+     carry joined vowel signs, so splitting by character breaks the script. */
+  const DEVANAGARI = /[\u0900-\u097F]/;
+
   function initSplit(root) {
     Array.prototype.slice.call((root || document).querySelectorAll('[data-split]'))
       .forEach(function (el) {
+        if (DEVANAGARI.test(el.textContent)) { el.setAttribute('aria-label', el.textContent.trim()); return; }
         if (el.getAttribute('data-split') === 'chars') splitChars(el);
         else splitWords(el);
       });

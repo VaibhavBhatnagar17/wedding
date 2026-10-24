@@ -45,13 +45,14 @@ window.W = window.W || {}; W.views = W.views || {};
         '10–15% below Saturday and Sunday, and the good vendors are still available. On a budget this tight that is worth ' +
         'about ₹1.2 lakh. <strong>Do not move it to a weekend.</strong>' }),
       el('p', { html:
-        'February is peak season regardless, so book early. Days run 25–27°C, nights 10–12°C, sunrise around 07:05 and ' +
-        '<strong>sunset at 18:10</strong>. Two consequences are already built into the schedule: outdoor daytime functions ' +
-        'wrap by 17:30, and both evenings need patio heaters and a shawl favour.' }),
+        'February is peak season regardless, so book early. Days run 24–27°C, nights 9–12°C, sunrise around 07:16 and ' +
+        '<strong>sunset at 18:19</strong>. Two consequences are already built into the schedule: outdoor daytime functions ' +
+        'finish well before dark, and both evenings need patio heaters and a shawl favour.' }),
       el('div', { class: 'callout', html:
-        '<b>Verify with your pandit and a 2027 panchang:</b> whether 2 February sits in a shubh vivah muhurat window, and whether ' +
-        'Basant Panchami (around 11 February 2027) or another abooj muhurat falls close enough to cluster vendor bookings. ' +
-        'If 1–2 February turns out to be a heavy muhurat date, expect +15% on rates and book fourteen months out.' })
+        '<b>The muhurat, checked:</b> published panchangs (Drik Panchang, Purohit, Swarnsiddhi, VedicMatch — all computed for Delhi) ' +
+        'list the 2 February 2027 vivah muhurat as <strong>17:47 on 2 Feb to 07:08 on 3 Feb</strong> (Mula nakshatra, Krishna Dwadashi). ' +
+        'The 11:00–13:00 phere sits outside it. The daytime option is Abhijit muhurat, about <strong>12:26–13:10 in Udaipur</strong>; ' +
+        'the next listed daytime window is 3 Feb, 07:08–12:26. Ask the pandit for the exact window in writing and time the pheras inside it.' })
     ]));
 
     /* cuts */

@@ -2,23 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Vaibhav &amp; Mahak · 2 February 2027 · Udaipur</title>
-<meta name="description" content="Vaibhav Bhatnagar weds Mahak Kalra. 1 and 2 February 2027, Udaipur, Rajasthan. Functions, schedule, travel and RSVP." />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Vaibhav &amp; Mahak · 1 &amp; 2 February 2027 · Hotel Khumani, Udaipur</title>
+<meta name="description" content="Vaibhav Bhatnagar weds Mahak Kalra — 1 and 2 February 2027 at Hotel Khumani, Udaipur. The full programme, the venue, travel, what to wear and RSVP, in English and Hindi." />
 <meta name="theme-color" content="#2b0810" />
-<meta property="og:title" content="Vaibhav &amp; Mahak — Udaipur, 2 February 2027" />
-<meta property="og:description" content="You are invited. Haldi, Ring Ceremony &amp; Sangeet, Phere and Reception." />
+<meta property="og:title" content="Vaibhav &amp; Mahak — Udaipur, 1 &amp; 2 February 2027" />
+<meta property="og:description" content="You are invited. Haldi, sagaai and sangeet on 1 February; baraat, phere and reception on 2 February — Hotel Khumani, Udaipur." />
 <meta property="og:type" content="website" />
+<meta property="og:image" content="https://vaibhavbhatnagar17.github.io/wedding/assets/og.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%236e1526'/%3E%3Ccircle cx='32' cy='32' r='15' fill='none' stroke='%23e8c86a' stroke-width='3'/%3E%3Cg stroke='%23e8c86a' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M32 6v8M32 50v8M6 32h8M50 32h8M13.6 13.6l5.6 5.6M44.8 44.8l5.6 5.6M13.6 50.4l5.6-5.6M44.8 19.2l5.6-5.6'/%3E%3C/g%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Italianno&family=Jost:wght@300;400;500&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://unpkg.com" crossorigin />
+<link rel="preconnect" href="https://server.arcgisonline.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Italianno&family=Jost:wght@300;400;500&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/css/tokens.css" />
 <link rel="stylesheet" href="assets/css/motion.css" />
 <link rel="stylesheet" href="assets/css/invite.css" />
+<link rel="stylesheet" href="assets/css/royal.css" />
+<script src="js/i18n.js"></script>
 </head>
 <body class="invite is-locked">
 
-<!-- ══════════ the gate: two jharokha doors that swing open ══════════ -->
+<!-- ══════════ the gate: a sealed farmaan between two jharokha doors ══════════ -->
 <div class="gate" id="gate">
   <div class="gate__glow"></div>
   <div class="gate__doors">
@@ -27,10 +36,15 @@
   </div>
   <div class="gate__seam"></div>
   <div class="gate__latch">
-    <div class="gate__ring" id="gate-ring" role="button" tabindex="0" aria-label="Open the invitation">ॐ</div>
+    <button class="seal" id="gate-ring" type="button" data-i18n-attr="aria-label:gate.aria" aria-label="Break the seal and open the invitation">
+      <span class="seal__half seal__half--l" id="seal-l"></span>
+      <span class="seal__half seal__half--r" id="seal-r"></span>
+      <span class="seal__crack" aria-hidden="true"></span>
+    </button>
     <div class="gate__names gold-shimmer">Vaibhav &amp; Mahak</div>
-    <div class="gate__sub">Udaipur · February 2027</div>
-    <div class="gate__hint">tap to open</div>
+    <div class="gate__sub" data-i18n="gate.sub">Udaipur · February 2027</div>
+    <div class="gate__hint" data-i18n="gate.hint">Tap the seal to open</div>
+    <button class="gate__lang" type="button" data-lang-toggle data-i18n="lang.label">हिन्दी में पढ़ें</button>
   </div>
 </div>
 
@@ -39,16 +53,46 @@
 <!-- ══════════ nav ══════════ -->
 <nav class="nav" id="nav">
   <div class="nav__in">
-    <a class="nav__mono" href="#top">V &amp; M</a>
+    <a class="nav__mono" href="#top" aria-label="Vaibhav and Mahak"><span class="nav__sun" id="nav-sun" aria-hidden="true"></span>V &amp; M</a>
     <div class="nav__links">
-      <a href="#functions">Functions</a>
-      <a href="#schedule">Schedule</a>
-      <a href="#travel">Travel</a>
-      <a href="#rsvp">RSVP</a>
-      <a class="btn btn--gold btn--sm" href="guest.html"><span>My details</span></a>
+      <a href="#programme" data-i18n="nav.programme">Programme</a>
+      <a href="#venue" data-i18n="nav.venue">Venue</a>
+      <a href="#stay" data-i18n="nav.stay">Stay</a>
+      <a href="#travel" data-i18n="nav.travel">Travel</a>
+      <a href="#faq" data-i18n="nav.faq">Questions</a>
+      <a href="#rsvp" data-i18n="nav.rsvp">RSVP</a>
+    </div>
+    <div class="nav__tools">
+      <button class="pill" type="button" data-lang-toggle data-i18n="lang.switch" lang="hi">हिन्दी</button>
+      <button class="pill pill--icon" type="button" id="sound-btn" aria-pressed="false" data-i18n-attr="aria-label:sound.on" aria-label="Play the shehnai">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="snd-on" d="M4 9h4l5-4v14l-5-4H4z M16 8.5a4.5 4.5 0 0 1 0 7 M18.5 6a8 8 0 0 1 0 12"/><path class="snd-off" d="M4 9h4l5-4v14l-5-4H4z M17 9l5 6 M22 9l-5 6"/></svg>
+      </button>
+      <a class="btn btn--gold btn--sm nav__me" href="guest.html"><span data-i18n="nav.me">My details</span></a>
+      <button class="pill pill--icon nav__burger" type="button" id="menu-btn" aria-expanded="false" aria-controls="menu" data-i18n-attr="aria-label:nav.menu" aria-label="Menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
     </div>
   </div>
 </nav>
+
+<!-- ══════════ phone menu ══════════ -->
+<div class="menu" id="menu" hidden>
+  <div class="menu__in">
+    <a href="#programme" data-i18n="nav.programme">Programme</a>
+    <a href="#venue" data-i18n="nav.venue">Venue</a>
+    <a href="#stay" data-i18n="nav.stay">Stay</a>
+    <a href="#travel" data-i18n="nav.travel">Travel</a>
+    <a href="#dress" data-i18n="nav.dress">What to wear</a>
+    <a href="#faq" data-i18n="nav.faq">Questions</a>
+    <a href="#help" data-i18n="nav.help">Help</a>
+    <a href="#rsvp" data-i18n="nav.rsvp">RSVP</a>
+    <a href="guest.html" data-i18n="nav.me">My details</a>
+    <button class="btn btn--ghost" type="button" data-lang-toggle><span data-i18n="lang.label">हिन्दी में पढ़ें</span></button>
+  </div>
+</div>
+
+<!-- ══════════ live ribbon on the wedding days ══════════ -->
+<aside class="now" id="now" hidden aria-live="polite"></aside>
 
 <main id="top">
 
@@ -64,39 +108,40 @@
       <article class="card-invite" data-reveal="rise">
         <div class="card-invite__corner card-invite__corner--bl" id="corner-bl"></div>
         <div class="card-invite__corner card-invite__corner--br" id="corner-br"></div>
+        <div class="card-invite__sun" id="card-sun" aria-hidden="true"></div>
 
         <div class="card-invite__ganesh">॥ श्री गणेशाय नमः ॥</div>
-        <div class="card-invite__pre">Together with our families, we invite you to celebrate</div>
+        <div class="card-invite__pre" data-i18n="card.pre">Together with our families, we invite you to the wedding of</div>
 
         <div class="names">
-          <span class="names__n" data-reveal="ink">Vaibhav</span>
-          <span class="names__amp" data-reveal="up" data-delay="620">weds</span>
-          <span class="names__n" data-reveal="ink" data-delay="420">Mahak</span>
+          <span class="names__n" data-reveal="ink" data-i18n="card.groom">Vaibhav</span>
+          <span class="names__amp" data-reveal="up" data-delay="620" data-i18n="card.weds">weds</span>
+          <span class="names__n" data-reveal="ink" data-delay="420" data-i18n="card.bride">Mahak</span>
         </div>
 
         <div class="parents">
           <div class="parents__side">
-            <span>Son of</span>
-            <b>Kamla Srivastava &amp; Ved Prakash Bhatnagar</b>
+            <span data-i18n="card.son">Son of</span>
+            <b data-i18n="card.groomParents">Kamla Srivastava &amp; Ved Prakash Bhatnagar</b>
           </div>
           <div class="parents__side">
-            <span>Daughter of</span>
-            <b>Riya Kalra &amp; Kishore Kalra</b>
+            <span data-i18n="card.daughter">Daughter of</span>
+            <b data-i18n="card.brideParents">Riya Kalra &amp; Kishore Kalra</b>
           </div>
         </div>
 
         <div class="orn"><i>❁</i></div>
 
         <div class="card-invite__meta">
-          <div class="card-invite__date">Monday 1 &amp; Tuesday 2 February 2027</div>
-          <div class="card-invite__muhurat">Phere · 2 February · 11:00 am – 1:30 pm</div>
-          <div class="card-invite__place">Udaipur, Rajasthan</div>
+          <div class="card-invite__date" data-i18n="card.date">Monday 1 &amp; Tuesday 2 February 2027</div>
+          <div class="card-invite__muhurat" data-i18n="card.muhurat">Phere · 2 February · 11:00 am – 1:00 pm</div>
+          <div class="card-invite__place" data-i18n="card.place">Hotel Khumani · Bhuwana, Udaipur</div>
         </div>
 
         <div class="card-invite__cta">
-          <a class="btn btn--gold" href="guest.html"><span>My invitation</span></a>
-          <button class="btn btn--ghost" id="btn-ics"><span>Add to calendar</span></button>
-          <button class="btn btn--ghost" id="btn-share"><span>Share</span></button>
+          <a class="btn btn--gold" href="#programme"><span data-i18n="btn.programme">See the programme</span></a>
+          <button class="btn btn--ghost" type="button" data-ics><span data-i18n="btn.ics">Add to calendar</span></button>
+          <button class="btn btn--ghost" type="button" id="btn-share"><span data-i18n="btn.share">Share</span></button>
         </div>
 
         <div class="card-invite__tag">#VaibhavWedsMahak</div>
@@ -110,42 +155,118 @@
   <section class="sec sec--dark sec--tight">
     <div class="wrap">
       <div class="countdown" id="countdown" data-stagger="90"></div>
+      <p class="countdown__to" data-i18n="cd.to">until the pheras begin</p>
     </div>
   </section>
 
-  <!-- ══════════ functions ══════════ -->
-  <section class="sec sec--cream" id="functions">
+  <!-- ══════════ the programme ══════════ -->
+  <section class="sec sec--cream" id="programme">
     <div class="wrap">
       <div class="sec__head" data-index="01" data-reveal="up">
-        <div><span class="eyebrow">The celebrations</span>
-        <h2 data-split="chars" data-reveal="up">Four functions, two days</h2></div>
-        <p>Everything happens at one venue in Udaipur, so you never need to travel between functions. Rooms open at 6 in the morning on 1 February, so you can settle in and dress at your own pace. Dress codes are suggestions, not rules.</p>
+        <div><span class="eyebrow" data-i18n="prog.eyebrow">The celebrations</span>
+        <h2 data-split="chars" data-reveal="up" data-i18n="prog.title">Two days, in order</h2></div>
+        <p data-i18n="prog.lead">Every event at Hotel Khumani, in the order it happens.</p>
       </div>
-      <div class="fns" id="fn-grid" data-stagger="110"></div>
+      <div class="prog" id="prog"></div>
+      <div class="prog__cal" data-reveal="up">
+        <button class="btn" type="button" data-ics><span data-i18n="btn.ics">Add to calendar</span></button>
+        <p data-i18n="prog.cal">Put every event in your phone, with a reminder before each one</p>
+      </div>
     </div>
   </section>
 
-  <!-- ══════════ schedule ══════════ -->
-  <section class="sec sec--dark" id="schedule">
-    <div class="wrap wrap--narrow">
+  <!-- ══════════ the venue: a drone flight from the old city ══════════ -->
+  <section class="fly" id="venue" aria-labelledby="venue-title">
+    <div class="fly__track" id="fly">
+      <div class="fly__stage">
+        <div class="fly__map" id="fly-map" aria-hidden="true"></div>
+        <img class="fly__poster" src="assets/art/venue-khumani-640.webp" alt="" aria-hidden="true" width="640" height="480" />
+        <div class="fly__veil" aria-hidden="true"></div>
+        <div class="fly__head">
+          <span class="eyebrow" data-i18n="venue.eyebrow">The venue</span>
+          <h2 id="venue-title" data-i18n="venue.title">Hotel Khumani, Udaipur</h2>
+          <p data-i18n="venue.lead">Fly in over the lakes of the old city to Bhuwana.</p>
+        </div>
+        <ol class="fly__caps" id="fly-caps"></ol>
+        <div class="fly__hud">
+          <span class="fly__cue" data-i18n="venue.scroll">Scroll to fly</span>
+          <span class="fly__bar"><i id="fly-bar"></i></span>
+          <a class="fly__skip" href="#venue-info" data-i18n="venue.skip">Skip the flight</a>
+        </div>
+        <figure class="fly__land" id="fly-land">
+          <img src="assets/art/venue-khumani.webp" alt="" width="1024" height="768" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--parchment" id="venue-info">
+    <div class="wrap">
+      <div class="venue" id="venue-body"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ staying with us ══════════ -->
+  <section class="sec sec--cream" id="stay">
+    <div class="wrap">
       <div class="sec__head" data-index="02" data-reveal="up">
-        <div><span class="eyebrow">Running order</span>
-        <h2 data-split="chars" data-reveal="up">How the days unfold</h2></div>
-        <p>Approximate timings. A final schedule reaches you a week before, and there will be a printed card in every room.</p>
+        <div><span class="eyebrow" data-i18n="stay.eyebrow">Staying with us</span>
+        <h2 data-split="chars" data-reveal="up" data-i18n="stay.title">Your room is held</h2></div>
+        <p data-i18n="stay.lead">If you are staying, your room is at Hotel Khumani itself.</p>
       </div>
-      <div id="schedule-body"></div>
+      <div class="cards" id="stay-grid" data-stagger="80"></div>
     </div>
   </section>
 
-  <!-- ══════════ travel ══════════ -->
+  <!-- ══════════ travel & weather ══════════ -->
   <section class="sec sec--parchment" id="travel">
     <div class="wrap">
       <div class="sec__head" data-index="03" data-reveal="up">
-        <div><span class="eyebrow">Getting there</span>
-        <h2 data-split="chars" data-reveal="up">Travel &amp; stay</h2></div>
-        <p>Udaipur in early February is glorious by day and genuinely cold after dark. Please pack a shawl or jacket for both evenings.</p>
+        <div><span class="eyebrow" data-i18n="travel.eyebrow">Getting there</span>
+        <h2 data-split="chars" data-reveal="up" data-i18n="travel.title">Travel &amp; weather</h2></div>
+        <p data-i18n="travel.lead">Pickups from the airport and both stations are on us.</p>
       </div>
-      <div class="info-grid" id="travel-grid" data-stagger="90"></div>
+      <div class="cards" id="travel-grid" data-stagger="80"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ what to wear ══════════ -->
+  <section class="sec sec--dark" id="dress">
+    <div class="wrap">
+      <div class="sec__head" data-index="04" data-reveal="up">
+        <div><span class="eyebrow" data-i18n="dress.eyebrow">What to wear</span>
+        <h2 data-split="chars" data-reveal="up" data-i18n="dress.title">Five looks</h2></div>
+        <p data-i18n="dress.lead">Suggestions, not rules.</p>
+      </div>
+      <div class="looks" id="looks" data-stagger="90"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ questions ══════════ -->
+  <section class="sec sec--cream" id="faq">
+    <div class="wrap wrap--narrow">
+      <div class="sec__head" data-index="05" data-reveal="up">
+        <div><span class="eyebrow" data-i18n="faq.eyebrow">Good to know</span>
+        <h2 data-split="chars" data-reveal="up" data-i18n="faq.title">Your questions, answered</h2></div>
+        <p data-i18n="faq.lead">If something is not here, call the help desk below.</p>
+      </div>
+      <label class="faq__search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+        <input type="search" id="faq-q" data-i18n-attr="placeholder:faq.search;aria-label:faq.search" placeholder="Search" />
+      </label>
+      <div class="faq" id="faq-list"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ help desk ══════════ -->
+  <section class="sec sec--parchment sec--tight" id="help">
+    <div class="wrap">
+      <div class="sec__head sec__head--mid" data-reveal="up">
+        <span class="eyebrow" data-i18n="help.eyebrow">Help desk</span>
+        <h2 data-i18n="help.title">Someone is always on call</h2>
+        <p data-i18n="help.lead">For anything at all.</p>
+      </div>
+      <div class="help" id="help-grid" data-stagger="80"></div>
     </div>
   </section>
 
@@ -153,10 +274,10 @@
   <section class="sec sec--cream sec--tight">
     <div class="wrap wrap--narrow">
       <div class="portal-cta" data-reveal="scale">
-        <span class="eyebrow">Just for you</span>
-        <h2>Your own invitation</h2>
-        <p>Enter your mobile number and we will show you exactly what you need: your room number, only the functions you are invited to, your pickup, your table at the reception, and the photo albums as they fill up.</p>
-        <a class="btn btn--gold" href="guest.html"><span>Open my details</span></a>
+        <span class="eyebrow" data-i18n="portal.eyebrow">Just for you</span>
+        <h2 data-i18n="portal.title">Your own invitation</h2>
+        <p data-i18n="portal.body">Enter your mobile number to see your room and pickup.</p>
+        <a class="btn btn--gold" href="guest.html"><span data-i18n="portal.btn">Open my details</span></a>
       </div>
     </div>
   </section>
@@ -165,9 +286,9 @@
   <section class="sec sec--parchment" id="rsvp">
     <div class="wrap">
       <div class="sec__head sec__head--mid" data-reveal="up">
-        <span class="eyebrow">Please reply</span>
-        <h2 data-split="chars" data-reveal="up">RSVP</h2>
-        <p>Kindly respond by <strong>20 January 2027</strong>. Knowing your numbers early genuinely helps us plan.</p>
+        <span class="eyebrow" data-i18n="rsvp.eyebrow">Please reply</span>
+        <h2 data-split="chars" data-reveal="up" data-i18n="rsvp.title">RSVP</h2>
+        <p data-i18n="rsvp.lead">Kindly respond by 20 January 2027.</p>
       </div>
       <div class="rsvp-card" id="rsvp-card" data-reveal="up"></div>
     </div>
@@ -177,18 +298,22 @@
 
 <footer class="foot">
   <div class="foot__mandala spin-slow-rev" id="foot-mandala" aria-hidden="true"></div>
+  <div class="foot__sun" id="foot-sun" aria-hidden="true"></div>
   <div class="foot__names gold-text">Vaibhav &amp; Mahak</div>
-  <p>1 &amp; 2 February 2027 · Udaipur, Rajasthan</p>
-  <p><a href="guest.html">My details</a> · <a href="planner.html">Planning console</a></p>
+  <p data-i18n="foot.dates">1 &amp; 2 February 2027 · Hotel Khumani, Udaipur</p>
+  <p><a href="guest.html" data-i18n="nav.me">My details</a> · <a href="planner.html">Planning console</a></p>
+  <p class="foot__credits" data-i18n="foot.credits">Credits</p>
 </footer>
 
 <script src="js/util.js"></script>
 <script src="js/data.js"></script>
+<script src="js/content.js"></script>
 <script src="js/store.js"></script>
 <script src="js/config.js"></script>
 <script src="js/db.js"></script>
 <script src="js/motifs.js"></script>
 <script src="js/motion.js"></script>
+<script src="js/flyin.js"></script>
 <script src="js/invite.js"></script>
 </body>
 </html>

@@ -130,7 +130,7 @@ if (typeof setTimeout === 'undefined') { var setTimeout = window.setTimeout; }
 /* ---------------- load app ---------------- */
 
 var FILES = [
-  'js/util.js', 'js/data.js', 'js/store.js', 'js/ui.js',
+  'js/i18n.js', 'js/util.js', 'js/data.js', 'js/content.js', 'js/flyin.js', 'js/store.js', 'js/ui.js',
   'js/views/dashboard.js', 'js/views/guests.js', 'js/views/functions.js',
   'js/views/venue.js', 'js/views/budget.js', 'js/views/vendors.js',
   'js/views/logistics.js', 'js/views/strategy.js',
@@ -619,27 +619,264 @@ check('Mehndi is no longer a venue function', function () {
   if ('mehndi' in W.data.seedGuests[0].inv) throw new Error('inv.mehndi survives');
 });
 
-check('rooms open at 06:00 on 1 Feb, before the haldi', function () {
-  var haldi = W.data.functions.find(function (f) { return f.id === 'haldi'; });
-  var first = haldi.schedule[0];
-  if (first[0] !== '06:00' || !/Rooms open/i.test(first[1])) {
-    throw new Error('the 06:00 room opening is not the first beat of 1 Feb');
-  }
-  if (haldi.start !== '10:00') throw new Error('haldi should start at 10:00 to allow dressing time');
+/* ---------------- the programme ---------------- */
+
+log('\nProgramme');
+
+var P = W.data.programme;
+function ev(id) {
+  var e = P.find(function (x) { return x.id === id; });
+  if (!e) throw new Error('no programme event "' + id + '"');
+  return e;
+}
+function mins(t) { var p = t.split(':'); return Number(p[0]) * 60 + Number(p[1]); }
+/* Minutes from midnight on 1 Feb, so 01:00 after the after-party is 1500. */
+function abs(date, t) {
+  var day = Number(date.slice(8)) - 1;
+  return day * 1440 + mins(t);
+}
+function endAbs(e) {
+  var s = abs(e.date, e.start), f = abs(e.date, e.end || e.start);
+  return f < s ? f + 1440 : f;
+}
+var DEVA = /[\u0900-\u097F]/;
+
+check('every event has an id, a date on the wedding days, and a time', function () {
+  var seen = {};
+  P.forEach(function (e) {
+    if (seen[e.id]) throw new Error('duplicate id ' + e.id);
+    seen[e.id] = 1;
+    if (['2027-02-01', '2027-02-02', '2027-02-03'].indexOf(e.date) < 0) throw new Error(e.id + ' has date ' + e.date);
+    if (!/^\d{2}:\d{2}$/.test(e.start)) throw new Error(e.id + ' start ' + e.start);
+    if (e.end && !/^\d{2}:\d{2}$/.test(e.end)) throw new Error(e.id + ' end ' + e.end);
+    if (e.fn && !W.data.functions.some(function (f) { return f.id === e.fn; })) throw new Error(e.id + ' has unknown group ' + e.fn);
+    if (!e.fn && !e.sheet) throw new Error(e.id + ' belongs to no run sheet');
+  });
 });
 
-check('the sangeet warms up with folk before family performances', function () {
-  var s = W.data.functions.find(function (f) { return f.id === 'sangeet'; });
-  function timeOf(re) {
-    var row = s.schedule.find(function (r) { return r[1] && re.test(r[1]); });
-    if (!row) throw new Error('no schedule row matching ' + re);
-    return row[0];
+check('the programme is in time order', function () {
+  for (var i = 1; i < P.length; i++) {
+    if (abs(P[i].date, P[i].start) < abs(P[i - 1].date, P[i - 1].start)) {
+      throw new Error(P[i].id + ' comes before ' + P[i - 1].id);
+    }
   }
-  var folk = timeOf(/folk act/i);
-  var family = timeOf(/Sangeet begins/i);
-  var couple = timeOf(/couple perform/i);
-  if (!(folk < family)) throw new Error('folk act must come before the family performances');
-  if (!(family < couple)) throw new Error('the couple should close, not open');
+});
+
+check('the hotel opens at 8 on 1 Feb, and the haldi starts at 11', function () {
+  if (P[0].id !== 'rooms' || P[0].start !== '08:00') throw new Error('first beat is ' + P[0].id + ' at ' + P[0].start);
+  if (W.data.venue.booked.opensForGuests !== '08:00') throw new Error('venue opening time disagrees');
+  if (ev('haldi').start !== '11:00') throw new Error('haldi starts at ' + ev('haldi').start);
+});
+
+check('1 Feb evening runs folk, sagaai, sangeet, then the after-party indoors', function () {
+  var order = ['folk', 'sagaai', 'sangeet', 'afterparty'].map(function (id) { return abs(ev(id).date, ev(id).start); });
+  for (var i = 1; i < order.length; i++) if (!(order[i] > order[i - 1])) throw new Error('evening out of order');
+  if (ev('sagaai').start !== '20:00' || ev('sangeet').start !== '21:00' || ev('afterparty').start !== '23:00') {
+    throw new Error('evening times moved');
+  }
+  if (!/underground banquet/i.test(ev('afterparty').where[0])) throw new Error('the after-party must be indoors');
+  if (ev('dinner1').start !== ev('sagaai').start) throw new Error('dinner should open with the sagaai');
+});
+
+check('published times never overlap the moments guests must attend', function () {
+  // Meals and rest can run alongside; the moments themselves must not collide.
+  var keys = P.filter(function (e) { return e.key; });
+  for (var i = 1; i < keys.length; i++) {
+    if (abs(keys[i].date, keys[i].start) < endAbs(keys[i - 1])) {
+      throw new Error(keys[i - 1].id + ' runs into ' + keys[i].id);
+    }
+  }
+});
+
+check('every published breakfast closes before the next thing guests must be at', function () {
+  [['bf1', 'haldi'], ['bf2', 'baraat']].forEach(function (pair) {
+    var b = ev(pair[0]), next = ev(pair[1]);
+    var nextAt = abs(next.date, next.seated || next.start);
+    if (endAbs(b) > nextAt) throw new Error(pair[0] + ' is published past ' + pair[1]);
+    if (!b.ops || !/quietly/i.test(b.ops)) throw new Error(pair[0] + ' should note the quiet extension for the planner');
+  });
+});
+
+check('the bride has time between the tel ceremony and the varmala', function () {
+  var gap = mins(ev('varmala').start) - mins(ev('tel').end);
+  if (gap < 150) throw new Error('only ' + gap + ' minutes for hair wash, hair and makeup');
+  if (!(mins(ev('ganesh').start) < mins(ev('tel').start))) throw new Error('Ganesh puja comes first');
+});
+
+check('baraat, milni, varmala and phere chain on 2 Feb', function () {
+  var b = ev('baraat'), m = ev('milni'), v = ev('varmala'), p = ev('phere');
+  if (b.seated !== '09:15' || b.start !== '09:30') throw new Error('baraat gathers 9:15 and leaves 9:30');
+  if (b.end !== m.start || m.end !== v.start || v.end !== p.start) throw new Error('the morning has a gap or overlap');
+  if (p.start !== W.data.couple.pheraStart || p.end !== W.data.couple.pheraEnd) throw new Error('phere disagrees with the couple record');
+});
+
+check('vidaai follows the wedding lunch and comes before the reception', function () {
+  var v = ev('vidaai');
+  if (!(mins(v.start) >= mins(ev('lunch2').end))) throw new Error('vidaai overlaps lunch');
+  if (!(endAbs(v) <= abs(ev('reception').date, ev('reception').start))) throw new Error('vidaai runs into the reception');
+});
+
+check('the run sheets are built from the programme, with the vendor rows kept', function () {
+  W.data.functions.forEach(function (f) {
+    var mine = P.filter(function (e) { return (e.fn || e.sheet) === f.id; }).length;
+    var guestRows = f.schedule.filter(function (r) { return r[1] !== null; }).length;
+    if (guestRows !== mine) throw new Error(f.id + ' run sheet has ' + guestRows + ' guest rows, programme has ' + mine);
+  });
+  var sangeet = W.data.functions.find(function (f) { return f.id === 'sangeet'; }).schedule;
+  if (!/after-party/i.test(sangeet[sangeet.length - 1][1] || '')) throw new Error('the after-party should close the evening run sheet');
+});
+
+check('planner-only notes never reach guest-facing programme text', function () {
+  var noise = /legal cut-?off|quietly|do not announce|décor team|decor team|licen[cs]e|lighting test|budget|₹/i;
+  P.forEach(function (e) {
+    ['t', 'where', 'note', 'dress'].forEach(function (k) {
+      (e[k] || []).forEach(function (s) { if (noise.test(s)) throw new Error(e.id + '.' + k + ' reads like a vendor note: ' + s); });
+    });
+  });
+});
+
+/* ---------------- English and Hindi ---------------- */
+
+log('\nEnglish and Hindi');
+
+function pairCheck(where, v) {
+  if (!Array.isArray(v) || v.length !== 2 || !v[0] || !v[1]) throw new Error(where + ' is not an [english, hindi] pair');
+  if (!DEVA.test(v[1])) throw new Error(where + ' Hindi has no Devanagari: ' + v[1]);
+  if (DEVA.test(v[0])) throw new Error(where + ' English is in Devanagari: ' + v[0]);
+}
+
+check('every programme event is written in both languages', function () {
+  P.forEach(function (e) {
+    pairCheck(e.id + '.t', e.t);
+    pairCheck(e.id + '.where', e.where);
+    if (e.note) pairCheck(e.id + '.note', e.note);
+    if (e.dress) pairCheck(e.id + '.dress', e.dress);
+  });
+});
+
+check('every guide card, look, question and caption is in both languages', function () {
+  var C = W.content;
+  C.stay.concat(C.travel, C.whileHere).forEach(function (c, i) { pairCheck('card ' + i + ' title', c.t); pairCheck('card ' + i + ' body', c.b); });
+  C.dress.forEach(function (d) { pairCheck(d.id + '.t', d.t); pairCheck(d.id + '.when', d.when); pairCheck(d.id + '.b', d.b); });
+  C.faq.forEach(function (f, i) { pairCheck('faq ' + i + ' q', f.q); pairCheck('faq ' + i + ' a', f.a); });
+  C.help.forEach(function (h) { pairCheck(h.kind + '.t', h.t); pairCheck(h.kind + '.b', h.b); });
+  C.flight.forEach(function (w) { pairCheck(w.id + '.cap', w.cap); pairCheck(w.id + '.sub', w.sub); });
+  C.spaces.forEach(function (s, i) { pairCheck('space ' + i, s.where); pairCheck('space ' + i + ' use', s.what); });
+  C.landmarks.forEach(function (l) { pairCheck(l.id, l.name); });
+  W.data.functions.forEach(function (f) {
+    pairCheck(f.id + ' name', [f.name, f.nameHi]);
+    pairCheck(f.id + ' tagline', [f.tagline, f.taglineHi]);
+    pairCheck(f.id + ' blurb', [f.blurb, f.blurbHi]);
+  });
+});
+
+check('the interface dictionary has the same keys in English and Hindi', function () {
+  var en = W.i18n.DICT.en, hi = W.i18n.DICT.hi;
+  var missing = Object.keys(en).filter(function (k) { return !hi[k]; });
+  var extra = Object.keys(hi).filter(function (k) { return !en[k]; });
+  if (missing.length) throw new Error('no Hindi for ' + missing.slice(0, 5).join(', '));
+  if (extra.length) throw new Error('Hindi-only keys ' + extra.slice(0, 5).join(', '));
+  // The language switch itself names the other language, so it is the one exception.
+  var latin = Object.keys(hi).filter(function (k) { return !DEVA.test(hi[k]) && ['lang.switch', 'lang.label'].indexOf(k) < 0; });
+  if (latin.length) throw new Error('Hindi strings with no Devanagari: ' + latin.slice(0, 5).join(', '));
+  Object.keys(en).forEach(function (k) {
+    var a = (en[k].match(/\{\w+\}/g) || []).sort().join(), b = (hi[k].match(/\{\w+\}/g) || []).sort().join();
+    if (a !== b) throw new Error(k + ' placeholders differ: ' + a + ' vs ' + b);
+  });
+});
+
+check('times read naturally in both languages', function () {
+  var I = W.i18n;
+  I.set('en');
+  var got = [I.time('19:30'), I.span('23:00', '01:00'), I.span('21:00', '23:00'), I.span('11:00', '13:30'), I.time('08:00')];
+  var want = ['7:30 pm', '11:00 pm – 1:00 am', '9:00 – 11:00 pm', '11:00 am – 1:30 pm', '8:00 am'];
+  if (got.join('|') !== want.join('|')) throw new Error(got.join(' | '));
+  I.set('hi');
+  var hgot = [I.time('19:30'), I.span('20:00', '21:00'), I.time('07:00'), I.span('11:00', '13:00')];
+  var hwant = ['शाम 7:30', 'रात 8:00 – 9:00', 'सुबह 7:00', 'सुबह 11:00 – दोपहर 1:00'];
+  I.set('en');
+  if (hgot.join('|') !== hwant.join('|')) throw new Error(hgot.join(' | '));
+});
+
+/* ---------------- everything a guest needs ---------------- */
+
+log('\nCompleteness');
+
+/* Every question a guest has asked at a wedding like this, and where the site
+   answers it. A blank answer fails the build rather than reaching a guest. */
+check('every question a guest will ask has an answer on the site', function () {
+  var C = W.content, V = W.data.venue.booked, dict = W.i18n.DICT.en;
+  function faq(re) { return C.faq.some(function (f) { return re.test(f.q[0]); }); }
+  function card(list, re) { return list.some(function (c) { return re.test(c.t[0]); }); }
+  var needs = [
+    ['When do I arrive?', ev('rooms').start === '08:00' && faq(/arrive/i)],
+    ['Can I come the night before?', card(C.stay, /31 January/) && V.earlyRooms > 0],
+    ['When is checkout?', ev('bf3').date === '2027-02-03' && card(C.stay, /Checking out/)],
+    ['Where exactly is the venue?', !!V.address && !!C.map.directions && !!C.map.query],
+    ['How do I get from the airport or station?', card(C.travel, /air/i) && card(C.travel, /train/i) && faq(/pick me up/i)],
+    ['How far is it by road?', card(C.travel, /road/i)],
+    ['Do I need to book a room?', faq(/book a room/i)],
+    ['What do I wear to each function?', C.dress.length === 5 && P.filter(function (e) { return e.dress; }).length >= 4],
+    ['Which meals are included?', faq(/meals/i) && P.filter(function (e) { return e.meal; }).length >= 6],
+    ['Is the food vegetarian?', faq(/vegetarian/i)],
+    ['Will there be drinks?', faq(/drinks/i)],
+    ['What is the weather like?', !!C.weather.dayHigh && !!C.weather.nightLow && faq(/weather/i)],
+    ['What do I pack?', card(C.travel, /pack/i)],
+    ['Can I bring children?', faq(/children/i)],
+    ['What about elders?', faq(/elders/i)],
+    ['What if I am late?', faq(/late/i)],
+    ['When are the pheras?', /11:00 am – 1:00 pm/.test(dict['card.muhurat'])],
+    ['Who do I call?', C.help.some(function (h) { return h.kind === 'hotel' && h.tel; }) && faq(/call/i)],
+    ['Is there a hospital nearby?', C.help.some(function (h) { return h.kind === 'hospital' && h.tel; })],
+    ['Emergency number', C.help.some(function (h) { return h.tel === '112'; })],
+    ['Wi-Fi and parking', faq(/wi-fi/i)],
+    ['Gifts', faq(/gift/i)],
+    ['Photos', faq(/photos/i)],
+    ['Is there a mehndi?', faq(/mehndi/i)],
+    ['By when do I RSVP?', /20 January 2027/.test(dict['rsvp.lead'])],
+    ['Can I put it in my calendar?', P.filter(function (e) { return e.alarm; }).length >= 8],
+    ['Things to do in Udaipur', C.whileHere.length >= 3]
+  ];
+  var gaps = needs.filter(function (n) { return !n[1]; }).map(function (n) { return n[0]; });
+  if (gaps.length) throw new Error('unanswered: ' + gaps.join('; '));
+});
+
+check('the things not yet confirmed are listed for the planner', function () {
+  var list = W.data.toConfirm;
+  if (!list || list.length < 5) throw new Error('to-confirm list is missing');
+  list.forEach(function (x) { if (!x.what || !x.detail) throw new Error('empty to-confirm row'); });
+  if (!list.some(function (x) { return /muhurat/i.test(x.what); })) throw new Error('the muhurat must stay on the list until the pandit confirms it');
+});
+
+check('content facts agree with the venue record', function () {
+  var V = W.data.venue.booked, C = W.content;
+  var last = C.flight[C.flight.length - 1];
+  if (last.center[0] !== V.lon || last.center[1] !== V.lat) throw new Error('the flight does not land on the hotel');
+  if (!C.stay.some(function (c) { return c.b[0].indexOf(String(V.rooms)) >= 0; })) throw new Error('room count missing from the stay cards');
+  if (C.help[0].tel !== V.phones[0]) throw new Error('help desk number disagrees with the venue record');
+  if (Math.round(V.distances.airport) !== 18 || !/18 km/.test(C.travel[0].b[0])) throw new Error('airport distance disagrees');
+});
+
+check('the flight path is ordered and lands where it ends', function () {
+  var F = W.content.flight, cam = W.flyin.cameraAt;
+  for (var i = 1; i < F.length; i++) if (!(F[i].at > F[i - 1].at)) throw new Error('waypoints out of order at ' + F[i].id);
+  var a = cam(F, 0), z = cam(F, 1);
+  if (Math.abs(a.center[0] - F[0].center[0]) > 1e-9) throw new Error('flight does not start at the first waypoint');
+  var L = F[F.length - 1];
+  if (Math.abs(z.center[0] - L.center[0]) > 1e-9 || Math.abs(z.center[1] - L.center[1]) > 1e-9) throw new Error('flight drifts off the hotel');
+  var mid = cam(F, (F[1].at + F[2].at) / 2);
+  if (!(mid.zoom > 10 && mid.zoom < 18 && mid.pitch >= 0 && mid.pitch <= 78)) throw new Error('camera out of range mid-flight');
+});
+
+check('the calendar reminds before key events and ends the after-party next day', function () {
+  var a = ev('afterparty');
+  var ics = W.util.buildICS([
+    { uid: 'a', date: a.date, start: a.start, end: a.end, title: 'After-party', alarm: 15 },
+    { uid: 'b', date: '2027-02-01', start: '11:00', end: '13:30', title: 'Haldi' }
+  ], 'test');
+  if (ics.indexOf('DTEND:20270202T010000') < 0) throw new Error('after-party end is not 1 am on 2 Feb');
+  if ((ics.match(/BEGIN:VALARM/g) || []).length !== 1) throw new Error('alarm count wrong');
+  if (ics.indexOf('TRIGGER:-PT15M') < 0) throw new Error('alarm trigger missing');
 });
 
 check('vendor-only beats are hidden from guests but kept for the planner', function () {

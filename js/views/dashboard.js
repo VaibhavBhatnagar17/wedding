@@ -68,6 +68,15 @@ W.views.dashboard = function () {
     })));
   }
 
+  /* What the invitation already publishes but the families have not settled. */
+  if (D.toConfirm && D.toConfirm.length) {
+    wrap.appendChild(UI.panel('Still to confirm', {
+      sub: 'The guest site shows these already. Confirm each one, then delete it from toConfirm in js/data.js.'
+    }, el('ul', { class: 'ul-clean' }, D.toConfirm.map(function (x) {
+      return el('li', { class: 'na', html: '<strong>' + x.what + '.</strong> ' + x.detail });
+    }))));
+  }
+
   /* ---- two columns ---- */
 
   const cols = el('div', { class: 'cols' });
