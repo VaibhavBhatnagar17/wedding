@@ -30,8 +30,8 @@ soft shehnai begins (with a pause button in the nav, remembered for next time),
 and the doors swing apart onto an arch card with your names and both sets of
 parents in gold. Below that, everything a guest needs, in this order:
 
-- **The programme** — all 22 events across 1–3 February, with time, place, what
-  to wear, "be seated by" times and who each is for. The eleven moments people
+- **The programme** — all 22 events across 1–3 February, with time, place,
+  "be seated by" times and who each is for. The eleven moments people
   travel for each carry a Mewar-style miniature painting in a cusped Rajput arch.
 - **The venue** — a drone flight: a real 3D map (satellite imagery over
   elevation data) that the guest flies by scrolling, from Lake Pichola past the
@@ -41,8 +41,7 @@ parents in gold. Below that, everything a guest needs, in this order:
 - **Stay, travel and weather** — arrival and early-arrival rooms, checkout,
   meals, pickups, routes by road, packing, and a live forecast that switches on
   in the last two weeks (Open-Meteo, no key).
-- **What to wear** — five looks with colour swatches.
-- **Questions** — 18 answers with a search box that works in both scripts.
+- **Questions** — 10 answers with a search box that works in both scripts.
 - **Help desk** — tap-to-call hotel numbers, the nearest 24-hour hospital
   (500 m) and 112.
 - **RSVP**, and a link to the guest's own page.
@@ -105,12 +104,12 @@ stop animating things, the doors open instantly and nothing moves.
 guest — their own page:
 
 - the room number and hotel, and whether it is on you
-- only the functions they are actually invited to, with timings and dress code
+- only the functions they are actually invited to, with timings
 - their arrival, and the pickup you have arranged for them
 - their table at the reception
 - a personal line you have written for them
 - photo albums as the photographers deliver them
-- a wedding guide: what to wear, weather, what to pack, things to do in Udaipur
+- a wedding guide: arriving, weather, what to pack, things to do in Udaipur
 - a form to correct their own headcount and food preference
 
 Out of the box this runs on the sample guests in `js/data.js` and says so in a
@@ -169,9 +168,9 @@ To turn on the "Send on WhatsApp" button, set `RSVP_WHATSAPP` at the top of
 
 All content is in **`js/data.js`** — couple details, functions, décor, menus, budget lines, venue, vendors, checklist, risks — and above all **`programme`**, the single list of every event and its time. The invitation, the guest portal, the calendar file and the planner's run sheets all read it, so a time only ever changes in one place. Each entry has `[english, hindi]` text; `ops` holds a planner-only note that guests never see.
 
-The rest of the guest copy — stay, travel, the five looks, the questions, the help desk and the flight's waypoints — is in **`js/content.js`**, and the interface strings are in **`js/i18n.js`**, both in English and Hindi. The smoke test fails if a Hindi line is missing.
+The rest of the guest copy — stay, travel, the questions, the help desk and the flight's waypoints — is in **`js/content.js`**, and the interface strings are in **`js/i18n.js`**, both in English and Hindi. The smoke test fails if a Hindi line is missing.
 
-`toConfirm` at the bottom of `data.js` lists what the site already publishes but you have not settled yet (the muhurat, help-desk numbers, which space each event uses). It shows on the planner dashboard; delete each line once it is confirmed.
+`toConfirm` at the bottom of `data.js` lists what the site already publishes but you have not settled yet (the muhurat, help-desk numbers, where the phere happen, a second hotel past 170 staying guests). It shows on the planner dashboard; delete each line once it is confirmed.
 
 If you change budget amounts, keep the total at ₹20,00,000 or the dashboard will tell you it does not add up.
 
@@ -188,10 +187,10 @@ Netlify, Vercel or Cloudflare Pages. Step-by-step instructions are in
 Two layers, neither needing any installed packages.
 
 ```sh
-# 95 unit checks — no browser
+# 98 unit checks — no browser
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tools/smoke-test.js
 
-# 82 checks in a real headless Chrome
+# 87 checks in a real headless Chrome
 python3 tools/cdp.py check
 
 # screenshots of every page, desktop and mobile, into /tmp/shots
@@ -212,8 +211,10 @@ guests must attend, each breakfast closes on paper before the next event, the
 bride has at least two and a half hours between the tel ceremony and the
 varmala, and planner notes never leak into guest text. Every guest-facing line
 must exist in both languages, and a completeness audit fails the build if any of
-27 questions a guest will ask — arrival, checkout, pickups, dress, meals, drinks,
-weather, children, elders, the hospital — has no answer on the site.
+21 questions a guest will ask — arrival, checkout, pickups, meals, drinks,
+weather, elders, the hospital — has no answer on the site. Other checks hold the
+families' decisions: no dress guidance, none of the dropped questions, and no
+"underground" anywhere.
 
 The browser tests drive a real Chrome over the DevTools protocol: they break the
 seal and open the doors, render all 22 events and load all eleven paintings,

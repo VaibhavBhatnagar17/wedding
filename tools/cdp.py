@@ -321,7 +321,6 @@ def task_zoom(tab):
         ("venue", "/index.html?open=1", "#venue-info"),
         ("stay", "/index.html?open=1", "#stay"),
         ("travel", "/index.html?open=1", "#travel"),
-        ("dress", "/index.html?open=1", "#dress"),
         ("faq", "/index.html?open=1", "#faq"),
         ("help", "/index.html?open=1", "#help"),
         ("rsvp", "/index.html?open=1", "#rsvp"),
@@ -394,8 +393,9 @@ def task_check(tab):
           tab.eval("document.querySelectorAll('a[href^=\"tel:\"]').length") >= 4)
     check("stay cards render", tab.eval("document.querySelectorAll('#stay-grid .card').length") == 6)
     check("travel, weather and Udaipur cards render", tab.eval("document.querySelectorAll('#travel-grid .card').length") == 6)
-    check("five looks render", tab.eval("document.querySelectorAll('#looks .look').length") == 5)
-    check("the questions render", tab.eval("document.querySelectorAll('#faq-list .qa').length") >= 16)
+    check("nothing tells guests what to wear",
+          tab.eval("!document.getElementById('dress') && !document.querySelector('.ev__dress, a[href=\"#dress\"]') && !/what to wear/i.test(document.body.innerText)"))
+    check("the questions render", tab.eval("document.querySelectorAll('#faq-list .qa').length") == tab.eval("W.content.faq.length") == 10)
     check("the help desk renders", tab.eval("document.querySelectorAll('#help-grid .helpc').length") == 4)
     tab.eval("var q=document.getElementById('faq-q'); q.value='parking'; q.dispatchEvent(new Event('input'));")
     shown = tab.eval("Array.from(document.querySelectorAll('#faq-list .qa')).filter(function(d){return !d.hidden}).length")
@@ -500,6 +500,20 @@ def task_check(tab):
     check("Devanagari is never letter-spaced", hi["eyebrow"] in ("normal", "0px"), hi["eyebrow"])
     check("programme, card and form are in Hindi",
           hi["haldi"] == "हल्दी" and "नाम" in hi["rsvp"] and "वैभव" in hi["names"], hi)
+    check("the footer names are in Hindi", tab.eval("document.querySelector('.foot__names').textContent") == "वैभव और महक")
+    small = tab.eval("""(function(){
+      var out=[], all=document.querySelectorAll('body *');
+      for (var i=0;i<all.length;i++){ var e=all[i];
+        if (e.closest('.gate') || e.closest('[hidden]') || e.tagName==='OPTION') continue;
+        var t=''; for (var c=e.firstChild;c;c=c.nextSibling) if (c.nodeType===3) t+=c.textContent;
+        if (!/[\\u0900-\\u097F]/.test(t)) continue;
+        var r=e.getBoundingClientRect(); if (!r.width) continue;
+        var fs=parseFloat(getComputedStyle(e).fontSize);
+        if (fs < 14) out.push(fs + 'px ' + (e.className||e.tagName) + ': ' + t.trim().slice(0,24));
+      }
+      return out;
+    })()""")
+    check("no Hindi text is set below 14px", not small, small[:4])
     tab.eval("W.i18n.set('en')")
     time.sleep(0.6)
     check("switching back restores English", tab.eval("document.querySelector('#ev-haldi .ev__title').textContent") == "Haldi")
@@ -565,6 +579,20 @@ def task_check(tab):
     check("the names wait behind the doors, even once revealed",
           tab.eval("document.querySelectorAll('.names__n.is-revealed').length") == 2
           and all("102%" in c for c in tab.eval(ink)), tab.eval(ink))
+    corner = tab.eval("""(function(){var b=document.querySelector('.gate__lang').getBoundingClientRect();
+      return {top: Math.round(b.top), right: Math.round(innerWidth - b.right), w: Math.round(b.width)};})()""")
+    check("the language button sits in the gate's top-right corner",
+          corner["w"] > 0 and corner["top"] < 60 and corner["right"] < 60, corner)
+    tab.eval("document.querySelector('.gate__lang').click()")
+    time.sleep(0.6)
+    g = tab.eval("""(function(){var n=document.querySelector('.gate__names');
+      return {names: n.textContent, ff: getComputedStyle(n).fontFamily,
+              open: document.getElementById('gate').classList.contains('is-open')};})()""")
+    check("the gate names switch to Hindi, and the gate stays shut",
+          g["names"] == "वैभव और महक" and "Tiro" in g["ff"] and not g["open"], g)
+    tab.eval("document.querySelector('.gate__lang').click()")
+    time.sleep(0.6)
+    check("and back to English", tab.eval("document.querySelector('.gate__names').textContent") == "Vaibhav & Mahak")
     tab.eval("document.getElementById('gate-ring').click()")
     time.sleep(0.3)
     check("the seal breaks on tap", tab.eval("document.getElementById('gate-ring').classList.contains('is-broken')"))
@@ -601,7 +629,7 @@ def task_check(tab):
     check("guest name shown", tab.eval("document.getElementById('me-name').textContent") == "Ved Prakash Bhatnagar")
     check("key cards render", tab.eval("document.querySelectorAll('#me-keys .key').length") >= 2)
     check("my functions render", tab.eval("document.querySelectorAll('#me-fns .myfn__row').length") == 4)
-    check("guide sections render", tab.eval("document.querySelectorAll('#me-guide .gitem').length") == 5)
+    check("guide sections render", tab.eval("document.querySelectorAll('#me-guide .gitem').length") == tab.eval("W.data.guide.length") == 4)
     check("albums render", tab.eval("document.querySelectorAll('#me-albums .album').length") == 5)
     check("rsvp editor renders", tab.eval("document.querySelectorAll('#me-rsvp .seg button').length") == 3)
     check("number remembered", tab.eval("localStorage.getItem('vm-guest-phone')") == "9876500001")

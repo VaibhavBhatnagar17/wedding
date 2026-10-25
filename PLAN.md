@@ -132,11 +132,10 @@ The whole programme now lives in `js/data.js` → `programme`. The invitation, t
 | **20:00–21:00** | **SAGAAI** — guests seated by 19:50. Dinner opens alongside | Lawn — stage |
 | 20:00–23:00 | Dinner — snacks and a full wedding dinner through the sagaai and sangeet | Lawn |
 | **21:00–23:00** | **SANGEET** — families, then cousins, then open floor | Lawn |
-| **23:00–01:00** | **Cocktail after-party** — drinks, late-night snacks, DJ | Underground banquet hall |
+| **23:00–01:00** | **Cocktail after-party** — drinks, late-night snacks, DJ | Banquet hall |
 
 **On outdoor sound.** The sangeet runs outdoors to about 23:00 and you are managing the sound yourselves. The legal cut-off for amplified outdoor sound is 22:00 (Noise Rules 2000, rule 5(2)), and Udaipur police have seized equipment at weddings, so keep the volume down after 22:00 and have the indoor rig ready. The after-party is indoors already, which is the right call.
 
-*Haldi:* yellow and marigold orange, cottons. *Evening:* fuchsia, marigold, gold — indo-western welcome. *After-party:* party wear.
 
 ### Day 2 — Tuesday 2 February
 
@@ -151,7 +150,7 @@ The whole programme now lives in `js/data.js` → `programme`. The invitation, t
 | **09:30–10:15** | **BARAAT** — dhol, band, ghodi | Porch → lawn gate |
 | 10:15–10:30 | **Milni & dwar puja** | Lawn gate |
 | **10:30–11:00** | **VARMALA** — flower shower | Lawn — stage |
-| **11:00–13:00** | **PHERE** — guests seated by 10:55. Kanyadaan, Granthi Bandhan, Havan, Pheras, Saptapadi, Sindoor & Mangalsutra, Ashirwad | Mandap, on the lawn |
+| **11:00–13:00** | **PHERE** — guests seated by 10:55. Kanyadaan, Granthi Bandhan, Havan, Pheras, Saptapadi, Sindoor & Mangalsutra, Ashirwad | Mandap — the lawn for now; rooftop or garden still to decide |
 | 13:00–14:30 | Wedding lunch | Beside the mandap |
 | **14:30–15:00** | **VIDAAI** — decorated car or doli at the porch; griha pravesh at the family suite | Hotel porch |
 | 15:00–19:00 | Rest. Lawn reset from mandap to reception (650) by 18:30. Bride's reception look 16:00 | Rooms |
@@ -219,7 +218,7 @@ Dal Baati Churma, Gatte ki Sabzi, Ker Sangri, Papad ki Sabzi, Bajra and missi ro
 
 ## 8. Risks, and what to do about them
 
-**Outdoor loudspeakers must stop at 22:00.** Rajasthan Pollution Control Board rules, following the Supreme Court order, prohibit open-air amplified sound between 22:00 and 06:00. Udaipur venues enforce this. The after-party is indoors in Khumani's underground banquet hall from 23:00; the sangeet runs outdoors to about 23:00, which you have chosen to manage yourselves — keep the volume down after 22:00 and get the hotel's indoor-music policy **in writing**.
+**Outdoor loudspeakers must stop at 22:00.** Rajasthan Pollution Control Board rules, following the Supreme Court order, prohibit open-air amplified sound between 22:00 and 06:00. Udaipur venues enforce this. The after-party is indoors in Khumani's banquet hall from 23:00; the sangeet runs outdoors to about 23:00, which you have chosen to manage yourselves — keep the volume down after 22:00 and get the hotel's indoor-music policy **in writing**.
 
 **Night temperatures of 9–12°C.** Budget 12 patio heaters at ₹800–1,200/day (~₹15k for two nights, from contingency) and give shawls or stoles as reception favours. Guests will remember being cold far longer than they'll remember the centrepieces.
 
@@ -322,3 +321,5 @@ Because guests pay their own tariff (§1b), a tighter block does not directly sa
 4. **Non-veg** at any function? It adds 25–35% per plate where served.
 5. **Vidaai** on 2 Feb night or 3 Feb morning?
 6. Roughly **how many of the 180 are outstation**, and flying vs driving? This sizes the travel desk and the room block.
+7. **A second hotel past 170.** Khumani has 50 rooms, which hold about 170 people. If more than that need a room, book a hotel near the Bhuwana Bypass for the overflow. The invitation does not mention it; set the hotel on each moved guest's record and their guest page shows it.
+8. **Where the phere happen** — the rooftop or the garden. The invitation says "the lawn" until you decide. The haldi, sagaai, sangeet and the after-party (banquet hall) are fixed.

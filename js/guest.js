@@ -226,7 +226,7 @@
         ]),
         el('div', { class: 'myfn__body' }, [
           el('h3', { text: f.name }),
-          el('p', { text: f.area + ' · ' + f.dressCode })
+          el('p', { text: f.area })
         ]),
         el('div', { class: 'myfn__badge', text: 'You’re invited' })
       ]));
@@ -445,8 +445,8 @@
       return {
         uid: f.id + '-' + g.phone, date: f.date, start: f.start, end: f.end,
         title: f.name + ' — Vaibhav & Mahak',
-        location: (g.hotel || 'Udaipur') + ', Rajasthan',
-        description: f.tagline + '\nDress code: ' + f.dressCode +
+        location: D.venue.booked.short + ', ' + D.venue.booked.address,
+        description: f.tagline +
           (g.room ? '\nYour room: ' + g.room : '') +
           (g.table && f.id === 'reception' ? '\nYour table: ' + g.table : '')
       };

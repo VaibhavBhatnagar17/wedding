@@ -205,7 +205,6 @@
       el('h4', { class: 'ev__title', text: I.pick(e.t) }),
       el('p', { class: 'ev__where', html: PIN + '<span>' + I.pick(e.where) + '</span>' }),
       e.note ? el('p', { class: 'ev__note', text: I.pick(e.note) }) : null,
-      e.dress ? el('p', { class: 'ev__dress' }, [el('b', { text: I.t('prog.wear') }), el('span', { text: I.pick(e.dress) })]) : null,
       chips.length ? el('div', { class: 'ev__chips' }, chips) : null
     ]);
 
@@ -415,28 +414,6 @@
     ]);
     items.push(here);
     items.forEach(function (n) { host.appendChild(again ? shown(n) : n); });
-  }
-
-  /* ---------------- what to wear ---------------- */
-
-  const LOOK_ART = { haldi: 'haldi', evening: 'sangeet', party: 'afterparty', wedding: 'varmala', reception: 'reception' };
-
-  function renderDress(again) {
-    const host = $('#looks');
-    if (!host) return;
-    U.clear(host);
-    C.dress.forEach(function (d) {
-      const n = el('article', { class: 'look', 'data-reveal': 'up' }, [
-        el('div', { class: 'look__art' }, el('img', {
-          src: 'assets/art/art-' + LOOK_ART[d.id] + '.webp', alt: '', width: '600', height: '800', loading: 'lazy', decoding: 'async'
-        })),
-        el('div', { class: 'look__sw' }, d.sw.map(function (c) { return el('i', { style: 'background:' + c }); })),
-        el('span', { class: 'look__when', text: I.pick(d.when) }),
-        el('h3', { text: I.pick(d.t) }),
-        el('p', { text: I.pick(d.b) })
-      ]);
-      host.appendChild(again ? shown(n) : n);
-    });
   }
 
   /* ---------------- questions ---------------- */
@@ -734,9 +711,9 @@
     return D.programme.map(function (e) {
       return {
         uid: 'vm-' + e.id, date: e.date, start: e.start, end: e.end || '', alarm: e.alarm || 0,
-        title: I.pick(e.t) + ' — Vaibhav & Mahak',
+        title: I.pick(e.t) + ' — ' + I.t('names.pair'),
         location: I.pick(e.where) + ', Hotel Khumani, Bhuwana Bypass, Udaipur',
-        description: [I.pick(e.note), e.dress ? I.t('prog.wear') + ': ' + I.pick(e.dress) : '',
+        description: [I.pick(e.note),
           e.seated ? I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }) : ''].filter(Boolean).join('\n')
       };
     });
@@ -769,7 +746,6 @@
     renderVenue(again);
     renderStay(again);
     renderTravel(again);
-    renderDress(again);
     renderFaq(again);
     renderHelp(again);
     if (again) relabelRsvp();

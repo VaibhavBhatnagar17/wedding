@@ -674,7 +674,7 @@ check('1 Feb evening runs folk, sagaai, sangeet, then the after-party indoors', 
   if (ev('sagaai').start !== '20:00' || ev('sangeet').start !== '21:00' || ev('afterparty').start !== '23:00') {
     throw new Error('evening times moved');
   }
-  if (!/underground banquet/i.test(ev('afterparty').where[0])) throw new Error('the after-party must be indoors');
+  if (!/banquet hall/i.test(ev('afterparty').where[0])) throw new Error('the after-party must be indoors');
   if (ev('dinner1').start !== ev('sagaai').start) throw new Error('dinner should open with the sagaai');
 });
 
@@ -729,7 +729,7 @@ check('the run sheets are built from the programme, with the vendor rows kept', 
 check('planner-only notes never reach guest-facing programme text', function () {
   var noise = /legal cut-?off|quietly|do not announce|décor team|decor team|licen[cs]e|lighting test|budget|₹/i;
   P.forEach(function (e) {
-    ['t', 'where', 'note', 'dress'].forEach(function (k) {
+    ['t', 'where', 'note'].forEach(function (k) {
       (e[k] || []).forEach(function (s) { if (noise.test(s)) throw new Error(e.id + '.' + k + ' reads like a vendor note: ' + s); });
     });
   });
@@ -750,14 +750,12 @@ check('every programme event is written in both languages', function () {
     pairCheck(e.id + '.t', e.t);
     pairCheck(e.id + '.where', e.where);
     if (e.note) pairCheck(e.id + '.note', e.note);
-    if (e.dress) pairCheck(e.id + '.dress', e.dress);
   });
 });
 
-check('every guide card, look, question and caption is in both languages', function () {
+check('every guide card, question and caption is in both languages', function () {
   var C = W.content;
   C.stay.concat(C.travel, C.whileHere).forEach(function (c, i) { pairCheck('card ' + i + ' title', c.t); pairCheck('card ' + i + ' body', c.b); });
-  C.dress.forEach(function (d) { pairCheck(d.id + '.t', d.t); pairCheck(d.id + '.when', d.when); pairCheck(d.id + '.b', d.b); });
   C.faq.forEach(function (f, i) { pairCheck('faq ' + i + ' q', f.q); pairCheck('faq ' + i + ' a', f.a); });
   C.help.forEach(function (h) { pairCheck(h.kind + '.t', h.t); pairCheck(h.kind + '.b', h.b); });
   C.flight.forEach(function (w) { pairCheck(w.id + '.cap', w.cap); pairCheck(w.id + '.sub', w.sub); });
@@ -813,16 +811,13 @@ check('every question a guest will ask has an answer on the site', function () {
     ['Can I come the night before?', card(C.stay, /31 January/) && V.earlyRooms > 0],
     ['When is checkout?', ev('bf3').date === '2027-02-03' && card(C.stay, /Checking out/)],
     ['Where exactly is the venue?', !!V.address && !!C.map.directions && !!C.map.query],
-    ['How do I get from the airport or station?', card(C.travel, /air/i) && card(C.travel, /train/i) && faq(/pick me up/i)],
+    ['How do I get from the airport or station?', card(C.travel, /air/i) && card(C.travel, /train/i)],
     ['How far is it by road?', card(C.travel, /road/i)],
     ['Do I need to book a room?', faq(/book a room/i)],
-    ['What do I wear to each function?', C.dress.length === 5 && P.filter(function (e) { return e.dress; }).length >= 4],
-    ['Which meals are included?', faq(/meals/i) && P.filter(function (e) { return e.meal; }).length >= 6],
-    ['Is the food vegetarian?', faq(/vegetarian/i)],
+    ['Which meals are included?', card(C.stay, /meal/i) && P.filter(function (e) { return e.meal; }).length >= 6],
     ['Will there be drinks?', faq(/drinks/i)],
     ['What is the weather like?', !!C.weather.dayHigh && !!C.weather.nightLow && faq(/weather/i)],
     ['What do I pack?', card(C.travel, /pack/i)],
-    ['Can I bring children?', faq(/children/i)],
     ['What about elders?', faq(/elders/i)],
     ['What if I am late?', faq(/late/i)],
     ['When are the pheras?', /11:00 am – 1:00 pm/.test(dict['card.muhurat'])],
@@ -830,9 +825,6 @@ check('every question a guest will ask has an answer on the site', function () {
     ['Is there a hospital nearby?', C.help.some(function (h) { return h.kind === 'hospital' && h.tel; })],
     ['Emergency number', C.help.some(function (h) { return h.tel === '112'; })],
     ['Wi-Fi and parking', faq(/wi-fi/i)],
-    ['Gifts', faq(/gift/i)],
-    ['Photos', faq(/photos/i)],
-    ['Is there a mehndi?', faq(/mehndi/i)],
     ['By when do I RSVP?', /20 January 2027/.test(dict['rsvp.lead'])],
     ['Can I put it in my calendar?', P.filter(function (e) { return e.alarm; }).length >= 8],
     ['Things to do in Udaipur', C.whileHere.length >= 3]
@@ -846,13 +838,38 @@ check('the things not yet confirmed are listed for the planner', function () {
   if (!list || list.length < 5) throw new Error('to-confirm list is missing');
   list.forEach(function (x) { if (!x.what || !x.detail) throw new Error('empty to-confirm row'); });
   if (!list.some(function (x) { return /muhurat/i.test(x.what); })) throw new Error('the muhurat must stay on the list until the pandit confirms it');
+  if (!list.some(function (x) { return /second hotel/i.test(x.what) && /170/.test(x.detail); })) throw new Error('the overflow hotel past 170 must be on the list');
+  if (!list.some(function (x) { return /phere/i.test(x.detail) && /rooftop/i.test(x.detail); })) throw new Error('the open phere location must be on the list');
+});
+
+/* Decisions the families made about what the invitation does not say. */
+check('the invitation does not tell guests what to wear', function () {
+  if (W.content.dress) throw new Error('the looks are back in content.js');
+  P.forEach(function (e) { if (e.dress) throw new Error(e.id + ' carries a dress line'); });
+  var keys = Object.keys(W.i18n.DICT.en).filter(function (k) { return /^dress\.|^nav\.dress$|^prog\.wear$/.test(k); });
+  if (keys.length) throw new Error('dress strings survive: ' + keys.join(', '));
+  if (W.data.guide.some(function (g) { return /wear/i.test(g.title); })) throw new Error('the portal guide still has a dress section');
+});
+
+check('the questions the families dropped stay dropped', function () {
+  var gone = /children|vegetarian|which meals|pick me up|should i wear|gift|photos|mehndi/i;
+  W.content.faq.forEach(function (f) { if (gone.test(f.q[0])) throw new Error('dropped question is back: ' + f.q[0]); });
+  W.data.guide.forEach(function (g) {
+    g.items.forEach(function (it) { if (/^(children|gifts|photographs|mehndi|food)$/i.test(it[0])) throw new Error('portal guide still answers ' + it[0]); });
+  });
+});
+
+check('the banquet hall is only ever "the banquet hall"', function () {
+  var all = JSON.stringify([W.data, W.content, W.i18n.DICT]);
+  if (/underground|अंडरग्राउंड/i.test(all)) throw new Error('"underground" is still in the copy');
 });
 
 check('content facts agree with the venue record', function () {
   var V = W.data.venue.booked, C = W.content;
   var last = C.flight[C.flight.length - 1];
   if (last.center[0] !== V.lon || last.center[1] !== V.lat) throw new Error('the flight does not land on the hotel');
-  if (!C.stay.some(function (c) { return c.b[0].indexOf(String(V.rooms)) >= 0; })) throw new Error('room count missing from the stay cards');
+  if (V.rooms !== 50 || V.staysUpTo !== 170) throw new Error('Khumani is 50 rooms, about 170 people');
+  if (!C.stay.some(function (c) { return c.b[0].indexOf(String(V.rooms) + ' rooms') >= 0 && c.b[1].indexOf(String(V.rooms)) >= 0; })) throw new Error('room count missing from the stay cards');
   if (C.help[0].tel !== V.phones[0]) throw new Error('help desk number disagrees with the venue record');
   if (Math.round(V.distances.airport) !== 18 || !/18 km/.test(C.travel[0].b[0])) throw new Error('airport distance disagrees');
 });

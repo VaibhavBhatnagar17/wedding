@@ -47,6 +47,13 @@ window.W = window.W || {}; W.views = W.views || {};
         hostPaid.length > 10 ? 'bad' : null)
     ]));
 
+    const V = D.venue.booked, staying = U.sum(needsRoom, S.heads);
+    if (staying > V.staysUpTo) {
+      wrap.appendChild(el('div', { class: 'callout callout--warn', html:
+        '<b>' + staying + ' people need a room — Khumani’s ' + V.rooms + ' rooms hold about ' + V.staysUpTo + '.</b> ' +
+        'Book a second hotel near the Bhuwana Bypass for the other ' + (staying - V.staysUpTo) + ', then set the Hotel on each moved guest so their page shows it.' }));
+    }
+
     if (hostPaid.length > 10) {
       wrap.appendChild(el('div', { class: 'callout callout--warn', html:
         '<b>' + hostPaid.length + ' parties are marked as host-paid.</b> The budget covers ten rooms (₹60,000). ' +

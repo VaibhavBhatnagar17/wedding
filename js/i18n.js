@@ -13,11 +13,12 @@ window.W = window.W || {};
   const DICT = {
     en: {
       'nav.programme': 'Programme', 'nav.venue': 'Venue', 'nav.stay': 'Stay', 'nav.travel': 'Travel',
-      'nav.dress': 'What to wear', 'nav.faq': 'Questions', 'nav.help': 'Help', 'nav.rsvp': 'RSVP',
+      'nav.faq': 'Questions', 'nav.help': 'Help', 'nav.rsvp': 'RSVP',
       'nav.me': 'My details', 'nav.menu': 'Menu', 'nav.close': 'Close',
       'lang.switch': 'हिन्दी', 'lang.label': 'हिन्दी में पढ़ें',
       'sound.on': 'Play the shehnai', 'sound.off': 'Pause the shehnai',
 
+      'names.pair': 'Vaibhav & Mahak',
       'gate.sub': 'Udaipur · February 2027',
       'gate.hint': 'Tap the seal to open',
       'gate.aria': 'Break the seal and open the invitation',
@@ -30,6 +31,7 @@ window.W = window.W || {};
       'card.date': 'Monday 1 & Tuesday 2 February 2027',
       'card.muhurat': 'Phere · 2 February · 11:00 am – 1:00 pm',
       'card.place': 'Hotel Khumani · Bhuwana, Udaipur',
+      'hero.scroll': 'scroll',
       'btn.programme': 'See the programme', 'btn.ics': 'Add to calendar', 'btn.share': 'Share',
 
       'cd.d': 'Days', 'cd.h': 'Hours', 'cd.m': 'Minutes', 'cd.s': 'Seconds',
@@ -44,7 +46,7 @@ window.W = window.W || {};
       'prog.day.2027-02-01': 'Day one', 'prog.day.2027-02-02': 'Day two', 'prog.day.2027-02-03': 'Farewell morning',
       'prog.sun': 'Sunrise {a} · sunset {b}',
       'prog.seated': 'Please be seated by {t}', 'prog.gather': 'Gather at {t}',
-      'prog.wear': 'Wear', 'prog.where': 'Where',
+      'prog.where': 'Where',
       'prog.cal': 'Put every event in your phone, with a reminder before each one',
       'who.stay': 'For guests staying at the hotel', 'who.bride': 'The bride’s family', 'who.adults': 'For grown-ups',
 
@@ -61,7 +63,7 @@ window.W = window.W || {};
       'venue.static': 'The flight needs a newer browser — here is the venue instead.',
 
       'stay.eyebrow': 'Staying with us', 'stay.title': 'Your room is held',
-      'stay.lead': 'If you are staying, your room is at Hotel Khumani itself, so there is nothing to book.',
+      'stay.lead': 'If you are staying with us, your room is arranged for you, so there is nothing to book.',
 
       'travel.eyebrow': 'Getting there', 'travel.title': 'Travel & weather',
       'travel.lead': 'Udaipur in early February is warm by day and properly cold after dark. Pickups from the airport and both stations are on us.',
@@ -70,12 +72,9 @@ window.W = window.W || {};
       'wx.live': 'Forecast for the hotel', 'wx.rain': '{p}% rain',
       'wx.note': 'The live forecast appears here in the last two weeks before the wedding.',
 
-      'dress.eyebrow': 'What to wear', 'dress.title': 'Five looks',
-      'dress.lead': 'Suggestions, not rules. Both nights are cold, so plan a shawl or a jacket.',
-
       'faq.eyebrow': 'Good to know', 'faq.title': 'Your questions, answered',
       'faq.lead': 'If something is not here, call the help desk below and we will sort it out.',
-      'faq.search': 'Search — parking, food, checkout…', 'faq.none': 'Nothing matches. Try another word, or call us.',
+      'faq.search': 'Search — parking, drinks, checkout…', 'faq.none': 'Nothing matches. Try another word, or call us.',
 
       'help.eyebrow': 'Help desk', 'help.title': 'Someone is always on call',
       'help.lead': 'For anything at all — a late train, a lost charger, a room swap.',
@@ -120,11 +119,12 @@ window.W = window.W || {};
 
     hi: {
       'nav.programme': 'कार्यक्रम', 'nav.venue': 'विवाह स्थल', 'nav.stay': 'ठहरना', 'nav.travel': 'यात्रा',
-      'nav.dress': 'क्या पहनें', 'nav.faq': 'सवाल-जवाब', 'nav.help': 'सहायता', 'nav.rsvp': 'उपस्थिति',
+      'nav.faq': 'सवाल-जवाब', 'nav.help': 'सहायता', 'nav.rsvp': 'उपस्थिति',
       'nav.me': 'मेरी जानकारी', 'nav.menu': 'मेन्यू', 'nav.close': 'बंद करें',
       'lang.switch': 'English', 'lang.label': 'Read in English',
       'sound.on': 'शहनाई चलाएँ', 'sound.off': 'शहनाई रोकें',
 
+      'names.pair': 'वैभव और महक',
       'gate.sub': 'उदयपुर · फ़रवरी 2027',
       'gate.hint': 'खोलने के लिए मुहर छुएँ',
       'gate.aria': 'मुहर तोड़कर निमंत्रण खोलें',
@@ -137,6 +137,7 @@ window.W = window.W || {};
       'card.date': 'सोमवार 1 एवं मंगलवार 2 फ़रवरी 2027',
       'card.muhurat': 'फेरे · 2 फ़रवरी · सुबह 11:00 से दोपहर 1:00',
       'card.place': 'होटल खुमानी · भुवाणा, उदयपुर',
+      'hero.scroll': 'नीचे देखें',
       'btn.programme': 'कार्यक्रम देखें', 'btn.ics': 'कैलेंडर में जोड़ें', 'btn.share': 'साझा करें',
 
       'cd.d': 'दिन', 'cd.h': 'घंटे', 'cd.m': 'मिनट', 'cd.s': 'सेकंड',
@@ -151,7 +152,7 @@ window.W = window.W || {};
       'prog.day.2027-02-01': 'पहला दिन', 'prog.day.2027-02-02': 'दूसरा दिन', 'prog.day.2027-02-03': 'विदा की सुबह',
       'prog.sun': 'सूर्योदय {a} · सूर्यास्त {b}',
       'prog.seated': 'कृपया {t} तक अपना स्थान ग्रहण कर लें', 'prog.gather': '{t} पर इकट्ठा हों',
-      'prog.wear': 'पहनावा', 'prog.where': 'कहाँ',
+      'prog.where': 'कहाँ',
       'prog.cal': 'हर कार्यक्रम अपने फ़ोन में जोड़ें — हर एक से पहले याद दिलाने वाली सूचना के साथ',
       'who.stay': 'होटल में ठहरे मेहमानों के लिए', 'who.bride': 'वधू पक्ष', 'who.adults': 'वयस्कों के लिए',
 
@@ -168,7 +169,7 @@ window.W = window.W || {};
       'venue.static': 'उड़ान के लिए नया ब्राउज़र चाहिए — तब तक विवाह स्थल यहाँ देखिए।',
 
       'stay.eyebrow': 'हमारे साथ ठहरना', 'stay.title': 'आपका कमरा आरक्षित है',
-      'stay.lead': 'यदि आप ठहर रहे हैं, तो आपका कमरा होटल खुमानी में ही है — आपको कुछ भी बुक नहीं करना है।',
+      'stay.lead': 'यदि आप हमारे साथ ठहर रहे हैं, तो आपके कमरे की व्यवस्था हमारी ओर से है — आपको कुछ भी बुक नहीं करना है।',
 
       'travel.eyebrow': 'कैसे पहुँचें', 'travel.title': 'यात्रा और मौसम',
       'travel.lead': 'फ़रवरी की शुरुआत में उदयपुर में दिन गुनगुने और रातें सचमुच ठंडी होती हैं। हवाई अड्डे और दोनों स्टेशनों से पिकअप हमारी ओर से है।',
@@ -177,12 +178,9 @@ window.W = window.W || {};
       'wx.live': 'होटल के लिए मौसम का पूर्वानुमान', 'wx.rain': 'बारिश {p}%',
       'wx.note': 'विवाह से पहले के आख़िरी दो हफ़्तों में यहाँ ताज़ा पूर्वानुमान दिखेगा।',
 
-      'dress.eyebrow': 'क्या पहनें', 'dress.title': 'पाँच पहनावे',
-      'dress.lead': 'ये सुझाव हैं, नियम नहीं। दोनों रातें ठंडी होंगी, इसलिए शॉल या जैकेट ज़रूर रखें।',
-
       'faq.eyebrow': 'ज़रूरी बातें', 'faq.title': 'आपके सवाल, हमारे जवाब',
       'faq.lead': 'अगर कोई बात यहाँ नहीं है, तो नीचे दिए नंबर पर फ़ोन कीजिए — हम सँभाल लेंगे।',
-      'faq.search': 'खोजें — पार्किंग, खाना, चेक-आउट…', 'faq.none': 'कुछ नहीं मिला। कोई और शब्द आज़माइए, या हमें फ़ोन कीजिए।',
+      'faq.search': 'खोजें — पार्किंग, ड्रिंक्स, चेक-आउट…', 'faq.none': 'कुछ नहीं मिला। कोई और शब्द आज़माइए, या हमें फ़ोन कीजिए।',
 
       'help.eyebrow': 'सहायता', 'help.title': 'हम हमेशा उपलब्ध हैं',
       'help.lead': 'किसी भी बात के लिए — देर से आती ट्रेन, खोया हुआ चार्जर, कमरा बदलना।',
