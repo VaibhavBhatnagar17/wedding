@@ -1,0 +1,15 @@
+{
+  // Cloudflare reads this on every push to main. The site has no build step:
+  // the files in this folder are the site.
+  "name": "wedding",
+  "compatibility_date": "2026-10-28",
+  "main": "worker.js",
+  "workers_dev": true,
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    // Only the front door needs the script, so Mahak's address can open her
+    // card. Every other file is served directly.
+    "run_worker_first": ["/", "/index", "/index.html"]
+  }
+}

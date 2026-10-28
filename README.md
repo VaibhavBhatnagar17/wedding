@@ -145,13 +145,13 @@ GitHub Pages serves only one custom domain per repository, so for
 Pages, which is free and can serve both from this repository.
 
 1. Buy both domains from any registrar.
-2. Make a free Cloudflare account. Go to *Workers & Pages → Create → Pages →
-   Connect to Git* and pick this repository. There is no build command, and the
-   output directory is the root (`/`).
-3. In the project's *Custom domains*, add both. Cloudflare will ask you to point
-   each domain's nameservers at it; do that at the registrar.
-4. `functions/_middleware.js` then serves Mahak's card at the root of
-   `mahakwedsvaibhav.in`. Vaibhav's address serves `index.html` as usual.
+2. Make a free Cloudflare account. Go to *Workers & Pages → Create* and connect
+   this repository. `wrangler.jsonc` tells it to serve the files as they are.
+3. The project starts with no public address. Under *Settings → Domains &
+   Routes → Add → Custom domain*, add both names. Each domain's nameservers
+   must already point at Cloudflare, set at the registrar.
+4. `worker.js` then serves Mahak's card at the root of `mahakwedsvaibhav.in`.
+   Vaibhav's address serves `index.html` as usual.
 5. Change the absolute preview-image link (`og:image`) in `index.html` to the
    new address, then run `python3 tools/build-sides.py`, which carries it into
    `mahak.html`. WhatsApp needs the full address there, not a relative one.

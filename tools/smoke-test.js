@@ -946,6 +946,14 @@ check('the flight path is ordered and lands where it ends', function () {
   }
 });
 
+check('Cloudflare serves these files, and Mahak\'s address opens her card', function () {
+  var w = readFile('wrangler.jsonc');
+  if (!/"name": "wedding"/.test(w) || !/"directory": "\."/.test(w)) throw new Error('wrangler.jsonc must serve this folder as the wedding worker');
+  if (!/run_worker_first/.test(w)) throw new Error('the front door must run worker.js, or both addresses show the same card');
+  var s = readFile('worker.js');
+  if (!/mahakwedsvaibhav/.test(s) || !/mahak\.html/.test(s)) throw new Error('worker.js must open mahak.html on her address');
+});
+
 check('the flight film matches its path, frame for frame', function () {
   var C = W.content, M = JSON.parse(readFile('assets/flight/flight.json'));
   if (M.seconds !== C.orbit.t) throw new Error('the film is ' + M.seconds + 's but the path is ' + C.orbit.t + 's — run tools/render-flight.py');
