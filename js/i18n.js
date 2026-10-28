@@ -2,7 +2,8 @@
    its own [english, hindi] pairs in data.js and content.js and goes through
    pick(). Devanagari must never be letter-spaced or split into characters —
    both break the shirorekha — so invite.css and invite.js check the language
-   before doing either. */
+   before doing either. A key can have a per-family version, 'key@bride',
+   which wins on Mahak's family's card (see side.js). */
 window.W = window.W || {};
 
 (function (W) {
@@ -18,12 +19,13 @@ window.W = window.W || {};
       'lang.switch': 'हिन्दी', 'lang.label': 'हिन्दी में पढ़ें',
       'sound.on': 'Play the shehnai', 'sound.off': 'Pause the shehnai',
 
-      'names.pair': 'Vaibhav & Mahak',
+      'names.pair': 'Vaibhav & Mahak', 'names.pair@bride': 'Mahak & Vaibhav',
       'gate.sub': 'Udaipur · February 2027',
       'gate.hint': 'Tap the seal to open',
       'gate.aria': 'Break the seal and open the invitation',
 
-      'card.pre': 'Together with our families, we invite you to the wedding of',
+      'card.pre': 'With the blessings of our elders, the Bhatnagar family invites you to the wedding of',
+      'card.pre@bride': 'With the blessings of our elders, the Kalra family invites you to the wedding of',
       'card.groom': 'Vaibhav', 'card.weds': 'weds', 'card.bride': 'Mahak',
       'card.son': 'Son of', 'card.daughter': 'Daughter of',
       'card.groomParents': 'Kamla Srivastava & Ved Prakash Bhatnagar',
@@ -46,9 +48,10 @@ window.W = window.W || {};
       'prog.day.2027-02-01': 'Day one', 'prog.day.2027-02-02': 'Day two', 'prog.day.2027-02-03': 'Farewell morning',
       'prog.sun': 'Sunrise {a} · sunset {b}',
       'prog.seated': 'Please be seated by {t}', 'prog.gather': 'Gather at {t}',
-      'prog.where': 'Where',
+      'prog.where': 'Where', 'prog.ours': 'Our family’s part',
+      'duties.title': 'What our family does', 'duties.lead': 'Every moment where our family has a part to play, in order.',
       'prog.cal': 'Put every event in your phone, with a reminder before each one',
-      'who.stay': 'For guests staying at the hotel', 'who.bride': 'The bride’s family', 'who.adults': 'For grown-ups',
+      'who.stay': 'For guests staying at the hotel', 'who.bride': 'The bride’s family', 'who.groom': 'The groom’s family',
 
       'venue.eyebrow': 'The venue',
       'venue.title': 'Hotel Khumani, Udaipur',
@@ -74,7 +77,7 @@ window.W = window.W || {};
 
       'faq.eyebrow': 'Good to know', 'faq.title': 'Your questions, answered',
       'faq.lead': 'If something is not here, call the help desk below and we will sort it out.',
-      'faq.search': 'Search — parking, drinks, checkout…', 'faq.none': 'Nothing matches. Try another word, or call us.',
+      'faq.search': 'Search — parking, checkout, weather…', 'faq.none': 'Nothing matches. Try another word, or call us.',
 
       'help.eyebrow': 'Help desk', 'help.title': 'Someone is always on call',
       'help.lead': 'For anything at all — a late train, a lost charger, a room swap.',
@@ -124,12 +127,13 @@ window.W = window.W || {};
       'lang.switch': 'English', 'lang.label': 'Read in English',
       'sound.on': 'शहनाई चलाएँ', 'sound.off': 'शहनाई रोकें',
 
-      'names.pair': 'वैभव और महक',
+      'names.pair': 'वैभव और महक', 'names.pair@bride': 'महक और वैभव',
       'gate.sub': 'उदयपुर · फ़रवरी 2027',
       'gate.hint': 'खोलने के लिए मुहर छुएँ',
       'gate.aria': 'मुहर तोड़कर निमंत्रण खोलें',
 
-      'card.pre': 'अपने परिवारों सहित, हम आपको शुभ विवाह में सादर आमंत्रित करते हैं',
+      'card.pre': 'बड़ों के आशीर्वाद से, भटनागर परिवार आपको इस शुभ विवाह में सादर आमंत्रित करता है',
+      'card.pre@bride': 'बड़ों के आशीर्वाद से, कालरा परिवार आपको इस शुभ विवाह में सादर आमंत्रित करता है',
       'card.groom': 'चि. वैभव', 'card.weds': 'संग', 'card.bride': 'सौ.कां. महक',
       'card.son': 'सुपुत्र', 'card.daughter': 'सुपुत्री',
       'card.groomParents': 'श्रीमती कमला श्रीवास्तव एवं श्री वेद प्रकाश भटनागर',
@@ -152,9 +156,10 @@ window.W = window.W || {};
       'prog.day.2027-02-01': 'पहला दिन', 'prog.day.2027-02-02': 'दूसरा दिन', 'prog.day.2027-02-03': 'विदा की सुबह',
       'prog.sun': 'सूर्योदय {a} · सूर्यास्त {b}',
       'prog.seated': 'कृपया {t} तक अपना स्थान ग्रहण कर लें', 'prog.gather': '{t} पर इकट्ठा हों',
-      'prog.where': 'कहाँ',
+      'prog.where': 'कहाँ', 'prog.ours': 'हमारे परिवार की भूमिका',
+      'duties.title': 'हमारे परिवार की ज़िम्मेदारियाँ', 'duties.lead': 'जिन पलों में हमारे परिवार की भूमिका है, क्रम से।',
       'prog.cal': 'हर कार्यक्रम अपने फ़ोन में जोड़ें — हर एक से पहले याद दिलाने वाली सूचना के साथ',
-      'who.stay': 'होटल में ठहरे मेहमानों के लिए', 'who.bride': 'वधू पक्ष', 'who.adults': 'वयस्कों के लिए',
+      'who.stay': 'होटल में ठहरे मेहमानों के लिए', 'who.bride': 'वधू पक्ष', 'who.groom': 'वर पक्ष',
 
       'venue.eyebrow': 'विवाह स्थल',
       'venue.title': 'होटल खुमानी, उदयपुर',
@@ -180,7 +185,7 @@ window.W = window.W || {};
 
       'faq.eyebrow': 'ज़रूरी बातें', 'faq.title': 'आपके सवाल, हमारे जवाब',
       'faq.lead': 'अगर कोई बात यहाँ नहीं है, तो नीचे दिए नंबर पर फ़ोन कीजिए — हम सँभाल लेंगे।',
-      'faq.search': 'खोजें — पार्किंग, ड्रिंक्स, चेक-आउट…', 'faq.none': 'कुछ नहीं मिला। कोई और शब्द आज़माइए, या हमें फ़ोन कीजिए।',
+      'faq.search': 'खोजें — पार्किंग, चेक-आउट, मौसम…', 'faq.none': 'कुछ नहीं मिला। कोई और शब्द आज़माइए, या हमें फ़ोन कीजिए।',
 
       'help.eyebrow': 'सहायता', 'help.title': 'हम हमेशा उपलब्ध हैं',
       'help.lead': 'किसी भी बात के लिए — देर से आती ट्रेन, खोया हुआ चार्जर, कमरा बदलना।',
@@ -249,7 +254,9 @@ window.W = window.W || {};
   }
 
   function t(key, vars) {
-    const s = (DICT[lang] && DICT[lang][key]) || DICT.en[key];
+    const mine = key + '@' + (W.side || 'groom');
+    const here = DICT[lang] || {};
+    const s = here[mine] || here[key] || DICT.en[mine] || DICT.en[key];
     return fill(s === undefined ? key : s, vars);
   }
 

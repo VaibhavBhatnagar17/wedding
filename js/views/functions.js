@@ -10,7 +10,7 @@ W.views.functions = function () {
     'Four functions across two days at one venue. Timings, décor briefs and menus — this is what you hand to the venue and the décor team. Greyed rows are vendor-only beats and never appear on the guest site.',
     [UI.btn('Print run sheet', function () { window.print(); }, 'ghost')]));
 
-  const KEY = /^(Haldi|Sagaai|Sangeet|Cocktail after-party|Baraat|Varmala|Phere|Vidaai|Reception|Rooms open)\b/i;
+  const KEY = /^(Haldi|Sagaai|Sangeet|After-party|Baraat|Varmala|Phere|Vidaai|Reception|Rooms open)\b/i;
 
   /* sequence summary */
   wrap.appendChild(UI.panel('The sequence, and why', {}, [

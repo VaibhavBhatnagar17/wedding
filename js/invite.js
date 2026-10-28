@@ -8,9 +8,11 @@
   const el = U.el, $ = U.$, $$ = U.$$;
   const V = D.venue.booked;
 
-  /* Number that receives RSVPs on WhatsApp. Country code, no + or spaces.
-     Leave blank to hide the button. */
-  const RSVP_WHATSAPP = '';
+  /* Whose card this is (see side.js). The other family's own ceremonies are
+     left off, so each card shows only what its guests attend. */
+  const SIDE = W.side === 'bride' ? 'bride' : 'groom';
+  const MINE = D.programme.filter(function (e) { return !e.side || e.side === SIDE; });
+  const RSVP_WHATSAPP = D.sides[SIDE].rsvpWhatsapp;
 
   /* Elements drawn after boot get revealed at once — they are already on
      screen, and an observer would leave them hidden until the next scroll. */
@@ -22,13 +24,36 @@
 
   function telHref(n) { return 'tel:' + String(n).replace(/[^\d+]/g, ''); }
 
+  /* ---------------- whose card ---------------- */
+
+  /* index.html is written in Vaibhav's family's order. On Mahak's family's
+     card her name and her parents come first, everywhere they appear. */
+  function initSide() {
+    if (SIDE !== 'bride') return;
+    const names = $('.names'), ns = $$('.names__n', names);
+    if (names && ns.length === 2) {
+      const delay = ns[1].getAttribute('data-delay');
+      ns[1].removeAttribute('data-delay');
+      ns[0].setAttribute('data-delay', delay);
+      names.insertBefore(ns[1], names.firstChild);
+      names.appendChild(ns[0]);
+    }
+    const parents = $('.parents'), ps = $$('.parents__side', parents);
+    if (parents && ps.length === 2) parents.insertBefore(ps[1], ps[0]);
+    const mono = $('.nav__mono');
+    if (mono && mono.lastChild && mono.lastChild.nodeType === 3) mono.lastChild.textContent = 'M & V';
+    if (mono) mono.setAttribute('aria-label', 'Mahak and Vaibhav');
+    document.title = 'Mahak & Vaibhav · 1 & 2 February 2027 · Hotel Khumani, Udaipur';
+  }
+
   /* ---------------- ornaments ---------------- */
 
   function paintOrnaments() {
     $('#door-l').innerHTML = M.doorPanel('l', 'L');
     $('#door-r').innerHTML = M.doorPanel('r', 'R');
-    $('#seal-l').innerHTML = M.seal('seal-a');
-    $('#seal-r').innerHTML = M.seal('seal-b');
+    const mono = SIDE === 'bride' ? 'M·V' : 'V·M';
+    $('#seal-l').innerHTML = M.seal('seal-a', mono);
+    $('#seal-r').innerHTML = M.seal('seal-b', mono);
     $('#hero-mandala').innerHTML = M.mandalaSvg('', 24, 'currentColor');
     $('#foot-mandala').innerHTML = M.mandalaSvg('', 20, 'currentColor');
     $('#feather-l').innerHTML = M.peacockFeather('currentColor', 'currentColor');
@@ -186,6 +211,8 @@
   const SUN = { '2027-02-01': ['07:17', '18:19'], '2027-02-02': ['07:16', '18:20'], '2027-02-03': ['07:16', '18:20'] };
   const PIN = '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-6.1-6.5-11A6.5 6.5 0 0 1 18.5 10c0 4.9-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>';
 
+  function seatedHere(e) { return e.seated && (!e.seatedFor || e.seatedFor === SIDE); }
+
   function chip(text, kind) { return el('span', { class: 'chip chip--' + kind, text: text }); }
 
   function renderEvent(e, flip) {
@@ -197,7 +224,7 @@
     ]) : null;
 
     const chips = [];
-    if (e.seated) chips.push(chip(I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }), 'seat'));
+    if (seatedHere(e)) chips.push(chip(I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }), 'seat'));
     if (e.who) chips.push(chip(I.t('who.' + e.who), 'who'));
 
     const body = el('div', { class: 'ev__body' }, [
@@ -205,6 +232,9 @@
       el('h4', { class: 'ev__title', text: I.pick(e.t) }),
       el('p', { class: 'ev__where', html: PIN + '<span>' + I.pick(e.where) + '</span>' }),
       e.note ? el('p', { class: 'ev__note', text: I.pick(e.note) }) : null,
+      e.role && e.role[SIDE] ? el('p', { class: 'ev__role' }, [
+        el('b', { text: I.t('prog.ours') }), el('span', { text: I.pick(e.role[SIDE]) })
+      ]) : null,
       chips.length ? el('div', { class: 'ev__chips' }, chips) : null
     ]);
 
@@ -217,7 +247,7 @@
     const host = $('#prog');
     if (!host) return;
     U.clear(host);
-    const byDate = U.groupBy(D.programme, function (e) { return e.date; });
+    const byDate = U.groupBy(MINE, function (e) { return e.date; });
     Object.keys(byDate).sort().forEach(function (date) {
       const events = byDate[date];
       let artCount = 0;
@@ -238,6 +268,28 @@
       host.appendChild(again ? shown(day) : day);
     });
     markNow();
+  }
+
+  /* Everything this family does, in order: its own ceremonies and its part
+     in the shared ones. Each line jumps to the event in the programme. */
+  function renderDuties(again) {
+    const host = $('#duties');
+    if (!host) return;
+    U.clear(host);
+    const items = MINE.filter(function (e) { return e.side === SIDE || (e.role && e.role[SIDE]); });
+    if (!items.length) return;
+    const box = el('div', { class: 'duties__in', 'data-reveal': 'up' }, [
+      el('h3', { class: 'duties__title', text: I.t('duties.title') }),
+      el('p', { class: 'duties__lead', text: I.t('duties.lead') }),
+      el('ol', { class: 'duties__list' }, items.map(function (e) {
+        return el('li', {}, el('a', { href: '#ev-' + e.id }, [
+          el('time', { datetime: e.date + 'T' + e.start, text: I.date(e.date, { day: false }) + ' · ' + I.time(e.start) }),
+          el('b', { text: I.pick(e.t) }),
+          el('span', { text: I.pick(e.side === SIDE ? e.note : e.role[SIDE]) })
+        ]));
+      }))
+    ]);
+    host.appendChild(again ? shown(box) : box);
   }
 
   /* ---------------- the flight ---------------- */
@@ -501,7 +553,7 @@
   /* The current moment: a key event outranks a meal running alongside it. */
   function nowNext(now) {
     let cur = null, nxt = null;
-    D.programme.forEach(function (e) {
+    MINE.forEach(function (e) {
       const w = windowOf(e);
       if (now >= w[0] && now < w[1]) {
         if (!cur || (e.key && !cur.key) || (!!e.key === !!cur.key && w[0] > windowOf(cur)[0])) cur = e;
@@ -578,7 +630,9 @@
       ]),
       el('div', { class: 'grid-2' }, [
         field('rsvp.city', inp({ type: 'text', name: 'city' }, 'rsvp.cityPh')),
-        field('rsvp.side', sel('side', [['Bride', 'rsvp.sideBride'], ['Groom', 'rsvp.sideGroom']]))
+        field('rsvp.side', sel('side', SIDE === 'bride'
+          ? [['Bride', 'rsvp.sideBride'], ['Groom', 'rsvp.sideGroom']]
+          : [['Groom', 'rsvp.sideGroom'], ['Bride', 'rsvp.sideBride']]))
       ]),
       field('rsvp.attending', sel('attending', [
         ['Yes, joyfully', 'rsvp.yes'], ['Yes, but only for some functions', 'rsvp.some'], ['Sadly cannot make it', 'rsvp.no']
@@ -647,7 +701,7 @@
       return f ? f.name : id;
     });
     return [
-      'RSVP — Vaibhav & Mahak',
+      'RSVP — Vaibhav & Mahak · ' + D.sides[SIDE].family + ' card',
       'Name: ' + r.name,
       'Side: ' + r.side + (r.city ? ' · from ' + r.city : ''),
       'Attending: ' + r.attending,
@@ -708,13 +762,14 @@
   /* ---------------- calendar & share ---------------- */
 
   function calendarEvents() {
-    return D.programme.map(function (e) {
+    return MINE.map(function (e) {
       return {
         uid: 'vm-' + e.id, date: e.date, start: e.start, end: e.end || '', alarm: e.alarm || 0,
         title: I.pick(e.t) + ' — ' + I.t('names.pair'),
         location: I.pick(e.where) + ', Hotel Khumani, Bhuwana Bypass, Udaipur',
         description: [I.pick(e.note),
-          e.seated ? I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }) : ''].filter(Boolean).join('\n')
+          seatedHere(e) ? I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }) : '',
+          e.role && e.role[SIDE] ? I.pick(e.role[SIDE]) : ''].filter(Boolean).join('\n')
       };
     });
   }
@@ -722,13 +777,14 @@
   function initActions() {
     $$('[data-ics]').forEach(function (b) {
       b.addEventListener('click', function () {
-        U.download('vaibhav-mahak-wedding.ics', U.buildICS(calendarEvents(), 'Vaibhav & Mahak'), 'text/calendar');
+        U.download(SIDE === 'bride' ? 'mahak-vaibhav-wedding.ics' : 'vaibhav-mahak-wedding.ics',
+          U.buildICS(calendarEvents(), I.t('names.pair')), 'text/calendar');
         U.toast(I.t('toast.ics'));
       });
     });
     const share = $('#btn-share');
     if (share) share.addEventListener('click', function () {
-      const payload = { title: 'Vaibhav & Mahak — Udaipur, 1 & 2 Feb 2027', text: I.t('share.text'), url: location.href.split('?')[0].split('#')[0] };
+      const payload = { title: I.t('names.pair') + ' — Udaipur, 1 & 2 Feb 2027', text: I.t('share.text'), url: location.href.split('?')[0].split('#')[0] };
       if (navigator.share) navigator.share(payload).catch(function () { /* dismissed */ });
       else if (navigator.clipboard) navigator.clipboard.writeText(payload.text + ' ' + payload.url).then(function () { U.toast(I.t('toast.copied')); });
       else U.toast(I.t('toast.nocopy'), 'warn');
@@ -742,6 +798,7 @@
   /* ---------------- boot ---------------- */
 
   function renderAll(again) {
+    renderDuties(again);
     renderProgramme(again);
     renderVenue(again);
     renderStay(again);
@@ -752,6 +809,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    initSide();
     I.apply(document);
     paintOrnaments();
     initGate();
@@ -773,5 +831,5 @@
     MO.petals($('#hero-petals'), { count: 30, speed: 1 });
   });
 
-  W.invite = { nowNext: nowNext, calendarEvents: calendarEvents, windowOf: windowOf };
+  W.invite = { nowNext: nowNext, calendarEvents: calendarEvents, windowOf: windowOf, side: SIDE, programme: MINE };
 })(window.W);

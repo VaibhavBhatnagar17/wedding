@@ -43,7 +43,10 @@ html.lang-hi .foot__names { font-size: clamp(34px, 5vw, 44px); line-height: 1.35
 html.lang-hi .scroll-cue { font-size: 14px; }
 html.lang-hi .field > span, html.lang-hi .cd span, html.lang-hi .parents__side span,
 html.lang-hi .pday__no, html.lang-hi .fly__cue, html.lang-hi .fly__skip,
-html.lang-hi .chip, html.lang-hi .wx b, html.lang-hi .wx i { font-size: 14px; }
+html.lang-hi .chip, html.lang-hi .wx b, html.lang-hi .wx i, html.lang-hi .ev__role b { font-size: 14px; }
+html.lang-hi .duties__list time { font-size: 15px; }
+html.lang-hi .ev__role, html.lang-hi .duties__list span, html.lang-hi .duties__lead { font-size: 16.5px; }
+html.lang-hi .duties__list b { font-size: 18px; }
 html.lang-hi .nav__links a:not(.btn), html.lang-hi .ev__time, html.lang-hi .ev__where,
 html.lang-hi .pday__jump a, html.lang-hi .pday__sun, html.lang-hi .hint { font-size: 15px; }
 html.lang-hi .foot__credits { font-size: 14px !important; }
@@ -285,6 +288,38 @@ html.lang-hi .ev__note { font-family: var(--deva); font-size: 17.5px; }
 .chip--seat { border-color: rgba(201, 118, 10, .45); background: #fff4dc; color: #7a4708; font-weight: 500; }
 .chip--seat::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--marigold); }
 .chip--who { color: var(--brand-soft); }
+
+/* This family's part in a shared ceremony: the one line on the card that is
+   written to its own guests, so it is set apart in marigold. */
+.ev__role {
+  display: grid; gap: 2px; margin: 0 0 12px; padding: 9px 14px;
+  border-left: 3px solid var(--marigold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: #fff6e2; font-size: 15px; line-height: 1.5; color: var(--ink);
+}
+.ev__role b { font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--marigold-deep); }
+.ev--flip .ev__role { border-left: 0; border-right: 3px solid var(--marigold); border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+
+.duties { max-width: 760px; margin: 0 auto clamp(40px, 6vw, 70px); }
+.duties__in {
+  padding: clamp(22px, 4vw, 34px); border-radius: var(--radius);
+  background: var(--ivory); border: 1px solid rgba(201, 162, 39, .4); box-shadow: var(--shadow-sm);
+}
+.duties__title { margin: 0 0 4px; font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--brand); }
+.duties__lead { margin: 0 0 18px; color: var(--muted); font-size: 15px; }
+.duties__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.duties__list a {
+  display: grid; grid-template-columns: 9.5em 1fr; gap: 2px 16px; padding: 10px 12px;
+  border-radius: var(--radius-sm); text-decoration: none; color: var(--ink);
+  transition: background .25s ease;
+}
+.duties__list a:hover { background: #fff3d6; }
+.duties__list time { grid-row: span 2; font-size: 13px; color: var(--gold-dark); padding-top: 3px; font-variant-numeric: tabular-nums; }
+.duties__list b { font-weight: 500; color: var(--brand); font-size: 16.5px; }
+.duties__list span { font-size: 14.5px; color: var(--ink); opacity: .8; line-height: 1.5; }
+@media (max-width: 560px) {
+  .duties__list a { grid-template-columns: 1fr; }
+  .duties__list time { grid-row: auto; padding: 0; }
+}
 
 /* Everything that is not a moment: one tidy line on the thread. */
 .ev--line {

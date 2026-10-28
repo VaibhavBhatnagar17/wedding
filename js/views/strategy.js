@@ -92,9 +92,9 @@ window.W = window.W || {}; W.views = W.views || {};
         el('li', { text: 'Jain and no-onion-no-garlic guests need a separate labelled counter. The Guests screen gives you the count to hand over.' })
       ]),
       el('div', { class: 'callout', html:
-        '<b>Bar.</b> ₹70,000 buys a two-hour open bar for roughly 105 drinkers — 2 whisky, 1 vodka, 1 gin, 1 rum, beer and 2 wines, all IMFL, no imported labels. ' +
-        'Rajasthan requires an <strong>occasional (temporary) bar licence</strong> for serving liquor at a private function; the venue or a licensed vendor must apply about two weeks ahead. ' +
-        'Cheaper alternatives: a cash bar, or premium mocktails only.' })
+        '<b>No bar.</b> The evening is dry, so there is no liquor, bar staff or occasional excise licence to arrange. ' +
+        'When the family performances finish at 23:00 the party moves into the banquet hall with the DJ, tea, coffee and late-night snacks until 01:00. ' +
+        'The old ₹45,000 bar line now pays for the sagaai\u2019s live singer, with the rest back in contingency.' })
     ]));
 
     /* risks */

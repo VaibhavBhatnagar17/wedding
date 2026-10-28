@@ -130,7 +130,7 @@ if (typeof setTimeout === 'undefined') { var setTimeout = window.setTimeout; }
 /* ---------------- load app ---------------- */
 
 var FILES = [
-  'js/i18n.js', 'js/util.js', 'js/data.js', 'js/content.js', 'js/flyin.js', 'js/store.js', 'js/ui.js',
+  'js/side.js', 'js/i18n.js', 'js/util.js', 'js/data.js', 'js/content.js', 'js/flyin.js', 'js/store.js', 'js/ui.js',
   'js/views/dashboard.js', 'js/views/guests.js', 'js/views/functions.js',
   'js/views/venue.js', 'js/views/budget.js', 'js/views/vendors.js',
   'js/views/logistics.js', 'js/views/strategy.js',
@@ -732,6 +732,9 @@ check('planner-only notes never reach guest-facing programme text', function () 
     ['t', 'where', 'note'].forEach(function (k) {
       (e[k] || []).forEach(function (s) { if (noise.test(s)) throw new Error(e.id + '.' + k + ' reads like a vendor note: ' + s); });
     });
+    Object.keys(e.role || {}).forEach(function (side) {
+      e.role[side].forEach(function (s) { if (noise.test(s)) throw new Error(e.id + '.role reads like a vendor note: ' + s); });
+    });
   });
 });
 
@@ -750,6 +753,7 @@ check('every programme event is written in both languages', function () {
     pairCheck(e.id + '.t', e.t);
     pairCheck(e.id + '.where', e.where);
     if (e.note) pairCheck(e.id + '.note', e.note);
+    Object.keys(e.role || {}).forEach(function (side) { pairCheck(e.id + '.role.' + side, e.role[side]); });
   });
 });
 
@@ -815,7 +819,6 @@ check('every question a guest will ask has an answer on the site', function () {
     ['How far is it by road?', card(C.travel, /road/i)],
     ['Do I need to book a room?', faq(/book a room/i)],
     ['Which meals are included?', card(C.stay, /meal/i) && P.filter(function (e) { return e.meal; }).length >= 6],
-    ['Will there be drinks?', faq(/drinks/i)],
     ['What is the weather like?', !!C.weather.dayHigh && !!C.weather.nightLow && faq(/weather/i)],
     ['What do I pack?', card(C.travel, /pack/i)],
     ['What about elders?', faq(/elders/i)],
@@ -827,7 +830,10 @@ check('every question a guest will ask has an answer on the site', function () {
     ['Wi-Fi and parking', faq(/wi-fi/i)],
     ['By when do I RSVP?', /20 January 2027/.test(dict['rsvp.lead'])],
     ['Can I put it in my calendar?', P.filter(function (e) { return e.alarm; }).length >= 8],
-    ['Things to do in Udaipur', C.whileHere.length >= 3]
+    ['Things to do in Udaipur', C.whileHere.length >= 3],
+    ['What does our family do?', ['groom', 'bride'].every(function (s) {
+      return P.filter(function (e) { return e.side === s || (e.role && e.role[s]); }).length >= 5;
+    })]
   ];
   var gaps = needs.filter(function (n) { return !n[1]; }).map(function (n) { return n[0]; });
   if (gaps.length) throw new Error('unanswered: ' + gaps.join('; '));
@@ -840,6 +846,53 @@ check('the things not yet confirmed are listed for the planner', function () {
   if (!list.some(function (x) { return /muhurat/i.test(x.what); })) throw new Error('the muhurat must stay on the list until the pandit confirms it');
   if (!list.some(function (x) { return /second hotel/i.test(x.what) && /170/.test(x.detail); })) throw new Error('the overflow hotel past 170 must be on the list');
   if (!list.some(function (x) { return /phere/i.test(x.detail) && /rooftop/i.test(x.detail); })) throw new Error('the open phere location must be on the list');
+  if (!list.some(function (x) { return /two addresses/i.test(x.what); })) throw new Error('buying the two addresses must be on the list');
+  if (!list.some(function (x) { return /part/i.test(x.what) && /draft/i.test(x.detail); })) throw new Error('the drafted family parts must be on the list');
+});
+
+/* The evening is dry: the sangeet's dancing moves indoors at 11, no bar. */
+check('there is no bar, and nothing a guest reads mentions drinks', function () {
+  var guest = JSON.stringify([W.content, W.i18n.DICT, W.data.guide, P.map(function (e) { return [e.t, e.where, e.note, e.role]; })]);
+  var m = /cocktail|drinks|alcohol|liquor|\b(open|small|the|a) bar\b/i.exec(guest);
+  if (m) throw new Error('guest copy still says "' + m[0] + '"');
+  if (ev('afterparty').who) throw new Error('the after-party is for everyone now');
+  if (W.data.budget.some(function (b) { return /\bbar\b/i.test(b.head); })) throw new Error('a bar line survives in the budget');
+});
+
+check('the sagaai is our dance into the rings, with a live singer', function () {
+  var s = ev('sagaai');
+  if (!/dance/i.test(s.note[0]) || !/singer/i.test(s.note[0])) throw new Error('sagaai note: ' + s.note[0]);
+  if (!W.data.budget.some(function (b) { return /singer/i.test(b.head); })) throw new Error('no budget line for the singer');
+});
+
+/* ---------------- two families, two cards ---------------- */
+
+check('each family has its own card, address and own ceremonies', function () {
+  var S = W.data.sides;
+  if (!S || !S.groom || !S.bride) throw new Error('sides missing');
+  if (S.groom.domain !== 'vaibhavwedsmahak.in' || S.bride.domain !== 'mahakwedsvaibhav.in') throw new Error('domains moved');
+  P.forEach(function (e) {
+    if (e.side && e.side !== 'groom' && e.side !== 'bride') throw new Error(e.id + ' has side ' + e.side);
+    Object.keys(e.role || {}).forEach(function (k) { if (k !== 'groom' && k !== 'bride') throw new Error(e.id + ' role for ' + k); });
+  });
+  ['ganesh', 'tel'].forEach(function (id) { if (ev(id).side !== 'bride') throw new Error(id + ' belongs on the bride\u2019s card only'); });
+  if (ev('sehra').side !== 'groom') throw new Error('the sehra belongs on the groom\u2019s card only');
+  var shared = P.filter(function (e) { return e.key && !e.side; }).length;
+  if (shared < 10) throw new Error('only ' + shared + ' shared key moments');
+});
+
+check('the card speaks for whichever family sent it', function () {
+  var I = W.i18n, was = W.side;
+  try {
+    W.side = 'groom'; I.set('en');
+    if (I.t('names.pair') !== 'Vaibhav & Mahak' || !/Bhatnagar/.test(I.t('card.pre'))) throw new Error('groom card: ' + I.t('names.pair'));
+    W.side = 'bride';
+    if (I.t('names.pair') !== 'Mahak & Vaibhav' || !/Kalra/.test(I.t('card.pre'))) throw new Error('bride card: ' + I.t('names.pair'));
+    I.set('hi');
+    if (I.t('names.pair') !== 'महक और वैभव' || !/कालरा/.test(I.t('card.pre'))) throw new Error('bride card in Hindi: ' + I.t('names.pair'));
+  } finally { W.side = was; I.set('en'); }
+  var orphans = Object.keys(I.DICT.en).filter(function (k) { return k.indexOf('@') > 0 && !(k.split('@')[0] in I.DICT.en); });
+  if (orphans.length) throw new Error('family versions with no default: ' + orphans.join(', '));
 });
 
 /* Decisions the families made about what the invitation does not say. */

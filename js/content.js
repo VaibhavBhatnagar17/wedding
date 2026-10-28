@@ -38,7 +38,7 @@ window.W = window.W || {};
 
   const spaces = [
     { where: ['The lawn', 'लॉन'], what: ['Haldi, folk evening, sagaai, sangeet, phere and the reception', 'हल्दी, लोक संध्या, सगाई, संगीत, फेरे और रिसेप्शन'] },
-    { where: ['The banquet hall', 'बैंक्वेट हॉल'], what: ['The cocktail after-party on 1 February', '1 फ़रवरी की कॉकटेल आफ़्टर-पार्टी'] },
+    { where: ['The banquet hall', 'बैंक्वेट हॉल'], what: ['The after-party on 1 February, from 11 pm', '1 फ़रवरी की आफ़्टर-पार्टी, रात 11 बजे से'] },
     { where: ['The hotel porch', 'होटल का पोर्च'], what: ['Where the baraat sets off, and the vidaai', 'जहाँ से बारात निकलेगी, और विदाई'] },
     { where: ['The restaurant', 'रेस्तराँ'], what: ['Breakfast every morning', 'हर सुबह का नाश्ता'] },
     { where: ['The rooftop pool', 'छत का स्विमिंग पूल'], what: ['For the afternoon rests', 'दोपहर के आराम के लिए'] }
@@ -109,10 +109,6 @@ window.W = window.W || {};
       a: ['Rooms are ready from 8 am on 1 February. Checkout is at 10 am on 3 February, after breakfast.',
         'कमरे 1 फ़रवरी को सुबह 8 बजे से तैयार रहेंगे। चेक-आउट 3 फ़रवरी को सुबह 10 बजे, नाश्ते के बाद।'],
       k: 'check-in checkin checkout check-out time चेक-इन चेक-आउट' },
-    { q: ['Will there be drinks?', 'क्या ड्रिंक्स होंगी?'],
-      a: ['Yes — at the cocktail after-party on the night of 1 February, from 11 pm in the banquet hall.',
-        'जी हाँ — 1 फ़रवरी की रात 11 बजे से बैंक्वेट हॉल में कॉकटेल आफ़्टर-पार्टी में।'],
-      k: 'drinks bar alcohol cocktail party ड्रिंक्स बार पार्टी' },
     { q: ['What if I am running late?', 'अगर मुझे देर हो जाए तो?'],
       a: ['The folk evening at 7 pm and the baraat at 9:30 am are the easy starts. The sagaai at 8 pm, the varmala at 10:30 am and the pheras at 11 begin on time — the pheras follow the muhurat. The calendar file reminds you before each one.',
         'शाम 7 बजे की लोक संध्या और सुबह 9:30 की बारात में थोड़ी ढील है। रात 8 बजे की सगाई, सुबह 10:30 की वरमाला और 11 बजे के फेरे समय पर शुरू होंगे — फेरे मुहूर्त के अनुसार होते हैं। कैलेंडर फ़ाइल हर कार्यक्रम से पहले आपको याद दिलाएगी।'],

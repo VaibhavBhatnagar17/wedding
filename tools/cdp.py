@@ -375,11 +375,12 @@ def task_check(tab):
         if(y>h){clearInterval(id);window.scrollTo(0,0);}},20);})()""")
     time.sleep(2.6)
 
-    n_prog = tab.eval("W.data.programme.length")
+    n_prog = tab.eval("W.invite.programme.length")
     check("three days render (1, 2 and the 3 Feb checkout)", tab.eval("document.querySelectorAll('.pday').length") == 3)
     check("every programme event renders", tab.eval("document.querySelectorAll('.ev').length") == n_prog,
           (tab.eval("document.querySelectorAll('.ev').length"), n_prog))
-    check("eleven painted moments", tab.eval("document.querySelectorAll('.ev--art img').length") == 11)
+    check("every painted moment on this card", tab.eval("document.querySelectorAll('.ev--art img').length")
+          == tab.eval("W.invite.programme.filter(function(e){return e.art}).length") == 10)
     tab.wait_for("Array.from(document.querySelectorAll('.ev--art img')).every(function(i){return i.complete && i.naturalWidth>0})", timeout=12)
     check("every painting loads", tab.eval(
         "Array.from(document.querySelectorAll('.ev--art img')).every(function(i){return i.complete && i.naturalWidth>0})"))
@@ -395,7 +396,7 @@ def task_check(tab):
     check("travel, weather and Udaipur cards render", tab.eval("document.querySelectorAll('#travel-grid .card').length") == 6)
     check("nothing tells guests what to wear",
           tab.eval("!document.getElementById('dress') && !document.querySelector('.ev__dress, a[href=\"#dress\"]') && !/what to wear/i.test(document.body.innerText)"))
-    check("the questions render", tab.eval("document.querySelectorAll('#faq-list .qa').length") == tab.eval("W.content.faq.length") == 10)
+    check("the questions render", tab.eval("document.querySelectorAll('#faq-list .qa').length") == tab.eval("W.content.faq.length") == 9)
     check("the help desk renders", tab.eval("document.querySelectorAll('#help-grid .helpc').length") == 4)
     tab.eval("var q=document.getElementById('faq-q'); q.value='parking'; q.dispatchEvent(new Event('input'));")
     shown = tab.eval("Array.from(document.querySelectorAll('#faq-list .qa')).filter(function(d){return !d.hidden}).length")
@@ -520,6 +521,47 @@ def task_check(tab):
 
     errs = tab.console_errors()
     check("no console errors", len(errs) == 0, errs[:3])
+
+    print("two cards")
+    stale = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "build-sides.py"), "--check"],
+                           capture_output=True, text=True)
+    check("mahak.html is rebuilt from index.html", stale.returncode == 0, (stale.stdout + stale.stderr).strip())
+    card_js = """(function(){
+      var q=function(s){return document.querySelector(s)};
+      return {side: W.side, first: q('.names .names__n').textContent, gate: q('.gate__names').textContent,
+              parent: q('.parents__side span').textContent, mono: q('.nav__mono').textContent.trim(),
+              ganesh: !!q('#ev-ganesh'), tel: !!q('#ev-tel'), sehra: !!q('#ev-sehra'),
+              duties: document.querySelectorAll('#duties li').length,
+              roles: document.querySelectorAll('#prog .ev__role').length,
+              rsvp: q('#rsvp-form select[name=side]').value, title: document.title,
+              og: (q('meta[property="og:image"]')||{}).content || '',
+              ogt: (q('meta[property="og:title"]')||{}).content || ''};
+    })()"""
+    tab.goto(base() + "/index.html?open=1", settle=2.6)
+    g = tab.eval(card_js)
+    check("Vaibhav's family's card names him first and shows the sehra",
+          g["side"] == "groom" and g["first"] == "Vaibhav" and g["parent"] == "Son of" and g["mono"] == "V & M"
+          and g["sehra"] and not g["ganesh"] and not g["tel"], g)
+    check("it lists our family's part and replies default to the groom's side",
+          g["duties"] >= 5 and g["roles"] >= 5 and g["rsvp"] == "Groom" and g["og"].endswith("/og.jpg"), g)
+    tab.goto(base() + "/mahak.html?open=1", settle=2.6)
+    b = tab.eval(card_js)
+    check("Mahak's family's card names her first, everywhere",
+          b["side"] == "bride" and b["first"] == "Mahak" and b["gate"] == "Mahak & Vaibhav" and b["parent"] == "Daughter of"
+          and b["mono"] == "M & V" and b["title"].startswith("Mahak & Vaibhav") and b["ogt"].startswith("Mahak & Vaibhav"), b)
+    check("it shows the Ganesh puja and tel, not the sehra, and has its own preview",
+          b["ganesh"] and b["tel"] and not b["sehra"] and b["duties"] >= 5 and b["rsvp"] == "Bride"
+          and b["og"].endswith("/og-mahak.jpg"), b)
+    tab.eval("W.i18n.set('hi')")
+    time.sleep(0.8)
+    bh = tab.eval("({first: document.querySelector('.names .names__n').textContent, foot: document.querySelector('.foot__names').textContent, duties: document.querySelector('.duties__title').textContent})")
+    check("and in Hindi too", "महक" in bh["first"] and bh["foot"] == "महक और वैभव" and "परिवार" in bh["duties"], bh)
+    tab.eval("W.i18n.set('en')")
+    tab.goto(base() + "/index.html?side=bride&open=1", settle=2.2)
+    check("?side=bride shows Mahak's card on any address", tab.eval("W.side") == "bride"
+          and tab.eval("document.querySelector('.names .names__n').textContent") == "Mahak")
+    errs = tab.console_errors()
+    check("the two cards have no console errors", len(errs) == 0, errs[:3])
 
     print("live day")
     tab.goto(base() + "/index.html?open=1&now=2027-02-01T20:10", settle=2.6)

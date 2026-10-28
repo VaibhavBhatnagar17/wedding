@@ -52,7 +52,7 @@ February is peak season, so book early anyway. Weather: days 24–27°C, nights 
 | 3 | Wedding lunch (Rajasthani thali) | 180 × ₹550 | 99,000 |
 | 4 | Reception dinner | 600 × ₹700 | 4,20,000 |
 | 5 | Welcome chaat, breakfasts, crew meals | — | 38,000 |
-| 6 | Bar — 2-hr limited IMFL + excise licence | ~35% of 180 drinking | 45,000 |
+| 6 | Live singer + musicians for the sagaai | one hour beside the stage — *placeholder until quotes; was the bar* | 30,000 |
 | 7 | Venue rental, taxes, generator, extra-hour | 2 lawns + banquet | 75,000 |
 | 8 | Host-side rooms | 10 net × 2 nights | 60,000 |
 | 9 | Décor — Haldi | daylight, marigold-led | 35,000 |
@@ -72,12 +72,12 @@ February is peak season, so book early anyway. Weather: days 24–27°C, nights 
 | 23 | Guest logistics — transfers, shuttle, ghodi/car | — | 34,000 |
 | 24 | Signage, seating charts, menu cards, printing | — | 12,000 |
 | 25 | **Day-of coordinator** | both days — *new line* | **50,000** |
-| 26 | **Contingency** | 8% — *up from 4.1%* | **1,60,250** |
+| 26 | **Contingency** | 8.8% — *up ₹15,000 from the dropped bar* | **1,75,250** |
 | | **Total** | | **20,00,000** |
 
 **What changed when the core list came down to 180.** Cutting 120 guests off the three family functions freed **₹2.32 lakh** — ₹2.16L of it food and bar, the rest hampers, transfers and printing. None of it was banked. Contingency went from a thin 4.1% to a real **8%**, the day-of coordinator became its own ₹50,000 line instead of being raided from that reserve, and the ₹1.05L left over went to the two things you keep: **the mandap** and **photography**. Food has dropped from 51% of the budget to 40%, which is the healthiest single number in this plan.
 
-**How it splits:** food & bar 40.4%, décor 11.7%, personal (outfits + HMU + mehndi) 10.2%, photo & video 9.5%, contingency 8%, venue & rooms 6.8%, everything else 13.4%.
+**How it splits:** food 38.2%, décor 11.7%, personal (outfits + HMU + mehndi) 10.2%, photo & video 9.5%, contingency 8.8%, venue & rooms 6.8%, everything else 14.8%.
 
 Food at 40% is where it should be. The lever, as always, is covers rather than décor: every 25 guests added back to the 180 list costs about ₹43,000 across the two days, and every 25 at the reception costs ₹17,500.
 
@@ -97,7 +97,7 @@ Food at 40% is where it should be. The lever, as always, is covers rather than d
 | Single venue for all four functions (no transport, one décor mobilisation) | ~₹1,40,000 |
 | Digital-first invitations; 120 printed boxes for elders and VIPs only | ~₹90,000 |
 | Marigold-led palette, zero imported flowers | ~₹85,000 |
-| 2-hour limited IMFL bar instead of all-night open bar with imported labels | ~₹80,000 |
+| No bar — a dry evening, with the party moving indoors at 23:00 | ~₹1,25,000 |
 | Haldi and Phere in daylight — zero lighting spend on 2 of 4 setups | ~₹70,000 |
 | Venue's in-house / preferred decorator (no outside-vendor entry fee) | 20–25% of décor |
 | LED wall rented once, used both nights | ~₹18,000 |
@@ -129,10 +129,10 @@ The whole programme now lives in `js/data.js` → `programme`. The invitation, t
 | 13:30–15:30 | Lunch, served beside the haldi so nobody changes first | Beside the lawn |
 | 15:30–19:00 | Rest. Lawn reset for the evening by 18:30. Sunset 18:19 | Rooms · rooftop pool |
 | **19:00–20:00** | **Rajasthani folk evening** — Kalbeliya and Ghoomar; the soft start for late arrivals | Lawn |
-| **20:00–21:00** | **SAGAAI** — guests seated by 19:50. Dinner opens alongside | Lawn — stage |
+| **20:00–21:00** | **SAGAAI** — our own performance with our friends, ending in the rings, a live singer beside the stage. Guests seated by 19:50. Dinner opens alongside | Lawn — stage |
 | 20:00–23:00 | Dinner — snacks and a full wedding dinner through the sagaai and sangeet | Lawn |
-| **21:00–23:00** | **SANGEET** — families, then cousins, then open floor | Lawn |
-| **23:00–01:00** | **Cocktail after-party** — drinks, late-night snacks, DJ | Banquet hall |
+| **21:00–23:00** | **SANGEET** — the family performances, then the cousins | Lawn |
+| **23:00–01:00** | **After-party** — the dancing moves indoors: DJ, tea, coffee and late-night snacks. No bar | Banquet hall |
 
 **On outdoor sound.** The sangeet runs outdoors to about 23:00 and you are managing the sound yourselves. The legal cut-off for amplified outdoor sound is 22:00 (Noise Rules 2000, rule 5(2)), and Udaipur police have seized equipment at weddings, so keep the volume down after 22:00 and have the indoor rig ready. The after-party is indoors already, which is the right call.
 
@@ -183,7 +183,7 @@ This is a lighting function, not a flower function. Mirror-mosaic stage backdrop
 Four-pillar open mandap, ivory and soft pink, hanging jasmine and rajnigandha strings, kalash and banana leaves, fabric canopy, petal-path aisle with brass urlis, 180 chairs with white covers and coloured sashes, a toran gate for the baraat, and a raised varmala stage with a flower-shower machine.
 
 **Reception — ₹43,000**
-Dramatic backdrop with the couple's monogram (~₹20k), 20 uplighters, entrance arch, 6 photo-wall panels, candles and tall centrepieces on 30 cocktail tables. After dark, lighting does all the work.
+Dramatic backdrop with the couple's monogram (~₹20k), 20 uplighters, entrance arch, 6 photo-wall panels, candles and tall centrepieces on 30 high tables. After dark, lighting does all the work.
 
 **The décor playbook**
 - Marigold runs ₹40–60/kg in February; orchids are ₹90 a stem. Go 80% marigold, rose, carnation, rajnigandha and jasmine. Zero imported flowers.
@@ -212,7 +212,7 @@ Dal Baati Churma, Gatte ki Sabzi, Ker Sangri, Papad ki Sabzi, Bajra and missi ro
 
 **Dietary tracking matters here.** Jain and no-onion-no-garlic guests need a separate labelled counter — the website tracks this per guest and gives you a count to hand the caterer.
 
-**Bar.** ₹70,000 buys a 2-hour open bar for ~105 drinkers: 2 whisky, 1 vodka, 1 gin, 1 rum, beer and 2 wines, all IMFL, no imported labels. Rajasthan requires an **occasional (temporary) bar licence** for serving liquor at a private function — the venue or a licensed vendor must apply about two weeks ahead. Budget alternatives: a cash bar (₹0 to you) or premium mocktails only.
+**No bar.** The evening is dry: no liquor, no bar staff and no occasional excise licence. The ₹45,000 bar line now pays for the sagaai's live singer (₹30,000, a placeholder until you have quotes), and ₹15,000 went back to contingency.
 
 ---
 
@@ -317,9 +317,10 @@ Because guests pay their own tariff (§1b), a tighter block does not directly sa
 
 1. **Is jewellery inside the ₹20L?** If yes, the guest count has to drop. This is the single biggest unknown in the plan.
 2. **Who pays for guest rooms?** The plan assumes guests do, with the host covering 10 rooms. If you're covering all of them, everything changes.
-3. **Alcohol** — 2-hour open bar (budgeted), cash bar, or dry?
+3. ~~**Alcohol**~~ — decided: dry. The party moves to the banquet hall at 23:00.
 4. **Non-veg** at any function? It adds 25–35% per plate where served.
 5. **Vidaai** on 2 Feb night or 3 Feb morning?
 6. Roughly **how many of the 180 are outstation**, and flying vs driving? This sizes the travel desk and the room block.
 7. **A second hotel past 170.** Khumani has 50 rooms, which hold about 170 people. If more than that need a room, book a hotel near the Bhuwana Bypass for the overflow. The invitation does not mention it; set the hotel on each moved guest's record and their guest page shows it.
 8. **Where the phere happen** — the rooftop or the garden. The invitation says "the lawn" until you decide. The haldi, sagaai, sangeet and the after-party (banquet hall) are fixed.
+9. **Each family's part.** The "our family's part" lines on both cards are a first draft. Each family should read its own card and correct them in `js/data.js` (the `role` field on each event).

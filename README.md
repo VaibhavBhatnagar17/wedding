@@ -5,7 +5,7 @@ Three things live in this folder:
 1. **[`PLAN.md`](PLAN.md)** — the wedding plan. Budget, function sequence, décor, menus, venue shortlist, risks. Read this first.
 2. **[`SETUP.md`](SETUP.md)** — how to put the site online and connect the guest database.
 3. **A website** with three pages:
-   - **`index.html`** — the invitation. Share this with guests.
+   - **`index.html`** — the invitation from Vaibhav's family, and **`mahak.html`** the same invitation from Mahak's. Share these with guests.
    - **`guest.html`** — the personal portal. A guest enters their mobile number and sees their own room, schedule, pickup, table and photo albums.
    - **`planner.html`** — the private planning console. Guests, budget, vendors, rooms, travel desk, checklist.
 
@@ -30,8 +30,12 @@ soft shehnai begins (with a pause button in the nav, remembered for next time),
 and the doors swing apart onto an arch card with your names and both sets of
 parents in gold. Below that, everything a guest needs, in this order:
 
-- **The programme** — all 22 events across 1–3 February, with time, place,
-  "be seated by" times and who each is for. The eleven moments people
+- **What our family does** — a short list of the family's own part in each
+  function, linked to the programme. Each family's card shows its own.
+- **The programme** — 23 events across 1–3 February, with time, place,
+  "be seated by" times, who each is for and the family's part in it. Each card
+  leaves out the other family's private ceremonies, so Vaibhav's shows 21 and
+  Mahak's 22. The eleven moments people
   travel for each carry a Mewar-style miniature painting in a cusped Rajput arch.
 - **The venue** — a drone flight: a real 3D map (satellite imagery over
   elevation data) that the guest flies by scrolling, from Lake Pichola past the
@@ -41,7 +45,7 @@ parents in gold. Below that, everything a guest needs, in this order:
 - **Stay, travel and weather** — arrival and early-arrival rooms, checkout,
   meals, pickups, routes by road, packing, and a live forecast that switches on
   in the last two weeks (Open-Meteo, no key).
-- **Questions** — 10 answers with a search box that works in both scripts.
+- **Questions** — 9 answers with a search box that works in both scripts.
 - **Help desk** — tap-to-call hotel numbers, the nearest 24-hour hospital
   (500 m) and 112.
 - **RSVP**, and a link to the guest's own page.
@@ -58,7 +62,8 @@ with a reminder 10–30 minutes before each key one — the main defence against
 people arriving late, along with published times that never overlap.
 
 The paintings are in `assets/art/`, the shehnai in `assets/audio/`, and the
-WhatsApp preview image is `assets/og.jpg`. Credits are in the footer.
+WhatsApp preview images are `assets/og.jpg` and `assets/og-mahak.jpg`, made by
+`python3.11 tools/make-og.py` (it needs Pillow). Credits are in the footer.
 
 The palette is maroon, sindoor red, saffron, marigold and gold — a shaadi joda,
 not a Mughal one. Colours live in `assets/css/tokens.css` and nowhere else, so
@@ -97,6 +102,51 @@ Append `?open=1` to skip the doors — useful for deep links, e.g.
 
 Everything honours `prefers-reduced-motion`: if a guest has asked their phone to
 stop animating things, the doors open instantly and nothing moves.
+
+## Two cards, two addresses
+
+There is one invitation, which speaks for whichever family sent it. On
+Mahak's card her name comes first, the line above the names says the Kalra
+family invites you, the seal reads M·V, and the parents swap sides. Each card
+shows its own family's part in each function, its own RSVP number, and only
+the ceremonies its guests attend: Ganesh puja and the tel ceremony are Mahak's
+side's, the sehra bandi is Vaibhav's. The hashtag is #VaibhavWedsMahak on both.
+
+The family is picked by `js/side.js`, in this order: `data-side="bride"` on the
+page (that is what `mahak.html` is), `?side=bride` in the address, or a
+hostname containing `mahakwedsvaibhav`. Everything else is Vaibhav's card.
+Nothing is remembered, so one phone can open both.
+
+`mahak.html` is generated from `index.html`, because WhatsApp reads the preview
+title and image before any script runs. **After editing `index.html`, run
+`python3 tools/build-sides.py`**; the browser tests fail if you forget.
+
+Who does what in each function is the `role` field on each event in
+`js/data.js`, with a `groom` and a `bride` line. The ones there now are a first
+draft: each family should read its own card and correct them. Some interface
+words have a per-family version, written `key@bride` in `js/i18n.js`.
+
+### Putting each card on its own address
+
+GitHub Pages serves only one custom domain per repository, so for
+`vaibhavwedsmahak.in` and `mahakwedsvaibhav.in` the site moves to Cloudflare
+Pages, which is free and can serve both from this repository.
+
+1. Buy both domains from any registrar.
+2. Make a free Cloudflare account. Go to *Workers & Pages → Create → Pages →
+   Connect to Git* and pick this repository. There is no build command, and the
+   output directory is the root (`/`).
+3. In the project's *Custom domains*, add both. Cloudflare will ask you to point
+   each domain's nameservers at it; do that at the registrar.
+4. `functions/_middleware.js` then serves Mahak's card at the root of
+   `mahakwedsvaibhav.in`. Vaibhav's address serves `index.html` as usual.
+5. Change the absolute preview-image link (`og:image`) in `index.html` to the
+   new address, then run `python3 tools/build-sides.py`, which carries it into
+   `mahak.html`. WhatsApp needs the full address there, not a relative one.
+6. Send each family its own link, and test both by pasting them into a WhatsApp
+   chat with yourself before sending them out.
+
+Until then, Mahak's card is `mahak.html` beside `index.html` on GitHub Pages.
 
 ## The guest portal
 
@@ -160,9 +210,10 @@ too. Without it, replies are saved in the guest's own browser — so in practice
 most RSVPs will arrive by phone and WhatsApp and you will type them into the
 Guests screen, which is fine.
 
-To turn on the "Send on WhatsApp" button, set `RSVP_WHATSAPP` at the top of
-`js/invite.js` to a number with country code and no `+` or spaces, e.g.
-`'919876543210'`.
+To turn on the "Send on WhatsApp" button, set `rsvpWhatsapp` for each family in
+`sides` near the top of `js/data.js`, to a number with country code and no `+`
+or spaces, e.g. `'919876543210'`. Each card sends its replies to its own
+family.
 
 ## Changing the plan
 
@@ -170,7 +221,7 @@ All content is in **`js/data.js`** — couple details, functions, décor, menus,
 
 The rest of the guest copy — stay, travel, the questions, the help desk and the flight's waypoints — is in **`js/content.js`**, and the interface strings are in **`js/i18n.js`**, both in English and Hindi. The smoke test fails if a Hindi line is missing.
 
-`toConfirm` at the bottom of `data.js` lists what the site already publishes but you have not settled yet (the muhurat, help-desk numbers, where the phere happen, a second hotel past 170 staying guests). It shows on the planner dashboard; delete each line once it is confirmed.
+`toConfirm` at the bottom of `data.js` lists what the site already publishes but you have not settled yet (the muhurat, help-desk numbers, where the phere happen, a second hotel past 170 staying guests, each family's part, the two addresses). It shows on the planner dashboard; delete each line once it is confirmed.
 
 If you change budget amounts, keep the total at ₹20,00,000 or the dashboard will tell you it does not add up.
 
@@ -178,7 +229,8 @@ If you change budget amounts, keep the total at ₹20,00,000 or the dashboard wi
 
 It is a static site with no build step, so anything works: GitHub Pages,
 Netlify, Vercel or Cloudflare Pages. Step-by-step instructions are in
-**[`SETUP.md`](SETUP.md)**.
+**[`SETUP.md`](SETUP.md)**. For the two family addresses, use Cloudflare Pages
+(see *Two cards, two addresses* above).
 
 `planner.html` carries `noindex` so it stays out of search results, but **it is not password-protected** — anyone with the link can read it. If that matters, publish only `index.html` and its `assets/` and `js/` folders, and keep `planner.html` local.
 
@@ -187,10 +239,10 @@ Netlify, Vercel or Cloudflare Pages. Step-by-step instructions are in
 Two layers, neither needing any installed packages.
 
 ```sh
-# 98 unit checks — no browser
+# 103 unit checks — no browser
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tools/smoke-test.js
 
-# 87 checks in a real headless Chrome
+# 95 checks in a real headless Chrome
 python3 tools/cdp.py check
 
 # screenshots of every page, desktop and mobile, into /tmp/shots
@@ -211,13 +263,17 @@ guests must attend, each breakfast closes on paper before the next event, the
 bride has at least two and a half hours between the tel ceremony and the
 varmala, and planner notes never leak into guest text. Every guest-facing line
 must exist in both languages, and a completeness audit fails the build if any of
-21 questions a guest will ask — arrival, checkout, pickups, meals, drinks,
-weather, elders, the hospital — has no answer on the site. Other checks hold the
-families' decisions: no dress guidance, none of the dropped questions, and no
-"underground" anywhere.
+21 questions a guest will ask — arrival, checkout, pickups, meals,
+each family's part, weather, elders, the hospital — has no answer on the site. Other checks hold the
+families' decisions: no dress guidance, none of the dropped questions, no
+"underground" anywhere, no bar and no mention of drinks, and a sagaai that is
+the couple's dance into the rings with a live singer. Each card must name its
+own family and keep to its own ceremonies, in both languages.
 
 The browser tests drive a real Chrome over the DevTools protocol: they break the
-seal and open the doors, render all 22 events and load all eleven paintings,
+seal and open the doors, render every event on the card and load its paintings,
+open Mahak's card and check her name leads, her family's ceremonies appear and
+the RSVP defaults to her side, check `mahak.html` is up to date with `index.html`,
 switch the page to Hindi and back, fake the clock to the evening of 1 February to
 check the live ribbon, fly the map to the hotel, read the calendar file for its
 reminders and the after-party's 1 am finish, type a number into the portal, check

@@ -350,7 +350,7 @@ window.W = window.W || {};
      copies are stacked and clipped down a jagged crack so the seal can break
      in two; the clip lives in CSS so both halves share one drawing. */
 
-  function seal(id) {
+  function seal(id, mono) {
     const sid = id || 'seal';
     const rnd = mulberry(29);
     const pts = [];
@@ -378,7 +378,7 @@ window.W = window.W || {};
       '<g opacity=".95">' + sunRays(100, 100, 40, 64, 24, 'url(#' + sid + '-gold)') + '</g>' +
       '<circle cx="100" cy="100" r="37" fill="#6b111b" stroke="url(#' + sid + '-gold)" stroke-width="2"/>' +
       '<text x="100" y="111" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-size="29" ' +
-        'letter-spacing="1" fill="url(#' + sid + '-gold)">V·M</text>' +
+        'letter-spacing="1" fill="url(#' + sid + '-gold)">' + (mono || 'V·M') + '</text>' +
       '<ellipse cx="78" cy="62" rx="28" ry="12" fill="#fff" opacity=".12" transform="rotate(-28 78 62)"/>' +
       '</svg>';
   }
