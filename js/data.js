@@ -188,6 +188,7 @@ window.W = window.W || {};
       date: '2027-02-02',
       start: '19:00',
       end: '23:00',
+      open: true,
       area: 'The lawn', areaHi: 'लॉन',
       guests: 650,
       dressCode: 'Formal Indian or western black-tie optional', dressHi: 'औपचारिक भारतीय पोशाक या ब्लैक-टाई',
@@ -233,13 +234,15 @@ window.W = window.W || {};
      fn      invitation group the event belongs to (who can see it in the portal)
      sheet   for events open to every staying guest (meals, rest), the run sheet
              it is filed under
-     who     'stay' hotel guests · 'bride' the bride's family · 'adults'
+     who     'stay' hotel guests (planner only, never tagged on the card) · 'bride' the bride's family · 'adults'
      key     a moment people are turning up for
      art     painting in assets/art/art-<art>.webp
      seated  "be seated by" / "gather at" time, published to guests
      seatedFor  only that family is asked to be there by `seated`
      side    'groom' or 'bride': on that family's card only (see side.js)
      role    { groom, bride }: that family's part, shown on its own card
+     open    no closing time is published ("7 pm onwards"); `end` is the
+             planner's estimate only
      alarm   minutes before start for the calendar reminder
      ops     a planner-only note on the same beat
 
@@ -378,7 +381,7 @@ window.W = window.W || {};
       where: ['Your room', 'आपका कमरा'],
       note: ['Rest before the reception. It turns cold after dark — bring a shawl.',
         'रिसेप्शन से पहले आराम कीजिए। अँधेरा होते ही ठंड बढ़ जाती है — शॉल साथ रखें।'] },
-    { id: 'reception', fn: 'reception', date: '2027-02-02', start: '19:00', end: '23:00', key: true, art: 'reception', alarm: 30,
+    { id: 'reception', fn: 'reception', date: '2027-02-02', start: '19:00', end: '23:00', open: true, key: true, art: 'reception', alarm: 30,
       t: ['Reception', 'रिसेप्शन'],
       where: ['The lawn', 'लॉन'],
       note: ['Everyone we love, in one evening. The couple arrive at 7:45 and dinner opens at 8.',

@@ -212,7 +212,7 @@ def new_tab():
 
 
 def serve():
-    p = subprocess.Popen([sys.executable, "-m", "http.server", str(HTTP_PORT)],
+    p = subprocess.Popen([sys.executable, os.path.join(ROOT, "tools", "serve.py"), str(HTTP_PORT)],
                          cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     time.sleep(1.5)
     return p
@@ -282,14 +282,14 @@ def task_shots(tab):
     tab.eval("W.i18n.set('en')")
 
     print("flight")
-    for name, p in (("15-fly-palace", 0.24), ("16-fly-hills", 0.72), ("17-fly-khumani", 0.94), ("18-fly-landed", 0.995)):
+    for name, t in (("15-fly-palace", 4.4), ("16-fly-hills", 12.6), ("17-fly-khumani", 18.5), ("18-fly-landed", 99)):
         tab.call("Emulation.setDeviceMetricsOverride", width=1440, height=900, deviceScaleFactor=1, mobile=False)
         tab.goto(base() + "/index.html?open=1", settle=1.6)
-        tab.eval("var t=document.getElementById('fly');window.scrollTo(0,t.getBoundingClientRect().top+window.scrollY+5)")
+        tab.eval("document.getElementById('venue').scrollIntoView()")
         tab.wait_for("/is-live|is-static/.test(document.getElementById('venue').className)", timeout=20)
-        tab.eval("""(function(p){var t=document.getElementById('fly');var top=t.getBoundingClientRect().top+window.scrollY;
-          window.scrollTo(0, top + (t.offsetHeight-window.innerHeight)*p);})(%s)""" % p)
-        time.sleep(5.0)
+        tab.eval("""(function(t){var v=document.getElementById('fly-film');v.pause();
+          v.currentTime=Math.min(t, (v.duration||22)-0.05);})(%s)""" % t)
+        time.sleep(2.0)
         tab.screenshot(f"{OUT}/{name}.png", width=1440, height=900, full=False)
         print("  " + name)
 
@@ -531,7 +531,7 @@ def task_check(tab):
       return {side: W.side, first: q('.names .names__n').textContent, gate: q('.gate__names').textContent,
               parent: q('.parents__side span').textContent, mono: q('.nav__mono').textContent.trim(),
               ganesh: !!q('#ev-ganesh'), tel: !!q('#ev-tel'), sehra: !!q('#ev-sehra'),
-              duties: document.querySelectorAll('#duties li').length,
+              duties: !!q('#duties, .duties'),
               roles: document.querySelectorAll('#prog .ev__role').length,
               rsvp: q('#rsvp-form select[name=side]').value, title: document.title,
               og: (q('meta[property="og:image"]')||{}).content || '',
@@ -542,20 +542,20 @@ def task_check(tab):
     check("Vaibhav's family's card names him first and shows the sehra",
           g["side"] == "groom" and g["first"] == "Vaibhav" and g["parent"] == "Son of" and g["mono"] == "V & M"
           and g["sehra"] and not g["ganesh"] and not g["tel"], g)
-    check("it lists our family's part and replies default to the groom's side",
-          g["duties"] >= 5 and g["roles"] >= 5 and g["rsvp"] == "Groom" and g["og"].endswith("/og.jpg"), g)
+    check("our family's part sits on its events, with no separate list, and replies default to the groom's side",
+          not g["duties"] and g["roles"] >= 5 and g["rsvp"] == "Groom" and g["og"].endswith("/og.jpg"), g)
     tab.goto(base() + "/mahak.html?open=1", settle=2.6)
     b = tab.eval(card_js)
     check("Mahak's family's card names her first, everywhere",
           b["side"] == "bride" and b["first"] == "Mahak" and b["gate"] == "Mahak & Vaibhav" and b["parent"] == "Daughter of"
           and b["mono"] == "M & V" and b["title"].startswith("Mahak & Vaibhav") and b["ogt"].startswith("Mahak & Vaibhav"), b)
     check("it shows the Ganesh puja and tel, not the sehra, and has its own preview",
-          b["ganesh"] and b["tel"] and not b["sehra"] and b["duties"] >= 5 and b["rsvp"] == "Bride"
+          b["ganesh"] and b["tel"] and not b["sehra"] and not b["duties"] and b["rsvp"] == "Bride"
           and b["og"].endswith("/og-mahak.jpg"), b)
     tab.eval("W.i18n.set('hi')")
     time.sleep(0.8)
-    bh = tab.eval("({first: document.querySelector('.names .names__n').textContent, foot: document.querySelector('.foot__names').textContent, duties: document.querySelector('.duties__title').textContent})")
-    check("and in Hindi too", "महक" in bh["first"] and bh["foot"] == "महक और वैभव" and "परिवार" in bh["duties"], bh)
+    bh = tab.eval("({first: document.querySelector('.names .names__n').textContent, foot: document.querySelector('.foot__names').textContent, role: document.querySelector('#prog .ev__role b').textContent})")
+    check("and in Hindi too", "महक" in bh["first"] and bh["foot"] == "महक और वैभव" and "परिवार" in bh["role"], bh)
     tab.eval("W.i18n.set('en')")
     tab.goto(base() + "/index.html?side=bride&open=1", settle=2.2)
     check("?side=bride shows Mahak's card on any address", tab.eval("W.side") == "bride"
@@ -575,37 +575,66 @@ def task_check(tab):
 
     print("flight")
     tab.goto(base() + "/index.html?open=1", settle=2.4)
-    tab.eval("var t=document.getElementById('fly');window.scrollTo(0,t.getBoundingClientRect().top+window.scrollY+5)")
+    tab.eval("document.getElementById('venue').scrollIntoView()")
     state = tab.wait_for("(function(){var c=document.getElementById('venue').className;"
                          "return /is-live|is-static/.test(c)?c:null})()", timeout=20)
     check("the flight starts, or falls back to the painting", bool(state), state)
     if state and "is-live" in state:
+        film = tab.eval("(function(){var v=document.getElementById('fly-film');return {src:v.currentSrc,poster:v.poster}})()")
+        check("a wide screen gets the wide film, with its first frame as the poster",
+              film["src"].endswith("/assets/flight/flight-wide.mp4") and film["poster"].endswith("flight-wide-poster.jpg"), film)
+        rolled = tab.wait_for("document.getElementById('fly-film').currentTime > 1", timeout=15)
+        check("the film rolls by itself when it comes into view", bool(rolled))
+        tab.wait_for("document.querySelectorAll('.fly__pin').length === 4", timeout=8)
         check("landmark pins are placed", tab.eval("document.querySelectorAll('.fly__pin').length") == 4)
-        # At the palace stop Lake Pichola's label used to sit in the caption, and
+        seek = """(function(t){var v=document.getElementById('fly-film');v.pause();
+          return new Promise(function(r){v.addEventListener('seeked',function(){setTimeout(function(){r(true)},900)},{once:true});v.currentTime=t;});})(%s)"""
+        # At the palace Lake Pichola's label used to sit in the caption, and
         # Fateh Sagar's hung half off the left edge.
-        clash, cut = [], []
-        for p in (0.24, 0.48, 0.72):
-            tab.eval("""(function(p){var t=document.getElementById('fly');var top=t.getBoundingClientRect().top+window.scrollY;
-              window.scrollTo(0, top + (t.offsetHeight-window.innerHeight)*p);})(%s)""" % p)
-            time.sleep(3.0)
+        clash, cut, caps = [], [], []
+        for t in (4.4, 8.6, 12.6, 18.5):
+            tab.eval(seek % t, await_promise=True)
             r = tab.eval("""(function(){
               var c=document.querySelector('#fly-caps .fly__cap.is-on'), r=c?c.getBoundingClientRect():null;
-              var nav=document.getElementById('nav').getBoundingClientRect().bottom, out={clash:[],cut:[]};
+              var nav=document.getElementById('nav').getBoundingClientRect().bottom, out={clash:[],cut:[],cap:c?c.getAttribute('data-leg'):null};
               Array.from(document.querySelectorAll('.fly__pin:not(.is-off) span')).forEach(function(s){
                 var b=s.getBoundingClientRect();
                 if(!r || (b.right>r.left && b.left<r.right && b.bottom>r.top && b.top<r.bottom)) out.clash.push(s.textContent);
                 if(b.left<0 || b.right>innerWidth || b.top<nav) out.cut.push(s.textContent);
               });
               return out;})()""")
-            clash += [f"{l} at {p}" for l in r["clash"]]
-            cut += [f"{l} at {p}" for l in r["cut"]]
+            clash += [f"{l} at {t}s" for l in r["clash"]]
+            cut += [f"{l} at {t}s" for l in r["cut"]]
+            caps.append(r["cap"])
+        check("each landmark's caption comes up with it", caps == ["1", "2", "3", "4"], caps)
         check("no landmark label sits on the caption", not clash, clash)
         check("no landmark label is cut off by an edge or the nav", not cut, cut)
-        tab.eval("""(function(){var t=document.getElementById('fly');var top=t.getBoundingClientRect().top+window.scrollY;
-          window.scrollTo(0, top + (t.offsetHeight-window.innerHeight)*0.995);})()""")
-        time.sleep(1.4)
-        check("the flight lands on the painted hotel",
-              "is-landed" in tab.eval("document.getElementById('venue').className"))
+        home = tab.eval("""(function(){var p=document.querySelector('.fly__pin--home');var b=p.getBoundingClientRect(),s=document.getElementById('fly').getBoundingClientRect();
+          return {on:!p.classList.contains('is-off'), x:(b.left-s.left)/s.width, y:(b.top-s.top)/s.height}})()""")
+        check("over the hotel, its pin is lit near the middle of the frame",
+              home["on"] and abs(home["x"] - 0.5) < 0.12 and abs(home["y"] - 0.5) < 0.15, home)
+        tab.eval("(function(){var v=document.getElementById('fly-film');v.currentTime=v.duration-0.3;v.play();})()")
+        landed = tab.wait_for("/is-landed/.test(document.getElementById('venue').className)", timeout=6)
+        again = tab.eval("(function(){var b=document.getElementById('fly-again');return b.hidden?null:b.textContent})()")
+        check("the flight lands on the painted hotel and offers to fly again", bool(landed) and again == "Fly again", again)
+        tab.eval("document.getElementById('fly-again').click()")
+        time.sleep(1.2)
+        re = tab.eval("(function(){var v=document.getElementById('fly-film');return {t:v.currentTime,landed:/is-landed/.test(document.getElementById('venue').className),paused:v.paused}})()")
+        check("flying again starts from the old city", re["t"] < 3 and not re["landed"] and not re["paused"], re)
+        tab.eval("window.scrollTo(0, 0)")
+        time.sleep(0.8)
+        check("the film pauses when scrolled away", tab.eval("document.getElementById('fly-film').paused"))
+        tab.eval("W.i18n.set('hi')")
+        time.sleep(0.5)
+        hi = tab.eval("[document.querySelector('.fly__pin--home span').textContent, document.getElementById('fly-again').textContent]")
+        check("the labels and button switch to Hindi", hi == ["होटल खुमानी", "फिर से उड़ान"], hi)
+        tab.eval("W.i18n.set('en')")
+        tab.call("Emulation.setDeviceMetricsOverride", width=414, height=896, deviceScaleFactor=1, mobile=False)
+        tab.goto(base() + "/index.html?open=1", settle=2.0)
+        tab.eval("document.getElementById('venue').scrollIntoView()")
+        tall = tab.wait_for("(function(){var s=document.getElementById('fly-film').currentSrc;return s||null})()", timeout=10)
+        check("a phone gets the tall film", bool(tall) and tall.endswith("/assets/flight/flight-tall.mp4"), tall)
+        tab.call("Emulation.setDeviceMetricsOverride", width=1440, height=900, deviceScaleFactor=1, mobile=False)
     errs = tab.console_errors()
     check("the flight has no console errors", len(errs) == 0, errs[:3])
 

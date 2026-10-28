@@ -443,7 +443,7 @@
 
     const events = mine.map(function (f) {
       return {
-        uid: f.id + '-' + g.phone, date: f.date, start: f.start, end: f.end,
+        uid: f.id + '-' + g.phone, date: f.date, start: f.start, end: f.open ? '' : f.end,
         title: f.name + ' — Vaibhav & Mahak',
         location: D.venue.booked.short + ', ' + D.venue.booked.address,
         description: f.tagline +

@@ -8,26 +8,30 @@ window.W = window.W || {};
 
   const V = W.data.venue.booked;
 
-  /* The flight, from the old city to the hotel. Camera values are MapLibre's:
-     lon/lat centre, zoom, pitch (tilt from straight down) and bearing (compass
-     direction the camera faces). `at` is where the leg ends along the scroll. */
+  /* The flight, from the old city to the hotel. tools/render-flight.py flies
+     this path to make the film in assets/flight/, so after changing a camera
+     value, run it again. Camera values are MapLibre's: lon/lat centre, zoom,
+     pitch (tilt from straight down) and bearing (compass direction the camera
+     faces). `t` is seconds into the film. After the hotel the drone keeps
+     circling it until `orbit.t`, and the film ends. */
   const flight = [
-    { id: 'udaipur', at: 0, center: [73.6905, 24.5795], zoom: 12.7, pitch: 38, bearing: -18,
+    { id: 'udaipur', t: 0, center: [73.6878, 24.5718], zoom: 13.3, pitch: 42, bearing: -24,
       cap: ['Udaipur — the City of Lakes', 'उदयपुर — झीलों की नगरी'],
       sub: ['Seat of the House of Mewar since 1559', '1559 से मेवाड़ राजघराने की राजधानी'] },
-    { id: 'palace', at: 0.24, center: [73.6834, 24.5762], zoom: 15.4, pitch: 64, bearing: 28,
+    { id: 'palace', t: 4.2, center: [73.6834, 24.5768], zoom: 15.5, pitch: 64, bearing: 18,
       cap: ['The City Palace on Lake Pichola', 'पिछोला झील के किनारे सिटी पैलेस'],
       sub: ['9 km from the venue', 'विवाह स्थल से 9 किमी'] },
-    { id: 'fateh', at: 0.48, center: [73.6752, 24.6008], zoom: 14.3, pitch: 60, bearing: 70,
+    { id: 'fateh', t: 8.4, center: [73.6760, 24.6000], zoom: 14.6, pitch: 64, bearing: 52,
       cap: ['Fateh Sagar, under the Aravallis', 'अरावली की गोद में फ़तेह सागर'],
       sub: ['7 km from the venue', 'विवाह स्थल से 7 किमी'] },
-    { id: 'east', at: 0.72, center: [73.6990, 24.6190], zoom: 13.6, pitch: 70, bearing: 80,
+    { id: 'east', t: 12.4, center: [73.6985, 24.6178], zoom: 13.9, pitch: 70, bearing: 82,
       cap: ['East across the city to Bhuwana', 'शहर के ऊपर से पूर्व में भुवाणा की ओर'],
       sub: ['Where the Aravalli hills close in', 'जहाँ अरावली की पहाड़ियाँ पास आ जाती हैं'] },
-    { id: 'khumani', at: 0.94, center: [V.lon, V.lat], zoom: 17.1, pitch: 62, bearing: 152,
+    { id: 'khumani', t: 16.8, center: [V.lon, V.lat], zoom: 17.45, pitch: 58, bearing: 146,
       cap: ['Hotel Khumani', 'होटल खुमानी'],
       sub: ['Where we celebrate — 1 & 2 February 2027', 'जहाँ हमारा उत्सव होगा — 1 एवं 2 फ़रवरी 2027'] }
   ];
+  const orbit = { t: 21.5, zoom: 17.8, pitch: 54, bearing: 204 };
 
   const landmarks = [
     { id: 'palace', lon: 73.6834, lat: 24.5762, name: ['City Palace', 'सिटी पैलेस'] },
@@ -167,7 +171,7 @@ window.W = window.W || {};
   };
 
   W.content = {
-    flight: flight, landmarks: landmarks, spaces: spaces, distances: distances,
+    flight: flight, orbit: orbit, landmarks: landmarks, spaces: spaces, distances: distances,
     stay: stay, travel: travel, weather: weather, faq: faq,
     help: help, whileHere: whileHere, map: map
   };

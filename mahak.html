@@ -168,7 +168,6 @@
         <h2 data-split="chars" data-reveal="up" data-i18n="prog.title">Two days, in order</h2></div>
         <p data-i18n="prog.lead">Every event at Hotel Khumani, in the order it happens.</p>
       </div>
-      <div class="duties" id="duties"></div>
       <div class="prog" id="prog"></div>
       <div class="prog__cal" data-reveal="up">
         <button class="btn" type="button" data-ics><span data-i18n="btn.ics">Add to calendar</span></button>
@@ -181,8 +180,9 @@
   <section class="fly" id="venue" aria-labelledby="venue-title">
     <div class="fly__track" id="fly">
       <div class="fly__stage">
-        <div class="fly__map" id="fly-map" aria-hidden="true"></div>
         <img class="fly__poster" src="assets/art/venue-khumani-640.webp" alt="" aria-hidden="true" width="640" height="480" />
+        <video class="fly__film" id="fly-film" muted playsinline disablepictureinpicture preload="none" aria-hidden="true" tabindex="-1"></video>
+        <div class="fly__pins" id="fly-pins" aria-hidden="true"></div>
         <div class="fly__veil" aria-hidden="true"></div>
         <div class="fly__head">
           <span class="eyebrow" data-i18n="venue.eyebrow">The venue</span>
@@ -191,10 +191,11 @@
         </div>
         <ol class="fly__caps" id="fly-caps"></ol>
         <div class="fly__hud">
-          <span class="fly__cue" data-i18n="venue.scroll">Scroll to fly</span>
+          <button class="fly__again" type="button" id="fly-again" hidden>Fly again</button>
           <span class="fly__bar"><i id="fly-bar"></i></span>
           <a class="fly__skip" href="#venue-info" data-i18n="venue.skip">Skip the flight</a>
         </div>
+        <small class="fly__credit">Imagery © Esri, Maxar, Earthstar Geographics · Terrain © Mapzen</small>
         <figure class="fly__land" id="fly-land">
           <img src="assets/art/venue-khumani.webp" alt="" width="1024" height="768" loading="lazy" decoding="async" />
         </figure>

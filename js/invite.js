@@ -225,10 +225,10 @@
 
     const chips = [];
     if (seatedHere(e)) chips.push(chip(I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }), 'seat'));
-    if (e.who) chips.push(chip(I.t('who.' + e.who), 'who'));
+    if (e.who && e.who !== 'stay') chips.push(chip(I.t('who.' + e.who), 'who'));
 
     const body = el('div', { class: 'ev__body' }, [
-      el('time', { class: 'ev__time', datetime: e.date + 'T' + e.start, text: I.span(e.start, e.end) }),
+      el('time', { class: 'ev__time', datetime: e.date + 'T' + e.start, text: e.open ? I.t('prog.onwards', { t: I.time(e.start) }) : I.span(e.start, e.end) }),
       el('h4', { class: 'ev__title', text: I.pick(e.t) }),
       el('p', { class: 'ev__where', html: PIN + '<span>' + I.pick(e.where) + '</span>' }),
       e.note ? el('p', { class: 'ev__note', text: I.pick(e.note) }) : null,
@@ -270,31 +270,9 @@
     markNow();
   }
 
-  /* Everything this family does, in order: its own ceremonies and its part
-     in the shared ones. Each line jumps to the event in the programme. */
-  function renderDuties(again) {
-    const host = $('#duties');
-    if (!host) return;
-    U.clear(host);
-    const items = MINE.filter(function (e) { return e.side === SIDE || (e.role && e.role[SIDE]); });
-    if (!items.length) return;
-    const box = el('div', { class: 'duties__in', 'data-reveal': 'up' }, [
-      el('h3', { class: 'duties__title', text: I.t('duties.title') }),
-      el('p', { class: 'duties__lead', text: I.t('duties.lead') }),
-      el('ol', { class: 'duties__list' }, items.map(function (e) {
-        return el('li', {}, el('a', { href: '#ev-' + e.id }, [
-          el('time', { datetime: e.date + 'T' + e.start, text: I.date(e.date, { day: false }) + ' · ' + I.time(e.start) }),
-          el('b', { text: I.pick(e.t) }),
-          el('span', { text: I.pick(e.side === SIDE ? e.note : e.role[SIDE]) })
-        ]));
-      }))
-    ]);
-    host.appendChild(again ? shown(box) : box);
-  }
-
   /* ---------------- the flight ---------------- */
 
-  const fly = { leg: 0, ctl: null };
+  const fly = { leg: 0, ctl: null, btn: 'again' };
 
   function paintCaps(active) {
     const host = $('#fly-caps');
@@ -306,6 +284,8 @@
         el('span', { text: I.pick(w.sub) })
       ]));
     });
+    const again = $('#fly-again');
+    if (again) again.textContent = I.t('venue.' + fly.btn);
   }
 
   function setLeg(i) {
@@ -315,33 +295,39 @@
   }
 
   function initFlight() {
-    const track = $('#fly');
-    if (!track || !W.flyin) return;
+    const stage = $('#fly');
+    if (!stage || !W.flyin) return;
     paintCaps(0);
-    const bar = $('#fly-bar'), land = $('#venue');
+    const bar = $('#fly-bar'), land = $('#venue'), again = $('#fly-again');
+    function offer(kind) {
+      fly.btn = kind;
+      again.textContent = I.t('venue.' + kind);
+      again.hidden = false;
+    }
     fly.ctl = W.flyin.mount({
-      track: track,
-      map: $('#fly-map'),
-      flight: C.flight,
+      stage: stage,
+      video: $('#fly-film'),
+      pins: $('#fly-pins'),
       landmarks: C.landmarks,
       label: function (lm) { return I.pick(lm.name); },
       avoid: function () {
         const c = $('#fly-caps .fly__cap.is-on');
         return c ? c.getBoundingClientRect() : null;
       },
-      onProgress: function (p, cam) {
+      onFrame: function (p, leg) {
         if (bar) bar.style.transform = 'scaleX(' + p.toFixed(3) + ')';
-        // Captions change a little before each waypoint, so the words arrive
-        // with the landmark rather than after it.
-        let leg = 0;
-        C.flight.forEach(function (w, i) { if (p >= w.at - 0.07) leg = i; });
         setLeg(leg);
-        land.classList.toggle('is-landed', p > 0.965);
-        land.classList.toggle('is-flying', p > 0.02 && p < 0.965);
+        land.classList.toggle('is-flying', p > 0.02 && !land.classList.contains('is-landed'));
       },
+      onLanded: function (on) {
+        land.classList.toggle('is-landed', on);
+        if (on) { land.classList.remove('is-flying'); offer('again'); } else again.hidden = true;
+      },
+      onBlocked: function () { offer('play'); },
       onReady: function () { land.classList.add('is-live'); },
       onStatic: function () { land.classList.add('is-static'); }
     });
+    again.addEventListener('click', function () { again.hidden = true; fly.ctl.replay(); });
   }
 
   /* ---------------- venue details ---------------- */
@@ -578,7 +564,7 @@
         el('i', { class: 'now__dot' }),
         el('small', { text: I.t('now.now') }),
         el('b', { text: I.pick(nn.cur.t) }),
-        el('span', { text: I.pick(nn.cur.where) + (nn.cur.end ? ' · ' + I.t('now.until', { t: I.time(nn.cur.end) }) : '') })
+        el('span', { text: I.pick(nn.cur.where) + (nn.cur.end && !nn.cur.open ? ' · ' + I.t('now.until', { t: I.time(nn.cur.end) }) : '') })
       ]));
     }
     if (nn.nxt) {
@@ -764,7 +750,7 @@
   function calendarEvents() {
     return MINE.map(function (e) {
       return {
-        uid: 'vm-' + e.id, date: e.date, start: e.start, end: e.end || '', alarm: e.alarm || 0,
+        uid: 'vm-' + e.id, date: e.date, start: e.start, end: e.open ? '' : e.end || '', alarm: e.alarm || 0,
         title: I.pick(e.t) + ' — ' + I.t('names.pair'),
         location: I.pick(e.where) + ', Hotel Khumani, Bhuwana Bypass, Udaipur',
         description: [I.pick(e.note),
@@ -798,7 +784,6 @@
   /* ---------------- boot ---------------- */
 
   function renderAll(again) {
-    renderDuties(again);
     renderProgramme(again);
     renderVenue(again);
     renderStay(again);

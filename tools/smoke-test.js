@@ -928,14 +928,50 @@ check('content facts agree with the venue record', function () {
 });
 
 check('the flight path is ordered and lands where it ends', function () {
-  var F = W.content.flight, cam = W.flyin.cameraAt;
-  for (var i = 1; i < F.length; i++) if (!(F[i].at > F[i - 1].at)) throw new Error('waypoints out of order at ' + F[i].id);
-  var a = cam(F, 0), z = cam(F, 1);
-  if (Math.abs(a.center[0] - F[0].center[0]) > 1e-9) throw new Error('flight does not start at the first waypoint');
+  var C = W.content, F = C.flight, O = C.orbit, cam = W.flyin.cameraAt;
+  for (var i = 1; i < F.length; i++) if (!(F[i].t > F[i - 1].t)) throw new Error('waypoints out of order at ' + F[i].id);
+  if (!(O.t > F[F.length - 1].t)) throw new Error('the circle over the hotel must come after the landing');
+  var a = cam(F, O, 0), z = cam(F, O, O.t);
+  if (Math.abs(a.center[0] - F[0].center[0]) > 1e-9 || a.leg !== 0) throw new Error('flight does not start at the first waypoint');
   var L = F[F.length - 1];
   if (Math.abs(z.center[0] - L.center[0]) > 1e-9 || Math.abs(z.center[1] - L.center[1]) > 1e-9) throw new Error('flight drifts off the hotel');
-  var mid = cam(F, (F[1].at + F[2].at) / 2);
-  if (!(mid.zoom > 10 && mid.zoom < 18 && mid.pitch >= 0 && mid.pitch <= 78)) throw new Error('camera out of range mid-flight');
+  if (z.leg !== F.length - 1) throw new Error('the last caption is not the hotel');
+  for (var u = 17.5; u <= O.t; u += 0.5) {
+    var o = cam(F, O, u);
+    if (Math.abs(o.center[0] - L.center[0]) > 1e-9 || Math.abs(o.center[1] - L.center[1]) > 1e-9) throw new Error('the circle drifts off the hotel at ' + u + 's');
+  }
+  for (var t = 0; t <= O.t; t += 0.25) {
+    var c = cam(F, O, t);
+    if (!(c.zoom > 11 && c.zoom < 18.5 && c.pitch >= 0 && c.pitch <= 76)) throw new Error('camera out of range at ' + t + 's');
+  }
+});
+
+check('the flight film matches its path, frame for frame', function () {
+  var C = W.content, M = JSON.parse(readFile('assets/flight/flight.json'));
+  if (M.seconds !== C.orbit.t) throw new Error('the film is ' + M.seconds + 's but the path is ' + C.orbit.t + 's — run tools/render-flight.py');
+  if (M.landmarks.join() !== C.landmarks.map(function (l) { return l.id; }).join()) throw new Error('landmark columns disagree');
+  ['wide', 'tall'].forEach(function (s) {
+    var f = M[s], n = Math.round(M.seconds * M.fps) + 1;
+    if (!f || f.caps.length !== n || f.pins.length !== n) throw new Error(s + ' film has the wrong number of frames');
+    for (var i = 1; i < n; i++) if (f.caps[i] < f.caps[i - 1]) throw new Error(s + ' captions run backwards at frame ' + i);
+    if (f.caps[n - 1] !== C.flight.length - 1) throw new Error(s + ' film does not end on the hotel caption');
+    var home = f.pins[n - 1][M.landmarks.indexOf('khumani')];
+    if (!home || Math.abs(home[0] - 0.5) > 0.08 || Math.abs(home[1] - 0.5) > 0.08) throw new Error(s + ' film does not end over the hotel: ' + home);
+  });
+});
+
+check('the reception has no closing time, on the card or in the calendar', function () {
+  var e = ev('reception'), f = W.data.functions.filter(function (x) { return x.id === 'reception'; })[0];
+  if (!e.open || !f.open) throw new Error('the reception must be open-ended');
+  ['en', 'hi'].forEach(function (l) { if (!/\{t\}/.test(W.i18n.DICT[l]['prog.onwards'] || '')) throw new Error('"onwards" missing in ' + l); });
+  var ics = W.util.buildICS([{ uid: 'r', date: e.date, start: e.start, end: '', title: 'Reception' }]);
+  if (/DTEND:20270202T23/.test(ics)) throw new Error('the calendar still closes the reception at 11');
+});
+
+check('the card never tags events "for guests staying at the hotel"', function () {
+  var d = W.i18n.DICT;
+  if (d.en['who.stay'] || d.hi['who.stay']) throw new Error('the staying-guests tag is back');
+  if (/staying at the hotel|होटल में ठहरे मेहमानों के लिए/.test(JSON.stringify(d))) throw new Error('the staying-guests line is back');
 });
 
 check('the calendar reminds before key events and ends the after-party next day', function () {

@@ -1,220 +1,218 @@
 /* The drone flight over Udaipur to the venue.
 
-   A real 3D map — satellite imagery draped over elevation data, so the
-   Aravallis stand up — with the camera tied to scroll position. The library
-   is only fetched when the section comes near, and anyone who has asked for
-   reduced motion, is saving data, or has no WebGL gets the painting instead:
-   the flight is decoration, never the only way to find the venue.
+   The flight is a film, rendered ahead of time by tools/render-flight.py: a
+   real 3D map (Esri satellite imagery over Mapzen terrain) flown along
+   cameraAt() one frame at a time, each frame captured only once every tile
+   had arrived. A live map drew half-loaded ground on a slow phone; the film
+   looks the same on every one, and weighs a few MB.
 
-   Imagery is Esri World Imagery and terrain is the Mapzen/AWS Terrarium set;
-   both are keyless, CORS-enabled and credited on screen. */
+   The page lays its own landmark labels over the film, in either language,
+   from the per-frame positions the renderer saved in assets/flight/flight.json.
+   Anyone who has asked for reduced motion, or is saving data, gets the
+   painting and the journey as a list: the flight is decoration, never the
+   only way to find the venue. */
 window.W = window.W || {};
 
 (function (W) {
   'use strict';
 
-  const VERSION = '5.24.0';
-  const BASE = 'https://unpkg.com/maplibre-gl@' + VERSION + '/dist/';
-
-  let loading = null;
-  function load() {
-    if (window.maplibregl) return Promise.resolve(window.maplibregl);
-    if (loading) return loading;
-    loading = new Promise(function (resolve, reject) {
-      const css = document.createElement('link');
-      css.rel = 'stylesheet';
-      css.href = BASE + 'maplibre-gl.css';
-      document.head.appendChild(css);
-      const s = document.createElement('script');
-      s.src = BASE + 'maplibre-gl.js';
-      s.async = true;
-      s.onload = function () { window.maplibregl ? resolve(window.maplibregl) : reject(new Error('no maplibregl')); };
-      s.onerror = function () { reject(new Error('maplibre failed to load')); };
-      document.head.appendChild(s);
-    });
-    return loading;
-  }
-
-  function webgl() {
-    try {
-      const c = document.createElement('canvas');
-      return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
-    } catch (e) { return false; }
-  }
+  const DIR = 'assets/flight/';
+  // Encoded frame sizes; tools/render-flight.py SHAPES must agree.
+  const SIZE = { wide: [1600, 900], tall: [720, 1280] };
 
   function smooth(t) { return t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t); }
-  function lerp(a, b, t) { return a + (b - a) * t; }
-  function lerpAngle(a, b, t) { const d = ((b - a + 540) % 360) - 180; return a + d * t; }
+  function cr(p0, p1, p2, p3, s) {
+    const s2 = s * s, s3 = s2 * s;
+    return 0.5 * ((2 * p1) + (-p0 + p2) * s + (2 * p0 - 5 * p1 + 4 * p2 - p3) * s2 + (-p0 + 3 * p1 - 3 * p2 + p3) * s3);
+  }
 
-  /* Camera at progress p (0..1) through the waypoints. Each leg eases in and
-     out so the camera seems to hover over each landmark before moving on; past
-     the last waypoint it keeps a slow orbit over the hotel. */
-  function cameraAt(flight, p) {
+  /* The camera t seconds into the film. A Catmull-Rom curve through the
+     waypoints keeps the drone moving past each landmark rather than stopping
+     dead at it, and the time warp eases out of the opening hover and into the
+     closing circle. dz lifts the whole path (a portrait frame sees less to
+     either side). `leg` is the caption to show, from just before each
+     waypoint, so the words arrive with the landmark. */
+  function cameraAt(flight, orbit, t, dz) {
+    dz = dz || 0;
     const last = flight[flight.length - 1];
-    if (p >= last.at) {
-      const t = (p - last.at) / Math.max(0.0001, 1 - last.at);
-      return { center: last.center.slice(), zoom: last.zoom + t * 0.25, pitch: last.pitch,
-        bearing: last.bearing + t * 26, leg: flight.length - 1 };
-    }
-    for (let i = 0; i < flight.length - 1; i++) {
-      const A = flight[i], B = flight[i + 1];
-      if (p <= B.at) {
-        const t = smooth((p - A.at) / (B.at - A.at));
-        return {
-          center: [lerp(A.center[0], B.center[0], t), lerp(A.center[1], B.center[1], t)],
-          zoom: lerp(A.zoom, B.zoom, t),
-          pitch: lerp(A.pitch, B.pitch, t),
-          bearing: lerpAngle(A.bearing, B.bearing, t),
-          leg: t < 0.5 ? i : i + 1
-        };
-      }
-    }
-    return { center: last.center.slice(), zoom: last.zoom, pitch: last.pitch, bearing: last.bearing, leg: flight.length - 1 };
+    const keys = flight.concat([{ t: orbit.t, center: last.center, zoom: orbit.zoom, pitch: orbit.pitch, bearing: orbit.bearing }]);
+    const T = orbit.t;
+    const u = Math.min(T, Math.max(0, 0.55 * t + 0.45 * T * smooth(t / T)));
+    let i = 0;
+    while (i < keys.length - 2 && u > keys[i + 1].t) i++;
+    const vec = function (k) { return [k.center[0], k.center[1], k.zoom + dz, k.pitch, k.bearing]; };
+    const P = [keys[Math.max(0, i - 1)], keys[i], keys[i + 1], keys[Math.min(keys.length - 1, i + 2)]].map(vec);
+    // The drone glides to a stop over the hotel and circles it on the spot:
+    // without this the curve's momentum carries it past and back again.
+    const same = function (a, b) { return a.center[0] === b.center[0] && a.center[1] === b.center[1]; };
+    if (same(keys[i], keys[i + 1])) { P[0][0] = P[3][0] = P[1][0]; P[0][1] = P[3][1] = P[1][1]; }
+    else if (i + 2 < keys.length && same(keys[i + 1], keys[i + 2])) { P[3][0] = P[1][0]; P[3][1] = P[1][1]; }
+    const s = (u - keys[i].t) / (keys[i + 1].t - keys[i].t);
+    const o = [0, 1, 2, 3, 4].map(function (j) { return cr(P[0][j], P[1][j], P[2][j], P[3][j], s); });
+    let leg = 0;
+    flight.forEach(function (k, n) { if (u >= k.t - 0.9) leg = n; });
+    return { center: [o[0], o[1]], zoom: o[2], pitch: Math.min(76, o[3]), bearing: o[4], leg: leg };
   }
 
-  function style() {
-    return {
-      version: 8,
-      sources: {
-        sat: {
-          type: 'raster', tileSize: 256, maxzoom: 18,
-          tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-          attribution: 'Imagery © Esri, Maxar, Earthstar Geographics'
-        },
-        dem: {
-          type: 'raster-dem', tileSize: 256, maxzoom: 14, encoding: 'terrarium',
-          tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
-          attribution: 'Terrain © Mapzen, AWS Open Data'
-        }
-      },
-      layers: [
-        { id: 'ground', type: 'background', paint: { 'background-color': '#2b0810' } },
-        { id: 'sat', type: 'raster', source: 'sat', paint: {
-          'raster-saturation': -0.06, 'raster-contrast': 0.06,
-          'raster-brightness-max': 0.97, 'raster-fade-duration': 0 } }
-      ],
-      terrain: { source: 'dem', exaggeration: 1.6 },
-      // A dusk sky with a marigold horizon, so the far hills dissolve into the
-      // same palette as the rest of the page instead of a blank horizon.
-      sky: {
-        'sky-color': '#24102e', 'horizon-color': '#e9a04a', 'fog-color': '#d9a066',
-        'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.35,
-        'atmosphere-blend': 0.85
-      }
-    };
+  function canPlay(v) {
+    return !!(v && v.canPlayType && v.canPlayType('video/mp4; codecs="avc1.640028"'));
   }
 
-  /* opts: track (tall scroll container), map (element), flight, landmarks,
-     label(lm) -> text, avoid() -> rect pins must stay clear of,
-     onProgress(p, cam), onStatic(reason), onReady() */
-  function mount(opts) {
+  /* opts: stage, video, pins (overlay element), landmarks, label(lm) -> text,
+     avoid() -> rect the labels must keep clear of,
+     onFrame(progress, leg), onLanded(bool), onBlocked(), onReady(), onStatic(reason) */
+  function mount(o) {
     const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const saveData = navigator.connection && navigator.connection.saveData;
-    if (reduced || saveData || !webgl() || !('IntersectionObserver' in window)) {
-      opts.onStatic(reduced ? 'reduced' : 'unsupported');
-      return { relabel: function () {} };
+    const v = o.video;
+    if (reduced || saveData || !canPlay(v) || !('IntersectionObserver' in window)) {
+      o.onStatic(reduced ? 'reduced' : 'unsupported');
+      return { relabel: function () {}, replay: function () {} };
     }
 
-    let map = null, ready = false, raf = 0, lastP = -1;
+    let shape = null, meta = null, raf = 0, landed = false, visible = false, failed = false;
     const pins = [];
 
-    function progress() {
-      const r = opts.track.getBoundingClientRect();
-      const span = r.height - window.innerHeight;
-      return span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
+    function pick() {
+      const r = o.stage.getBoundingClientRect();
+      return r.width / Math.max(1, r.height) < 0.9 ? 'tall' : 'wide';
     }
 
-    function update(force) {
-      const p = progress();
-      if (!force && Math.abs(p - lastP) < 0.0004) return;
-      lastP = p;
-      const cam = cameraAt(opts.flight, p);
-      if (opts.onProgress) opts.onProgress(p, cam);
-      if (ready) map.jumpTo({ center: cam.center, zoom: cam.zoom, pitch: cam.pitch, bearing: cam.bearing });
+    function source(at) {
+      shape = pick();
+      v.poster = DIR + 'flight-' + shape + '-poster.jpg';
+      v.src = DIR + 'flight-' + shape + '.mp4';
+      v.preload = 'auto';
+      if (at) v.addEventListener('loadedmetadata', function once() { v.removeEventListener('loadedmetadata', once); v.currentTime = at; });
+      v.load();
     }
 
-    function onScroll() {
-      if (raf) return;
-      raf = requestAnimationFrame(function () { raf = 0; update(false); });
-    }
-
-    /* Pins are our own overlay, placed with map.project(), which accounts for
-       the terrain. Library markers are projected at sea level and then marked
-       "covered" by the hills, so on raised ground they float off their place. */
     function addPins() {
-      const layer = document.createElement('div');
-      layer.className = 'fly__pins';
-      opts.map.appendChild(layer);
-      (opts.landmarks || []).forEach(function (lm) {
-        const elx = document.createElement('div');
-        elx.className = 'fly__pin' + (lm.home ? ' fly__pin--home' : '');
-        elx.innerHTML = '<i></i><span></span>';
-        elx.querySelector('span').textContent = opts.label(lm);
-        layer.appendChild(elx);
-        pins.push({ lm: lm, el: elx });
+      (o.landmarks || []).forEach(function (lm) {
+        const el = document.createElement('div');
+        el.className = 'fly__pin is-off' + (lm.home ? ' fly__pin--home' : '');
+        el.innerHTML = '<i></i><span></span>';
+        el.querySelector('span').textContent = o.label(lm);
+        o.pins.appendChild(el);
+        pins.push({ lm: lm, el: el, col: meta.landmarks.indexOf(lm.id) });
       });
-      map.on('render', placePins);
-      placePins();
     }
 
-    function placePins() {
-      const w = opts.map.clientWidth, h = opts.map.clientHeight;
-      const m = opts.map.getBoundingClientRect();
-      const cap = opts.avoid ? opts.avoid() : null;
+    function frame() {
+      const n = meta ? meta[shape].pins.length : 0;
+      return n ? Math.min(n - 1, Math.max(0, Math.round(v.currentTime * meta.fps))) : 0;
+    }
+
+    /* The film is cropped to fill the stage (object-fit: cover), so a
+       landmark's spot in the frame is scaled and offset the same way. */
+    function placePins(i) {
+      if (!meta || !pins.length) return;
+      const S = SIZE[shape], w = o.stage.clientWidth, h = o.stage.clientHeight;
+      const k = Math.max(w / S[0], h / S[1]), dx = (w - S[0] * k) / 2, dy = (h - S[1] * k) / 2;
+      const row = meta[shape].pins[i] || [];
+      const m = o.stage.getBoundingClientRect();
+      const cap = o.avoid ? o.avoid() : null;
       pins.forEach(function (p) {
-        const pt = map.project([p.lm.lon, p.lm.lat]);
+        const pt = row[p.col];
+        if (!pt) { p.el.classList.add('is-off'); return; }
+        const x = dx + pt[0] * S[0] * k, y = dy + pt[1] * S[1] * k;
         // A label that drifts into the caption shows through its line gaps, and
         // one near an edge is cut off or slides under the nav, so both give way.
         // The label sits about 40px above its dot and is up to 130px wide.
-        const x = m.left + pt.x, y = m.top + pt.y;
-        const under = !!cap && x > cap.left - 70 && x < cap.right + 70 && y > cap.top && y < cap.bottom + 44;
-        const on = !under && pt.x > 66 && pt.x < w - 66 && pt.y > 112 && pt.y < h - 60;
-        p.el.style.transform = 'translate(' + pt.x.toFixed(1) + 'px,' + pt.y.toFixed(1) + 'px)';
+        const X = m.left + x, Y = m.top + y;
+        const under = !!cap && X > cap.left - 70 && X < cap.right + 70 && Y > cap.top && Y < cap.bottom + 44;
+        const on = !under && x > 66 && x < w - 66 && y > 112 && y < h - 60;
+        p.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
         p.el.classList.toggle('is-off', !on);
       });
     }
 
-    function start() {
-      load().then(function (ml) {
-        const cam = cameraAt(opts.flight, progress());
-        map = new ml.Map({
-          container: opts.map,
-          style: style(),
-          center: cam.center, zoom: cam.zoom, pitch: cam.pitch, bearing: cam.bearing,
-          maxPitch: 78,
-          interactive: false,
-          attributionControl: { compact: true },
-          pixelRatio: Math.min(window.devicePixelRatio || 1, 1.75),
-          fadeDuration: 0
-        });
-        map.on('load', function () {
-          ready = true;
-          addPins();
-          update(true);
-          if (opts.onReady) opts.onReady();
-        });
-        // A failed tile is a hole in the ground, not a reason to tear down.
-        map.on('error', function () {});
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', function () { if (map) map.resize(); onScroll(); });
-        update(true);
-      }).catch(function () { opts.onStatic('failed'); });
+    function setLanded(on) {
+      if (on === landed) return;
+      landed = on;
+      o.onLanded(on);
     }
 
-    const io = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { io.disconnect(); start(); }
-    }, { rootMargin: '120% 0px 120% 0px' });
-    io.observe(opts.track);
+    function draw() {
+      const d = v.duration || (meta && meta.seconds) || 1;
+      const i = frame();
+      o.onFrame(Math.min(1, v.currentTime / d), meta ? meta[shape].caps[i] : 0);
+      placePins(i);
+      if (v.currentTime >= d - 0.45) setLanded(true);
+    }
 
-    // Captions follow scroll even before the map arrives.
-    window.addEventListener('scroll', function () { if (!ready) onScroll(); }, { passive: true });
+    function loop() {
+      cancelAnimationFrame(raf);
+      (function tick() {
+        draw();
+        if (!v.paused && !v.ended) raf = requestAnimationFrame(tick);
+      })();
+    }
+
+    function play() {
+      if (failed || landed || !v.getAttribute('src')) return;
+      const p = v.play();
+      // Low-power mode can refuse even a muted film; then the guest taps to play.
+      if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError') o.onBlocked(); });
+    }
+
+    v.muted = true;
+    v.playsInline = true;
+    v.addEventListener('loadeddata', function () { o.onReady(); draw(); }, { once: true });
+    v.addEventListener('play', loop);
+    v.addEventListener('seeked', draw);
+    v.addEventListener('ended', function () { setLanded(true); draw(); });
+    v.addEventListener('error', function () {
+      if (!v.getAttribute('src')) return;
+      failed = true;
+      o.onStatic('failed');
+    });
+
+    const near = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      near.disconnect();
+      source(0);
+      fetch(DIR + 'flight.json')
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error(String(r.status))); })
+        .then(function (m) { meta = m; addPins(); draw(); })
+        .catch(function () { /* the film still plays, without labels */ });
+    }, { rootMargin: '150% 0px 150% 0px' });
+    near.observe(o.stage);
+
+    // Rolls when most of it is on screen, pauses when scrolled away, and
+    // carries on from there when the guest comes back.
+    const seen = new IntersectionObserver(function (entries) {
+      visible = entries[0].intersectionRatio >= 0.55;
+      if (visible) play(); else v.pause();
+    }, { threshold: [0, 0.55, 1] });
+    seen.observe(o.stage);
+
+    let resizing = 0;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizing);
+      resizing = setTimeout(function () {
+        if (!shape) return;
+        if (pick() !== shape) {
+          const at = v.currentTime, was = !v.paused;
+          source(at);
+          if (was) play();
+        }
+        draw();
+      }, 200);
+    });
 
     return {
       relabel: function () {
-        pins.forEach(function (p) { p.el.querySelector('span').textContent = opts.label(p.lm); });
+        pins.forEach(function (p) { p.el.querySelector('span').textContent = o.label(p.lm); });
+      },
+      replay: function () {
+        setLanded(false);
+        v.currentTime = 0;
+        const p = v.play();
+        if (p && p.catch) p.catch(function () {});
       }
     };
   }
 
-  W.flyin = { mount: mount, cameraAt: cameraAt, VERSION: VERSION };
+  W.flyin = { mount: mount, cameraAt: cameraAt, SIZE: SIZE };
 })(window.W);

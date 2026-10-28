@@ -42,11 +42,11 @@ html.lang-hi .gate__hint { font-size: 15px; }
 html.lang-hi .foot__names { font-size: clamp(34px, 5vw, 44px); line-height: 1.35; }
 html.lang-hi .scroll-cue { font-size: 14px; }
 html.lang-hi .field > span, html.lang-hi .cd span, html.lang-hi .parents__side span,
-html.lang-hi .pday__no, html.lang-hi .fly__cue, html.lang-hi .fly__skip,
+html.lang-hi .pday__no, html.lang-hi .fly__again, html.lang-hi .fly__skip,
 html.lang-hi .chip, html.lang-hi .wx b, html.lang-hi .wx i, html.lang-hi .ev__role b { font-size: 14px; }
-html.lang-hi .duties__list time { font-size: 15px; }
-html.lang-hi .ev__role, html.lang-hi .duties__list span, html.lang-hi .duties__lead { font-size: 16.5px; }
-html.lang-hi .duties__list b { font-size: 18px; }
+html.lang-hi .ev__role { font-size: 16.5px; }
+html.lang-hi .fly__pin span { font-size: 14px; }
+html.lang-hi .fly__pin--home span { font-size: 16px; }
 html.lang-hi .nav__links a:not(.btn), html.lang-hi .ev__time, html.lang-hi .ev__where,
 html.lang-hi .pday__jump a, html.lang-hi .pday__sun, html.lang-hi .hint { font-size: 15px; }
 html.lang-hi .foot__credits { font-size: 14px !important; }
@@ -299,28 +299,6 @@ html.lang-hi .ev__note { font-family: var(--deva); font-size: 17.5px; }
 .ev__role b { font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--marigold-deep); }
 .ev--flip .ev__role { border-left: 0; border-right: 3px solid var(--marigold); border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
 
-.duties { max-width: 760px; margin: 0 auto clamp(40px, 6vw, 70px); }
-.duties__in {
-  padding: clamp(22px, 4vw, 34px); border-radius: var(--radius);
-  background: var(--ivory); border: 1px solid rgba(201, 162, 39, .4); box-shadow: var(--shadow-sm);
-}
-.duties__title { margin: 0 0 4px; font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--brand); }
-.duties__lead { margin: 0 0 18px; color: var(--muted); font-size: 15px; }
-.duties__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-.duties__list a {
-  display: grid; grid-template-columns: 9.5em 1fr; gap: 2px 16px; padding: 10px 12px;
-  border-radius: var(--radius-sm); text-decoration: none; color: var(--ink);
-  transition: background .25s ease;
-}
-.duties__list a:hover { background: #fff3d6; }
-.duties__list time { grid-row: span 2; font-size: 13px; color: var(--gold-dark); padding-top: 3px; font-variant-numeric: tabular-nums; }
-.duties__list b { font-weight: 500; color: var(--brand); font-size: 16.5px; }
-.duties__list span { font-size: 14.5px; color: var(--ink); opacity: .8; line-height: 1.5; }
-@media (max-width: 560px) {
-  .duties__list a { grid-template-columns: 1fr; }
-  .duties__list time { grid-row: auto; padding: 0; }
-}
-
 /* Everything that is not a moment: one tidy line on the thread. */
 .ev--line {
   display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center;
@@ -360,12 +338,13 @@ html.lang-hi .ev--line .ev__title { font-size: 1.35rem; }
 /* ═════════════════ the flight ═════════════════ */
 
 .fly { position: relative; background: var(--night); color: var(--champagne); }
-.fly__track { position: relative; height: 340vh; }
-.fly__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-/* MapLibre's stylesheet sets its container to position:relative, which would
-   collapse the map to a strip; this has to outrank it. */
-.fly .fly__map, .fly .fly__map.maplibregl-map { position: absolute; inset: 0; width: 100%; height: 100%; }
-.fly__map canvas { outline: none; }
+.fly__track { position: relative; }
+.fly__stage { position: relative; height: 100vh; height: 100svh; min-height: 520px; overflow: hidden; }
+.fly__film {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: var(--night);
+  opacity: 0; transition: opacity 1s ease;
+}
+.fly.is-live .fly__film { opacity: 1; }
 .fly__poster {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   filter: blur(14px) saturate(1.1) brightness(.62); transform: scale(1.1);
@@ -403,7 +382,16 @@ html.lang-hi .ev--line .ev__title { font-size: 1.35rem; }
   position: absolute; left: var(--gutter); right: var(--gutter); bottom: calc(26px + env(safe-area-inset-bottom));
   display: flex; align-items: center; gap: 18px; font-size: 11px; letter-spacing: .26em; text-transform: uppercase;
 }
-.fly__cue { color: rgba(247, 236, 201, .7); }
+.fly__again {
+  font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer;
+  color: var(--night); background: var(--gold-lit); border: 0; border-radius: 999px; padding: 9px 16px;
+}
+.fly__again:hover { background: var(--gold-pale); }
+.fly__again[hidden] { display: none; }
+.fly__credit {
+  position: absolute; right: var(--gutter); bottom: calc(6px + env(safe-area-inset-bottom)); z-index: 4;
+  font-size: 9.5px; letter-spacing: .04em; color: rgba(247, 236, 201, .5);
+}
 .fly__bar { flex: 1; height: 2px; background: rgba(232, 200, 106, .22); position: relative; overflow: hidden; border-radius: 2px; }
 .fly__bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--marigold), var(--gold-lit)); transform-origin: left; transform: scaleX(0); }
 .fly__skip { color: var(--gold-lit); text-decoration: none; border-bottom: 1px solid rgba(232, 200, 106, .5); padding-bottom: 2px; }
@@ -441,14 +429,11 @@ html.lang-hi .ev--line .ev__title { font-size: 1.35rem; }
 .fly__pin--home i { width: 16px; height: 16px; background: var(--marigold); animation: home-pulse 2s ease-out infinite; }
 @keyframes home-pulse { 0% { box-shadow: 0 0 0 0 rgba(240, 167, 42, .75); } 100% { box-shadow: 0 0 0 22px rgba(240, 167, 42, 0); } }
 
-.fly .maplibregl-ctrl-attrib { background: rgba(30, 6, 12, .6) !important; color: rgba(247, 236, 201, .7); font-size: 10px; }
-.fly .maplibregl-ctrl-attrib a { color: rgba(247, 236, 201, .85); }
-.fly .maplibregl-ctrl-bottom-right { bottom: 56px; }
 
 /* No flight: the painting, and the journey as a list. */
 .fly.is-static .fly__track { height: auto; }
 .fly.is-static .fly__stage { position: relative; height: auto; min-height: 0; padding: 110px var(--gutter) 70px; display: grid; gap: 30px; justify-items: center; }
-.fly.is-static .fly__map, .fly.is-static .fly__hud, .fly.is-static .fly__veil { display: none; }
+.fly.is-static .fly__film, .fly.is-static .fly__pins, .fly.is-static .fly__hud, .fly.is-static .fly__veil, .fly.is-static .fly__credit { display: none; }
 .fly.is-static .fly__poster { filter: brightness(.35) blur(10px); }
 .fly.is-static .fly__head { position: relative; top: auto; left: auto; right: auto; text-align: center; margin: 0 auto; }
 .fly.is-static .fly__head p { margin: 0 auto; }
@@ -463,10 +448,8 @@ html.lang-hi .ev--line .ev__title { font-size: 1.35rem; }
 .fly.is-static .fly__land { position: relative; left: auto; top: auto; transform: none; opacity: 1; width: min(640px, 100%); }
 
 @media (max-width: 760px) {
-  .fly__track { height: 300vh; }
   .fly__cap span { font-size: 12px; }
   .fly__hud { gap: 12px; letter-spacing: .16em; }
-  .fly__cue { display: none; }
 }
 
 /* ═════════════════ venue details ═════════════════ */

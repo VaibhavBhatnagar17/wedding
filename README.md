@@ -30,18 +30,16 @@ soft shehnai begins (with a pause button in the nav, remembered for next time),
 and the doors swing apart onto an arch card with your names and both sets of
 parents in gold. Below that, everything a guest needs, in this order:
 
-- **What our family does** — a short list of the family's own part in each
-  function, linked to the programme. Each family's card shows its own.
 - **The programme** — 23 events across 1–3 February, with time, place,
   "be seated by" times, who each is for and the family's part in it. Each card
   leaves out the other family's private ceremonies, so Vaibhav's shows 21 and
   Mahak's 22. The eleven moments people
   travel for each carry a Mewar-style miniature painting in a cusped Rajput arch.
-- **The venue** — a drone flight: a real 3D map (satellite imagery over
-  elevation data) that the guest flies by scrolling, from Lake Pichola past the
-  City Palace and Fateh Sagar, east over the Aravallis, down onto Hotel
-  Khumani's rooftop, where the painted hotel rises over the real one. Then the
-  address, directions, a call button, what happens where, and distances.
+- **The venue** — a 21-second drone film that rolls when it comes into view:
+  from Lake Pichola past the City Palace and Fateh Sagar, east over the
+  Aravallis, down to a slow circle over Hotel Khumani's rooftop, where the
+  painted hotel rises over the real one. Then the address, directions, a call
+  button, what happens where, and distances.
 - **Stay, travel and weather** — arrival and early-arrival rooms, checkout,
   meals, pickups, routes by road, packing, and a live forecast that switches on
   in the last two weeks (Open-Meteo, no key).
@@ -60,6 +58,20 @@ next, and highlights it in the programme. Try it with
 `index.html?open=1&now=2027-02-01T20:10`. The calendar file carries every event
 with a reminder 10–30 minutes before each key one — the main defence against
 people arriving late, along with published times that never overlap.
+
+The flight is real satellite imagery over elevation data, rendered ahead of time
+rather than drawn live. A live 3D map showed half-loaded ground on slow phones;
+`tools/render-flight.py` instead flies the camera path in `js/content.js` one
+frame at a time in Chrome, captures each frame only once every tile has
+arrived, grades the colour warm and encodes a wide film for screens (6–7 MB)
+and a tall one for phones (about 5 MB). It also saves where each landmark sits
+in every frame, so the page lays its own labels over the film in either
+language. After changing the path, run it again (about ten minutes):
+
+```sh
+python3.11 -m pip install imageio-ffmpeg   # once, for ffmpeg
+python3.11 tools/render-flight.py
+```
 
 The paintings are in `assets/art/`, the shehnai in `assets/audio/`, and the
 WhatsApp preview images are `assets/og.jpg` and `assets/og-mahak.jpg`, made by
@@ -239,10 +251,10 @@ Netlify, Vercel or Cloudflare Pages. Step-by-step instructions are in
 Two layers, neither needing any installed packages.
 
 ```sh
-# 103 unit checks — no browser
+# 106 unit checks — no browser
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tools/smoke-test.js
 
-# 95 checks in a real headless Chrome
+# 103 checks in a real headless Chrome
 python3 tools/cdp.py check
 
 # screenshots of every page, desktop and mobile, into /tmp/shots
@@ -275,7 +287,8 @@ seal and open the doors, render every event on the card and load its paintings,
 open Mahak's card and check her name leads, her family's ceremonies appear and
 the RSVP defaults to her side, check `mahak.html` is up to date with `index.html`,
 switch the page to Hindi and back, fake the clock to the evening of 1 February to
-check the live ribbon, fly the map to the hotel, read the calendar file for its
+check the live ribbon, play the drone film (the right one for a screen or a
+phone) through each landmark to the landing and back, read the calendar file for its
 reminders and the after-party's 1 am finish, type a number into the portal, check
 an unknown number is refused and a real one loads the right guest, save an RSVP,
 and assert that no element is ever left invisible by a failed animation. They
@@ -285,6 +298,8 @@ headings keep an `aria-label` while their characters stay hidden from assistive
 tech, that the script names are wiped rather than cut into characters, and that
 neither page scrolls sideways at 360px. The names must be written by the scroll
 observer rather than its safety timer, and held behind the doors until they part.
-On the flight, no landmark label may sit on the caption or hang off an edge.
+On the flight, no landmark label may sit on the caption or hang off an edge, and
+the unit tests hold the film's frame data to the camera path, so a path changed
+without re-rendering fails the build.
 `tools/cdp.py` is a small from-scratch
 WebSocket and CDP client, so there is nothing to install.

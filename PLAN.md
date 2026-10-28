@@ -154,7 +154,7 @@ The whole programme now lives in `js/data.js` → `programme`. The invitation, t
 | 13:00–14:30 | Wedding lunch | Beside the mandap |
 | **14:30–15:00** | **VIDAAI** — decorated car or doli at the porch; griha pravesh at the family suite | Hotel porch |
 | 15:00–19:00 | Rest. Lawn reset from mandap to reception (650) by 18:30. Bride's reception look 16:00 | Rooms |
-| **19:00–23:00** | **RECEPTION** — couple enter 19:45, dinner 20:00, two greeting queues, cake and 3 speeches at 21:00 | Lawn |
+| **19:00 onwards** | **RECEPTION** — couple enter 19:45, dinner 20:00, two greeting queues, cake and 3 speeches at 21:00. The card says "7 pm onwards" with no closing time; plan staff and the caterer to about 23:00 | Lawn |
 
 **Why the varmala is 10:30, not 10:00.** Bridal hair and makeup needs about three hours, plus a hair wash after the oil of the tel ceremony. With Ganesh puja at 07:00 and tel at 07:30, she can be ready by 10:30 without starting at dawn. The varmala itself needs thirty minutes, not an hour.
 

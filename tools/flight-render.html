@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- The drone flight's render stage. tools/render-flight.py opens this in
+     Chrome, steps the camera one video frame at a time, waits for every tile
+     to arrive, and screenshots it. Guests never load this page. -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Flight render</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" />
+<style>
+  html, body, #map { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #2b0810; }
+  .maplibregl-ctrl-attrib, .maplibregl-ctrl-logo { display: none !important; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="../js/data.js"></script>
+<script src="../js/content.js"></script>
+<script src="../js/flyin.js"></script>
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script>
+(function () {
+  'use strict';
+  const C = W.content;
+  const q = new URLSearchParams(location.search);
+  // A portrait frame sees less to either side, so it flies a little higher.
+  const dz = q.get('shape') === 'portrait' ? -0.55 : 0;
+  // The film is the middle cw × ch of a larger canvas: MapLibre culls tiles
+  // near the canvas edge when terrain is on, which shows as holes there.
+  const cw = Number(q.get('cw')) || innerWidth, ch = Number(q.get('ch')) || innerHeight;
+  const LANDMARKS = C.landmarks.map(function (lm) { return [lm.lon, lm.lat]; });
+  const first = W.flyin.cameraAt(C.flight, C.orbit, 0, dz);
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: {
+      version: 8,
+      sources: {
+        sat: { type: 'raster', tileSize: 256, maxzoom: 19,
+          tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'] },
+        dem: { type: 'raster-dem', tileSize: 256, maxzoom: 14, encoding: 'terrarium',
+          tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'] }
+      },
+      layers: [
+        // Ground beyond the loaded tiles takes the haze colour, not a hole.
+        { id: 'ground', type: 'background', paint: { 'background-color': '#c9925e' } },
+        { id: 'sat', type: 'raster', source: 'sat', paint: {
+          'raster-saturation': 0.05, 'raster-contrast': 0.08, 'raster-fade-duration': 0, 'raster-resampling': 'linear' } }
+      ],
+      terrain: { source: 'dem', exaggeration: 1.7 },
+      sky: {
+        'sky-color': '#2a1036', 'horizon-color': '#f0a64c', 'fog-color': '#e0a468',
+        'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.75, 'fog-ground-blend': 0.4, 'atmosphere-blend': 0.9
+      }
+    },
+    center: first.center, zoom: first.zoom, pitch: first.pitch, bearing: first.bearing,
+    interactive: false, attributionControl: false, fadeDuration: 0, maxPitch: 78,
+    pixelRatio: 1, maxTileCacheSize: 4000, canvasContextAttributes: { preserveDrawingBuffer: true }
+  });
+
+  function idle() {
+    return new Promise(function (resolve) {
+      let done = false;
+      const finish = function () { if (!done) { done = true; resolve(); } };
+      map.once('idle', finish);
+      setTimeout(finish, 15000);
+    });
+  }
+
+  window.ready = new Promise(function (r) { map.on('load', r); });
+  // For framing shots by hand: look({center, zoom, pitch, bearing}).
+  window.look = async function (cam) {
+    await window.ready;
+    try { map.jumpTo(cam); } catch (e) { /* the DEM can be a frame behind; idle catches up */ }
+    await idle();
+    return true;
+  };
+  window.FILM = { seconds: C.orbit.t, landmarks: C.landmarks.map(function (lm) { return lm.id; }) };
+
+  /* Moves to film time t, waits for every tile, and returns where each
+     landmark sits on screen as fractions of the frame (null when off it). */
+  window.frame = async function (t) {
+    await window.ready;
+    const cam = W.flyin.cameraAt(C.flight, C.orbit, t, dz);
+    try { map.jumpTo(cam); } catch (e) { /* the DEM can be a frame behind; idle catches up */ }
+    await idle();
+    await new Promise(requestAnimationFrame);
+    const ox = (map.getCanvas().clientWidth - cw) / 2, oy = (map.getCanvas().clientHeight - ch) / 2;
+    const pins = LANDMARKS.map(function (c) {
+      const pt = map.project(c), x = pt.x - ox, y = pt.y - oy;
+      const ok = x > -40 && x < cw + 40 && y > -40 && y < ch + 40;
+      return ok ? [+(x / cw).toFixed(4), +(y / ch).toFixed(4)] : null;
+    });
+    return { cap: cam.leg, pins: pins, loaded: map.areTilesLoaded() };
+  };
+})();
+</script>
+</body>
+</html>
