@@ -635,6 +635,11 @@ def task_check(tab):
         tall = tab.wait_for("(function(){var s=document.getElementById('fly-film').currentSrc;return s||null})()", timeout=10)
         check("a phone gets the tall film", bool(tall) and tall.endswith("/assets/flight/flight-tall.mp4"), tall)
         tab.call("Emulation.setDeviceMetricsOverride", width=1440, height=900, deviceScaleFactor=1, mobile=False)
+        # A jump straight to the venue used to leave the film loaded but paused.
+        tab.goto(base() + "/mahak.html?open=1", settle=2.4)
+        tab.eval("document.getElementById('venue').scrollIntoView()")
+        check("on Mahak's card too, a jump straight to the venue rolls the film",
+              bool(tab.wait_for("document.getElementById('fly-film').currentTime > 1", timeout=15)))
     errs = tab.console_errors()
     check("the flight has no console errors", len(errs) == 0, errs[:3])
 

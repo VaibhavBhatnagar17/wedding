@@ -85,6 +85,8 @@ window.W = window.W || {};
       v.preload = 'auto';
       if (at) v.addEventListener('loadedmetadata', function once() { v.removeEventListener('loadedmetadata', once); v.currentTime = at; });
       v.load();
+      // The stage may already be in view: that observer fires only once.
+      if (visible) play();
     }
 
     function addPins() {
@@ -169,7 +171,7 @@ window.W = window.W || {};
     });
 
     const near = new IntersectionObserver(function (entries) {
-      if (!entries[0].isIntersecting) return;
+      if (!entries.some(function (e) { return e.isIntersecting; })) return;
       near.disconnect();
       source(0);
       fetch(DIR + 'flight.json')
@@ -181,8 +183,9 @@ window.W = window.W || {};
 
     // Rolls when most of it is on screen, pauses when scrolled away, and
     // carries on from there when the guest comes back.
+    // Several changes can arrive at once; only the newest is true now.
     const seen = new IntersectionObserver(function (entries) {
-      visible = entries[0].intersectionRatio >= 0.55;
+      visible = entries[entries.length - 1].intersectionRatio >= 0.55;
       if (visible) play(); else v.pause();
     }, { threshold: [0, 0.55, 1] });
     seen.observe(o.stage);
@@ -193,9 +196,7 @@ window.W = window.W || {};
       resizing = setTimeout(function () {
         if (!shape) return;
         if (pick() !== shape) {
-          const at = v.currentTime, was = !v.paused;
-          source(at);
-          if (was) play();
+          source(v.currentTime);
         }
         draw();
       }, 200);

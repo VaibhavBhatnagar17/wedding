@@ -254,7 +254,7 @@ Two layers, neither needing any installed packages.
 # 106 unit checks — no browser
 /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc tools/smoke-test.js
 
-# 103 checks in a real headless Chrome
+# 104 checks in a real headless Chrome
 python3 tools/cdp.py check
 
 # screenshots of every page, desktop and mobile, into /tmp/shots
