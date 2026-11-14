@@ -283,11 +283,11 @@ body::after {
   margin-top: 22px;
 }
 .parents__side { flex: 0 1 214px; }
-/* Mahak's grandparents, above both parents. Hidden on Vaibhav's card. */
-.parents__grand { display: none; margin-top: 22px; }
+/* On Mahak's card, her grandparents sit in her column, directly above
+   "Daughter of". Son of stays level with Daughter of, not in the middle. */
+.parents__grand { display: none; margin-bottom: 16px; }
 html[data-side="bride"] .parents__grand { display: block; }
-.parents__grand span { letter-spacing: .22em; }
-html[data-side="bride"] .parents { margin-top: 16px; }
+html[data-side="bride"] .parents { align-items: flex-end; }
 .parents__side span, .parents__grand span {
   display: block; font-size: 9.5px; letter-spacing: .3em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 5px;

@@ -244,11 +244,19 @@ html.menu-open .nav { z-index: 80; }
 .ev--flip .ev__body { order: 1; justify-self: end; text-align: right; }
 .ev--flip .ev__where, .ev--flip .ev__chips { justify-content: flex-end; }
 /* the medallion where the event meets the thread */
-.ev--art::before {
+.ev--art::before, .ev--moment::before {
   content: ''; position: absolute; left: 50%; top: 50%; width: 15px; height: 15px; margin: -7.5px 0 0 -7.5px;
   border-radius: 50%; background: var(--marigold); z-index: 1;
   box-shadow: 0 0 0 5px var(--cream), 0 0 0 6px rgba(201, 162, 39, .6), 0 0 18px rgba(240, 167, 42, .55);
 }
+/* A moment with no painting yet: the same two-column place on the thread. */
+.ev--moment {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(26px, 5vw, 72px); align-items: center; padding: 28px 0;
+}
+.ev--moment .ev__body { justify-self: start; }
+.ev--moment.ev--flip .ev__body { grid-column: 2; justify-self: end; text-align: right; }
+.ev--moment.ev--flip .ev__where, .ev--moment.ev--flip .ev__chips { justify-content: flex-end; }
 
 .ev__art { margin: 0; width: min(100%, 360px); }
 /* A cusped Rajput arch, as a mask, with a gold frame drawn over it. The SVG is
@@ -325,7 +333,10 @@ html.lang-hi .ev--line .ev__title { font-size: 1.35rem; }
 
 @media (max-width: 780px) {
   .ptl::before { left: 22px; }
-  .ev--art, .ev--flip { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 10px 0 10px 46px; }
+  .ev--art, .ev--flip, .ev--moment { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 10px 0 10px 46px; }
+  .ev--moment .ev__body, .ev--moment.ev--flip .ev__body { grid-column: auto; justify-self: start; text-align: left; }
+  .ev--moment.ev--flip .ev__where, .ev--moment.ev--flip .ev__chips { justify-content: flex-start; }
+  .ev--moment::before { left: 22px; top: 34px; }
   .ev--art .ev__art, .ev--flip .ev__art { order: 0; justify-self: start; width: min(100%, 300px); }
   .ev--art .ev__body, .ev--flip .ev__body { order: 1; justify-self: start; text-align: left; }
   .ev--flip .ev__where, .ev--flip .ev__chips { justify-content: flex-start; }

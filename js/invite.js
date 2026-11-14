@@ -241,7 +241,7 @@
       chips.length ? el('div', { class: 'ev__chips' }, chips) : null
     ]);
 
-    const cls = ['ev', e.art ? 'ev--art' : 'ev--line', e.key ? 'is-key' : '', e.meal ? 'ev--meal' : '',
+    const cls = ['ev', e.art ? 'ev--art' : (e.key ? 'ev--moment' : 'ev--line'), e.key ? 'is-key' : '', e.meal ? 'ev--meal' : '',
       flip ? 'ev--flip' : ''].filter(Boolean).join(' ');
     return el('li', { class: cls, id: 'ev-' + e.id, 'data-ev': e.id, 'data-reveal': e.art ? 'rise' : 'up' }, [art, body]);
   }
@@ -264,7 +264,7 @@
         })) : null
       ]);
       const list = el('ol', { class: 'ptl' }, events.map(function (e) {
-        const flip = e.art ? (artCount++ % 2 === 1) : false;
+        const flip = (e.art || e.key) ? (artCount++ % 2 === 1) : false;
         return renderEvent(e, flip);
       }));
       const day = el('section', { class: 'pday', id: 'day-' + date }, [head, list]);

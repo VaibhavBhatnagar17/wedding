@@ -893,7 +893,9 @@ check('Mahak\'s card names her grandparents and the three days before Udaipur', 
     if (I.t('card.granddaughter') !== 'Grand Daughter of') throw new Error('label: ' + I.t('card.granddaughter'));
     if (!/Shaanti Devi Kalra/.test(I.t('card.brideGrandparents')) || !/Gelaram ji Kalra/.test(I.t('card.brideGrandparents'))) throw new Error(I.t('card.brideGrandparents'));
     if (!/Sagda/.test(I.t('prog.lead'))) throw new Error('the bride programme lead still starts at the hotel');
+    if (I.t('prog.day.2027-01-18') !== 'Day one' || I.t('prog.day.2027-02-01') !== 'Day four') throw new Error('1 February is still day one on Mahak\'s card');
     W.side = 'groom';
+    if (I.t('prog.day.2027-02-01') !== 'Day one') throw new Error('Vaibhav\'s 1 February should stay day one');
     if (/Sagda/.test(I.t('prog.lead'))) throw new Error('Vaibhav\'s card mentions the Kalra ceremonies');
     I.set('hi'); W.side = 'bride';
     if (I.t('card.granddaughter') !== 'पौत्री' || !/शांति देवी कालरा/.test(I.t('card.brideGrandparents')) || !/गेलाराम/.test(I.t('card.brideGrandparents'))) throw new Error(I.t('card.brideGrandparents'));
