@@ -648,8 +648,12 @@ check('every event has an id, a date on the wedding days, and a time', function 
   P.forEach(function (e) {
     if (seen[e.id]) throw new Error('duplicate id ' + e.id);
     seen[e.id] = 1;
+    var when = { sagda: ['12:00', ''], parsaadi: ['12:30', '16:00'], mehndi: ['16:00', '20:00'] };
     if (before[e.id]) {
-      if (e.date !== before[e.id] || e.side !== 'bride' || e.start) throw new Error(e.id + ' should be an untimed bride ceremony on ' + before[e.id]);
+      if (e.date !== before[e.id] || e.side !== 'bride' || e.start !== when[e.id][0] || (e.end || '') !== when[e.id][1]) {
+        throw new Error(e.id + ' should be ' + when[e.id].join('–') + ' on ' + before[e.id]);
+      }
+      if (!e.art) throw new Error(e.id + ' needs its painting');
     } else if (home.indexOf(e.date) < 0) throw new Error(e.id + ' has date ' + e.date);
     else if (!/^\d{2}:\d{2}$/.test(e.start)) throw new Error(e.id + ' start ' + e.start);
     if (e.end && !/^\d{2}:\d{2}$/.test(e.end)) throw new Error(e.id + ' end ' + e.end);
@@ -906,8 +910,8 @@ check('Mahak\'s card names her grandparents and the three days before Udaipur', 
     if (ev('sagda').where[0] !== 'Jhulelal Bhawan, Shakti Nagar') throw new Error(ev('sagda').where[0]);
     if (ev('parsaadi').where[0] !== 'Bohra Ganesh Ji Temple') throw new Error(ev('parsaadi').where[0]);
     if (ev('mehndi').where[0] !== 'Sector-5') throw new Error(ev('mehndi').where[0]);
-    var ics = W.util.buildICS([{ uid: 's', date: '2027-01-18', start: '', title: 'Sagda', location: 'Jhulelal Bhawan, Shakti Nagar' }]);
-    if (!/DTSTART;VALUE=DATE:20270118/.test(ics) || !/DTEND;VALUE=DATE:20270119/.test(ics)) throw new Error('sagda should be an all-day calendar event');
+    var ics = W.util.buildICS([{ uid: 's', date: '2027-01-18', start: '12:00', end: '', title: 'Sagda', location: 'Jhulelal Bhawan, Shakti Nagar' }]);
+    if (!/DTSTART:20270118T120000/.test(ics)) throw new Error('sagda should start at noon');
     if (/Hotel Khumani/.test(ics)) throw new Error('the January ceremonies are not at the hotel');
   } finally { W.side = was; I.set('en'); }
 });

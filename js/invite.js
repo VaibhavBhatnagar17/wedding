@@ -259,7 +259,7 @@
         el('span', { class: 'pday__no', text: I.t('prog.day.' + date) }),
         el('h3', { class: 'pday__date', text: I.date(date, { year: true }) }),
         SUN[date] ? el('p', { class: 'pday__sun', text: I.t('prog.sun', { a: I.time(SUN[date][0]), b: I.time(SUN[date][1]) }) }) : null,
-        keys.length ? el('nav', { class: 'pday__jump' }, keys.map(function (e) {
+        keys.length > 1 ? el('nav', { class: 'pday__jump' }, keys.map(function (e) {
           return el('a', { href: '#ev-' + e.id, text: I.pick(e.t) });
         })) : null
       ]);
