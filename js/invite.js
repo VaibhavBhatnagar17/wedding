@@ -29,6 +29,11 @@
   /* index.html is written in Vaibhav's family's order. On Mahak's family's
      card her name and her parents come first, everywhere they appear. */
   function initSide() {
+    // The personal page is shared. The query tells it which card sent the guest,
+    // so Mahak's guests are asked to message Mahak.
+    $$('a[href="guest.html"]').forEach(function (a) {
+      a.setAttribute('href', 'guest.html?side=' + SIDE);
+    });
     if (SIDE !== 'bride') return;
     const names = $('.names'), ns = $$('.names__n', names);
     if (names && ns.length === 2) {

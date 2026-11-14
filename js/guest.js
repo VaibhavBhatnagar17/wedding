@@ -32,10 +32,13 @@
     const err = $('#lookup-err');
     const btn = $('#lookup-btn');
 
-    if (cfg.helpPhone) {
+    const mine = D.sides && D.sides[W.side === 'bride' ? 'bride' : 'groom'];
+    const helpName = (mine && mine.helpName) || cfg.helpName;
+    const helpPhone = (mine && mine.helpPhone) || cfg.helpPhone;
+    if (helpPhone) {
       $('#lookup-help').innerHTML = 'Not finding yourself? Message ' +
-        (cfg.helpName || 'us') + ' on <a href="https://wa.me/' +
-        cfg.helpPhone.replace(/\D/g, '') + '">WhatsApp</a> and we will add you.';
+        (helpName || 'us') + ' on <a href="https://wa.me/' +
+        String(helpPhone).replace(/\D/g, '') + '">WhatsApp</a> and we will add you.';
     }
 
     // Group the digits as they type, purely for readability.
@@ -458,6 +461,8 @@
   /* ---------------- boot ---------------- */
 
   document.addEventListener('DOMContentLoaded', function () {
+    const back = document.querySelector('.pfoot a[href="index.html"]');
+    if (back && W.side === 'bride') back.setAttribute('href', 'mahak.html');
     paintDemoNote();
     paintOrnaments();
     initLookup();

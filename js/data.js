@@ -35,10 +35,12 @@ window.W = window.W || {};
      own child first, shows that family's part in each ceremony, and sends
      replies to that family. js/side.js decides which card a visitor sees.
      rsvpWhatsapp: country code and number, no + or spaces; blank hides the
-     WhatsApp button. */
+     WhatsApp button on the RSVP form.
+     helpName / helpPhone: who a guest messages when their number is not on
+     the list. Each card uses its own. */
   const sides = {
-    groom: { family: 'Bhatnagar', domain: 'vaibhavwedsmahak.in', page: 'index.html', rsvpWhatsapp: '' },
-    bride: { family: 'Kalra', domain: 'mahakwedsvaibhav.in', page: 'mahak.html', rsvpWhatsapp: '' }
+    groom: { family: 'Bhatnagar', domain: 'vaibhavwedsmahak.in', page: 'index.html', rsvpWhatsapp: '', helpName: 'Vaibhav', helpPhone: '+919649364280' },
+    bride: { family: 'Kalra', domain: 'mahakwedsvaibhav.in', page: 'mahak.html', rsvpWhatsapp: '', helpName: 'Mahak', helpPhone: '+917976147835' }
   };
 
   /* ---------------- Functions ---------------- */

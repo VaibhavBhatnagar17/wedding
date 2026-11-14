@@ -880,6 +880,8 @@ check('each family has its own card, address and own ceremonies', function () {
   var S = W.data.sides;
   if (!S || !S.groom || !S.bride) throw new Error('sides missing');
   if (S.groom.domain !== 'vaibhavwedsmahak.in' || S.bride.domain !== 'mahakwedsvaibhav.in') throw new Error('domains moved');
+  if (S.bride.helpName !== 'Mahak' || String(S.bride.helpPhone).replace(/\D/g, '') !== '917976147835') throw new Error('Mahak\'s guests should message her on 7976147835');
+  if (S.groom.helpName !== 'Vaibhav') throw new Error('Vaibhav\'s guests should still message him');
   P.forEach(function (e) {
     if (e.side && e.side !== 'groom' && e.side !== 'bride') throw new Error(e.id + ' has side ' + e.side);
     Object.keys(e.role || {}).forEach(function (k) { if (k !== 'groom' && k !== 'bride') throw new Error(e.id + ' role for ' + k); });
