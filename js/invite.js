@@ -251,9 +251,12 @@
     if (!host) return;
     U.clear(host);
     const byDate = U.groupBy(MINE, function (e) { return e.date; });
+    // One count for the whole programme, so a painting on the right is followed
+    // by a painting on the left even when the date changes. The first painting
+    // has its words on the left.
+    let artCount = 0;
     Object.keys(byDate).sort().forEach(function (date) {
       const events = byDate[date];
-      let artCount = 0;
       const keys = events.filter(function (e) { return e.key; });
       const head = el('header', { class: 'pday__head' }, [
         el('span', { class: 'pday__no', text: I.t('prog.day.' + date) }),
@@ -264,7 +267,7 @@
         })) : null
       ]);
       const list = el('ol', { class: 'ptl' }, events.map(function (e) {
-        const flip = (e.art || e.key) ? (artCount++ % 2 === 1) : false;
+        const flip = e.art ? (artCount++ % 2 === 0) : false;
         return renderEvent(e, flip);
       }));
       const day = el('section', { class: 'pday', id: 'day-' + date }, [head, list]);
