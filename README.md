@@ -30,10 +30,10 @@ soft shehnai begins (with a pause button in the nav, remembered for next time),
 and the doors swing apart onto an arch card with your names and both sets of
 parents in gold. Below that, everything a guest needs, in this order:
 
-- **The programme** — 23 events across 1–3 February, with time, place,
-  "be seated by" times, who each is for and the family's part in it. Each card
-  leaves out the other family's private ceremonies, so Vaibhav's shows 21 and
-  Mahak's 22. The eleven moments people
+- **The programme** — 26 events, with time, place, "be seated by" times, who
+  each is for and the family's part in it. Each card leaves out the other
+  family's private ceremonies, so Vaibhav's shows 21, from 1 February, and
+  Mahak's shows 25, beginning with sagda, parsaadi and the mehndi in January. The eleven moments people
   travel for each carry a Mewar-style miniature painting in a cusped Rajput arch.
 - **The venue** — a 21-second drone film that rolls when it comes into view:
   from Lake Pichola past the City Palace and Fateh Sagar, east over the

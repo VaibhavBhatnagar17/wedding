@@ -228,7 +228,10 @@
     if (e.who && e.who !== 'stay') chips.push(chip(I.t('who.' + e.who), 'who'));
 
     const body = el('div', { class: 'ev__body' }, [
-      el('time', { class: 'ev__time', datetime: e.date + 'T' + e.start, text: e.open ? I.t('prog.onwards', { t: I.time(e.start) }) : I.span(e.start, e.end) }),
+      el('time', {
+        class: 'ev__time', datetime: e.start ? e.date + 'T' + e.start : e.date,
+        text: !e.start ? I.date(e.date, { onlyDay: true }) : (e.open ? I.t('prog.onwards', { t: I.time(e.start) }) : I.span(e.start, e.end))
+      }),
       el('h4', { class: 'ev__title', text: I.pick(e.t) }),
       el('p', { class: 'ev__where', html: PIN + '<span>' + I.pick(e.where) + '</span>' }),
       e.note ? el('p', { class: 'ev__note', text: I.pick(e.note) }) : null,
@@ -530,6 +533,7 @@
   }
 
   function windowOf(e) {
+    if (!e.start) return null;
     const s = at(e.date, e.start);
     let f = e.end ? at(U.endDateFor(e.date, e.start, e.end), e.end) : new Date(s.getTime() + 30 * 60000);
     if (f <= s) f = new Date(s.getTime() + 30 * 60000);
@@ -541,6 +545,7 @@
     let cur = null, nxt = null;
     MINE.forEach(function (e) {
       const w = windowOf(e);
+      if (!w) return;
       if (now >= w[0] && now < w[1]) {
         if (!cur || (e.key && !cur.key) || (!!e.key === !!cur.key && w[0] > windowOf(cur)[0])) cur = e;
       } else if (w[0] > now && (!nxt || w[0] < windowOf(nxt)[0])) {
@@ -750,9 +755,9 @@
   function calendarEvents() {
     return MINE.map(function (e) {
       return {
-        uid: 'vm-' + e.id, date: e.date, start: e.start, end: e.open ? '' : e.end || '', alarm: e.alarm || 0,
+        uid: 'vm-' + e.id, date: e.date, start: e.start || '', end: !e.start || e.open ? '' : e.end || '', alarm: e.alarm || 0,
         title: I.pick(e.t) + ' — ' + I.t('names.pair'),
-        location: I.pick(e.where) + ', Hotel Khumani, Bhuwana Bypass, Udaipur',
+        location: I.pick(e.where) + (e.away ? '' : ', Hotel Khumani, Bhuwana Bypass, Udaipur'),
         description: [I.pick(e.note),
           seatedHere(e) ? I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }) : '',
           e.role && e.role[SIDE] ? I.pick(e.role[SIDE]) : ''].filter(Boolean).join('\n')

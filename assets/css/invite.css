@@ -283,11 +283,16 @@ body::after {
   margin-top: 22px;
 }
 .parents__side { flex: 0 1 214px; }
-.parents__side span {
+/* Mahak's grandparents, above both parents. Hidden on Vaibhav's card. */
+.parents__grand { display: none; margin-top: 22px; }
+html[data-side="bride"] .parents__grand { display: block; }
+.parents__grand span { letter-spacing: .22em; }
+html[data-side="bride"] .parents { margin-top: 16px; }
+.parents__side span, .parents__grand span {
   display: block; font-size: 9.5px; letter-spacing: .3em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
 }
-.parents__side b {
+.parents__side b, .parents__grand b {
   display: block; font-family: var(--serif); font-weight: 500;
   font-size: 15px; line-height: 1.4; color: var(--brand);
   /* The two names are different lengths; balance keeps the wrap tidy. */

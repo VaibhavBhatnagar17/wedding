@@ -630,10 +630,11 @@ function ev(id) {
   return e;
 }
 function mins(t) { var p = t.split(':'); return Number(p[0]) * 60 + Number(p[1]); }
-/* Minutes from midnight on 1 Feb, so 01:00 after the after-party is 1500. */
+/* Minutes since the epoch, so January sits before February and 01:00 after
+   the after-party is still the next morning. */
 function abs(date, t) {
-  var day = Number(date.slice(8)) - 1;
-  return day * 1440 + mins(t);
+  var p = date.split('-');
+  return Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2])) / 60000 + mins(t || '00:00');
 }
 function endAbs(e) {
   var s = abs(e.date, e.start), f = abs(e.date, e.end || e.start);
@@ -642,15 +643,18 @@ function endAbs(e) {
 var DEVA = /[\u0900-\u097F]/;
 
 check('every event has an id, a date on the wedding days, and a time', function () {
-  var seen = {};
+  var seen = {}, home = ['2027-02-01', '2027-02-02', '2027-02-03'];
+  var before = { sagda: '2027-01-18', parsaadi: '2027-01-26', mehndi: '2027-01-31' };
   P.forEach(function (e) {
     if (seen[e.id]) throw new Error('duplicate id ' + e.id);
     seen[e.id] = 1;
-    if (['2027-02-01', '2027-02-02', '2027-02-03'].indexOf(e.date) < 0) throw new Error(e.id + ' has date ' + e.date);
-    if (!/^\d{2}:\d{2}$/.test(e.start)) throw new Error(e.id + ' start ' + e.start);
+    if (before[e.id]) {
+      if (e.date !== before[e.id] || e.side !== 'bride' || e.start) throw new Error(e.id + ' should be an untimed bride ceremony on ' + before[e.id]);
+    } else if (home.indexOf(e.date) < 0) throw new Error(e.id + ' has date ' + e.date);
+    else if (!/^\d{2}:\d{2}$/.test(e.start)) throw new Error(e.id + ' start ' + e.start);
     if (e.end && !/^\d{2}:\d{2}$/.test(e.end)) throw new Error(e.id + ' end ' + e.end);
     if (e.fn && !W.data.functions.some(function (f) { return f.id === e.fn; })) throw new Error(e.id + ' has unknown group ' + e.fn);
-    if (!e.fn && !e.sheet) throw new Error(e.id + ' belongs to no run sheet');
+    if (!e.fn && !e.sheet && !e.side) throw new Error(e.id + ' belongs to no run sheet');
   });
 });
 
@@ -663,7 +667,8 @@ check('the programme is in time order', function () {
 });
 
 check('the hotel opens at 8 on 1 Feb, and the haldi starts at 11', function () {
-  if (P[0].id !== 'rooms' || P[0].start !== '08:00') throw new Error('first beat is ' + P[0].id + ' at ' + P[0].start);
+  var first = P.filter(function (e) { return e.date === '2027-02-01'; })[0];
+  if (first.id !== 'rooms' || first.start !== '08:00') throw new Error('first Udaipur beat is ' + first.id + ' at ' + first.start);
   if (W.data.venue.booked.opensForGuests !== '08:00') throw new Error('venue opening time disagrees');
   if (ev('haldi').start !== '11:00') throw new Error('haldi starts at ' + ev('haldi').start);
 });
@@ -875,10 +880,34 @@ check('each family has its own card, address and own ceremonies', function () {
     if (e.side && e.side !== 'groom' && e.side !== 'bride') throw new Error(e.id + ' has side ' + e.side);
     Object.keys(e.role || {}).forEach(function (k) { if (k !== 'groom' && k !== 'bride') throw new Error(e.id + ' role for ' + k); });
   });
-  ['ganesh', 'tel'].forEach(function (id) { if (ev(id).side !== 'bride') throw new Error(id + ' belongs on the bride\u2019s card only'); });
+  ['ganesh', 'tel', 'sagda', 'parsaadi', 'mehndi'].forEach(function (id) { if (ev(id).side !== 'bride') throw new Error(id + ' belongs on the bride\u2019s card only'); });
   if (ev('sehra').side !== 'groom') throw new Error('the sehra belongs on the groom\u2019s card only');
   var shared = P.filter(function (e) { return e.key && !e.side; }).length;
   if (shared < 10) throw new Error('only ' + shared + ' shared key moments');
+});
+
+check('Mahak\'s card names her grandparents and the three days before Udaipur', function () {
+  var I = W.i18n, was = W.side;
+  try {
+    W.side = 'bride'; I.set('en');
+    if (I.t('card.granddaughter') !== 'Grand Daughter of') throw new Error('label: ' + I.t('card.granddaughter'));
+    if (!/Shaanti Devi Kalra/.test(I.t('card.brideGrandparents')) || !/Gelaram ji Kalra/.test(I.t('card.brideGrandparents'))) throw new Error(I.t('card.brideGrandparents'));
+    if (!/Sagda/.test(I.t('prog.lead'))) throw new Error('the bride programme lead still starts at the hotel');
+    W.side = 'groom';
+    if (/Sagda/.test(I.t('prog.lead'))) throw new Error('Vaibhav\'s card mentions the Kalra ceremonies');
+    I.set('hi'); W.side = 'bride';
+    if (I.t('card.granddaughter') !== 'पौत्री' || !/शांति देवी कालरा/.test(I.t('card.brideGrandparents')) || !/गेलाराम/.test(I.t('card.brideGrandparents'))) throw new Error(I.t('card.brideGrandparents'));
+    ['sagda', 'parsaadi', 'mehndi'].forEach(function (id) {
+      var e = ev(id);
+      if (!e.away || !e.where[0] || !e.where[1] || !e.note[0] || !e.note[1]) throw new Error(id + ' is missing its place or its line');
+    });
+    if (ev('sagda').where[0] !== 'Jhulelal Bhawan, Shakti Nagar') throw new Error(ev('sagda').where[0]);
+    if (ev('parsaadi').where[0] !== 'Bohra Ganesh Ji Temple') throw new Error(ev('parsaadi').where[0]);
+    if (ev('mehndi').where[0] !== 'Sector-5') throw new Error(ev('mehndi').where[0]);
+    var ics = W.util.buildICS([{ uid: 's', date: '2027-01-18', start: '', title: 'Sagda', location: 'Jhulelal Bhawan, Shakti Nagar' }]);
+    if (!/DTSTART;VALUE=DATE:20270118/.test(ics) || !/DTEND;VALUE=DATE:20270119/.test(ics)) throw new Error('sagda should be an all-day calendar event');
+    if (/Hotel Khumani/.test(ics)) throw new Error('the January ceremonies are not at the hotel');
+  } finally { W.side = was; I.set('en'); }
 });
 
 check('the card speaks for whichever family sent it', function () {

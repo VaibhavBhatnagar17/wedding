@@ -183,9 +183,19 @@ window.W = window.W || {};
     events.forEach(function (e) {
       lines.push('BEGIN:VEVENT');
       lines.push('UID:' + (e.uid || uid('evt')) + '@vaibhav-mahak');
-      lines.push('DTSTAMP:' + icsStamp(e.date, e.start) + 'Z');
-      lines.push('DTSTART:' + icsStamp(e.date, e.start));
-      lines.push('DTEND:' + icsStamp(endDateFor(e.date, e.start, e.end), e.end || e.start));
+      lines.push('DTSTAMP:' + icsStamp(e.date, e.start || '00:00') + 'Z');
+      if (!e.start) {
+        // An all-day event. The end date is exclusive, so it is the next day.
+        const day = parseISO(e.date);
+        day.setDate(day.getDate() + 1);
+        const p = function (n) { return String(n).padStart(2, '0'); };
+        const next = day.getFullYear() + p(day.getMonth() + 1) + p(day.getDate());
+        lines.push('DTSTART;VALUE=DATE:' + e.date.replace(/-/g, ''));
+        lines.push('DTEND;VALUE=DATE:' + next);
+      } else {
+        lines.push('DTSTART:' + icsStamp(e.date, e.start));
+        lines.push('DTEND:' + icsStamp(endDateFor(e.date, e.start, e.end), e.end || e.start));
+      }
       lines.push('SUMMARY:' + icsText(e.title));
       if (e.location) lines.push('LOCATION:' + icsText(e.location));
       if (e.description) lines.push('DESCRIPTION:' + icsText(e.description));

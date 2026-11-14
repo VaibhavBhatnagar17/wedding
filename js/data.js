@@ -240,6 +240,8 @@ window.W = window.W || {};
      seated  "be seated by" / "gather at" time, published to guests
      seatedFor  only that family is asked to be there by `seated`
      side    'groom' or 'bride': on that family's card only (see side.js)
+     away    not at Hotel Khumani; the calendar uses `where` on its own
+     start   omitted when no clock time is published; the card shows the weekday
      role    { groom, bride }: that family's part, shown on its own card
      open    no closing time is published ("7 pm onwards"); `end` is the
              planner's estimate only
@@ -250,6 +252,22 @@ window.W = window.W || {};
      breakfast quietly runs longer for late risers, that is in `ops`, not here. */
 
   const programme = [
+    { id: 'sagda', date: '2027-01-18', key: true, who: 'bride', side: 'bride', away: true,
+      t: ['Sagda', 'सगड़ा'],
+      where: ['Jhulelal Bhawan, Shakti Nagar', 'झूलेलाल भवन, शक्ति नगर'],
+      note: ['Sacred threads, family blessings, and joyful beginnings.',
+        'पवित्र धागे, परिवार का आशीर्वाद, और एक आनंदमय शुरुआत।'] },
+    { id: 'parsaadi', date: '2027-01-26', key: true, who: 'bride', side: 'bride', away: true,
+      t: ['Parsaadi', 'परसादी'],
+      where: ['Bohra Ganesh Ji Temple', 'बोहरा गणेश जी मंदिर'],
+      note: ['Join us as we share a blessed meal and celebrate new beginnings.',
+        'हमारे साथ यह पवित्र भोजन कीजिए, और नई शुरुआत का उत्सव मनाइए।'] },
+    { id: 'mehndi', date: '2027-01-31', key: true, who: 'bride', side: 'bride', away: true,
+      t: ['Mehndi', 'मेहंदी'],
+      where: ['Sector-5', 'सेक्टर-5'],
+      note: ['An evening of henna, music, and sweet memories in the making.',
+        'मेहंदी, संगीत, और बनती हुई प्यारी यादों की एक शाम।'] },
+
     { id: 'rooms', date: '2027-02-01', start: '08:00', sheet: 'haldi', who: 'stay',
       t: ['Rooms open · check in', 'कमरे तैयार · चेक-इन'],
       where: ['Hotel Khumani reception', 'होटल खुमानी का रिसेप्शन'],
@@ -749,6 +767,7 @@ window.W = window.W || {};
     { what: 'Each family\u2019s part, on its card', detail: 'The \u201cour family\u2019s part\u201d lines on both cards are a first draft. Each family should read its own card and correct them in the programme (the role field).' },
     { what: 'An RSVP WhatsApp number for each family', detail: 'Each card can send replies to its own family. Add one number per side in sides, near the top of data.js; until then the WhatsApp button stays hidden.' },
     { what: 'The two addresses', detail: 'Buy vaibhavwedsmahak.in and mahakwedsvaibhav.in and point both at the site (README: \u201cTwo cards, two addresses\u201d). Until then, Mahak\u2019s card is mahak.html on the current address.' },
+    { what: 'Clock times for sagda, parsaadi and the mehndi', detail: 'Mahak\u2019s card lists 18 January at Jhulelal Bhawan, Shakti Nagar; 26 January at Bohra Ganesh Ji Temple; and 31 January at Sector-5. No clock time is published until the families set one.' },
     { what: 'Vidaai at 14:30', detail: 'Placed after the wedding lunch, before the reception. Confirm with both families.' },
     { what: 'Permission for the venue painting', detail: 'The Mewar-style painting is made from the hotel\u2019s own photograph. Tell the hotel and get a yes.' }
   ];

@@ -387,7 +387,10 @@ def task_check(tab):
     day1 = tab.eval("Array.from(document.querySelectorAll('#day-2027-02-01 .ev__time')).map(function(t){return t.textContent})")
     check("day 1 opens with the 8 am room opening", day1[0] == "8:00 am", day1[:2])
     check("the after-party runs past midnight and sorts last", day1[-1] == "11:00 pm – 1:00 am", day1[-2:])
-    check("both sets of parents on the card", tab.eval("document.querySelectorAll('.parents__side b').length") == 2)
+    check("both sets of parents on the card", tab.eval(
+        "document.querySelectorAll('.parents__side').length === 2"
+        " && !!document.querySelector('[data-i18n=\"card.groomParents\"]')"
+        " && !!document.querySelector('[data-i18n=\"card.brideParents\"]')"))
     check("venue directions point at the hotel rooftop",
           "24.6263,73.7139" in (tab.eval("(document.querySelector('#venue-body a[href*=\"maps/dir\"]')||{}).href") or ""))
     check("the hotel can be called from the page",
@@ -529,7 +532,10 @@ def task_check(tab):
     card_js = """(function(){
       var q=function(s){return document.querySelector(s)};
       return {side: W.side, first: q('.names .names__n').textContent, gate: q('.gate__names').textContent,
-              parent: q('.parents__side span').textContent, mono: q('.nav__mono').textContent.trim(),
+              parent: q('.parents__side:first-child > span').textContent,
+              grand: (function(){var n=q('.parents__grand'); if(!n || getComputedStyle(n).display==='none') return ''; return n.innerText.replace(/\\s+/g,' ').trim();})(),
+              early: ['sagda','parsaadi','mehndi'].map(function(id){return !!document.getElementById('ev-'+id);}).join(','),
+              mono: q('.nav__mono').textContent.trim(),
               ganesh: !!q('#ev-ganesh'), tel: !!q('#ev-tel'), sehra: !!q('#ev-sehra'),
               duties: !!q('#duties, .duties'),
               roles: document.querySelectorAll('#prog .ev__role').length,
@@ -541,16 +547,17 @@ def task_check(tab):
     g = tab.eval(card_js)
     check("Vaibhav's family's card names him first and shows the sehra",
           g["side"] == "groom" and g["first"] == "Vaibhav" and g["parent"] == "Son of" and g["mono"] == "V & M"
-          and g["sehra"] and not g["ganesh"] and not g["tel"], g)
+          and g["sehra"] and not g["ganesh"] and not g["tel"] and g["grand"] == "" and g["early"] == "false,false,false", g)
     check("our family's part sits on its events, with no separate list, and replies default to the groom's side",
           not g["duties"] and g["roles"] >= 5 and g["rsvp"] == "Groom" and g["og"].endswith("/og.jpg"), g)
     tab.goto(base() + "/mahak.html?open=1", settle=2.6)
     b = tab.eval(card_js)
     check("Mahak's family's card names her first, everywhere",
           b["side"] == "bride" and b["first"] == "Mahak" and b["gate"] == "Mahak & Vaibhav" and b["parent"] == "Daughter of"
-          and b["mono"] == "M & V" and b["title"].startswith("Mahak & Vaibhav") and b["ogt"].startswith("Mahak & Vaibhav"), b)
-    check("it shows the Ganesh puja and tel, not the sehra, and has its own preview",
-          b["ganesh"] and b["tel"] and not b["sehra"] and not b["duties"] and b["rsvp"] == "Bride"
+          and b["mono"] == "M & V" and b["title"].startswith("Mahak & Vaibhav") and b["ogt"].startswith("Mahak & Vaibhav")
+          and "Shaanti Devi Kalra" in b["grand"] and "Gelaram ji Kalra" in b["grand"], b)
+    check("it shows sagda, parsaadi and the mehndi, then the Ganesh puja and tel, not the sehra",
+          b["early"] == "true,true,true" and b["ganesh"] and b["tel"] and not b["sehra"] and not b["duties"] and b["rsvp"] == "Bride"
           and b["og"].endswith("/og-mahak.jpg"), b)
     tab.eval("W.i18n.set('hi')")
     time.sleep(0.8)

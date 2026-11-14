@@ -28,6 +28,8 @@ window.W = window.W || {};
       'card.pre@bride': 'With the blessings of our elders, the Kalra family invites you to the wedding of',
       'card.groom': 'Vaibhav', 'card.weds': 'weds', 'card.bride': 'Mahak',
       'card.son': 'Son of', 'card.daughter': 'Daughter of',
+      'card.granddaughter': 'Grand Daughter of',
+      'card.brideGrandparents': 'Shaanti Devi Kalra & Gelaram ji Kalra',
       'card.groomParents': 'Kamla Srivastava & Ved Prakash Bhatnagar',
       'card.brideParents': 'Riya Kalra & Kishore Kalra',
       'card.date': 'Monday 1 & Tuesday 2 February 2027',
@@ -44,7 +46,10 @@ window.W = window.W || {};
 
       'prog.eyebrow': 'The celebrations',
       'prog.title': 'Two days, in order',
+      'prog.title@bride': 'The days, in order',
       'prog.lead': 'Every event at Hotel Khumani, in the order it happens. The paintings mark the moments you will not want to miss; meals and rest are listed too, so you always know where to be.',
+      'prog.lead@bride': 'Sagda, parsaadi and the mehndi with our family, then every event at Hotel Khumani, in the order it happens. The paintings mark the moments you will not want to miss; meals and rest are listed too, so you always know where to be.',
+      'prog.day.2027-01-18': 'Sagda', 'prog.day.2027-01-26': 'Parsaadi', 'prog.day.2027-01-31': 'Mehndi',
       'prog.day.2027-02-01': 'Day one', 'prog.day.2027-02-02': 'Day two', 'prog.day.2027-02-03': 'Farewell morning',
       'prog.sun': 'Sunrise {a} · sunset {b}',
       'prog.seated': 'Please be seated by {t}', 'prog.onwards': '{t} onwards', 'prog.gather': 'Gather at {t}',
@@ -135,6 +140,8 @@ window.W = window.W || {};
       'card.pre@bride': 'बड़ों के आशीर्वाद से, कालरा परिवार आपको इस शुभ विवाह में सादर आमंत्रित करता है',
       'card.groom': 'चि. वैभव', 'card.weds': 'संग', 'card.bride': 'सौ.कां. महक',
       'card.son': 'सुपुत्र', 'card.daughter': 'सुपुत्री',
+      'card.granddaughter': 'पौत्री',
+      'card.brideGrandparents': 'श्रीमती शांति देवी कालरा एवं श्री गेलाराम जी कालरा',
       'card.groomParents': 'श्रीमती कमला श्रीवास्तव एवं श्री वेद प्रकाश भटनागर',
       'card.brideParents': 'श्रीमती रिया कालरा एवं श्री किशोर कालरा',
       'card.date': 'सोमवार 1 एवं मंगलवार 2 फ़रवरी 2027',
@@ -151,7 +158,10 @@ window.W = window.W || {};
 
       'prog.eyebrow': 'उत्सव',
       'prog.title': 'दो दिन, क्रम से',
+      'prog.title@bride': 'सारे दिन, क्रम से',
       'prog.lead': 'होटल खुमानी में हर कार्यक्रम, उसी क्रम में जिसमें वह होगा। चित्र उन पलों के हैं जिन्हें आप बिल्कुल नहीं छोड़ना चाहेंगे; भोजन और आराम का समय भी दिया है, ताकि आपको हमेशा पता रहे कि कहाँ पहुँचना है।',
+      'prog.lead@bride': 'परिवार के साथ सगड़ा, परसादी और मेहंदी, फिर होटल खुमानी का हर कार्यक्रम, उसी क्रम में। चित्र उन पलों के हैं जिन्हें आप बिल्कुल नहीं छोड़ना चाहेंगे; भोजन और आराम का समय भी दिया है, ताकि आपको हमेशा पता रहे कि कहाँ पहुँचना है।',
+      'prog.day.2027-01-18': 'सगड़ा', 'prog.day.2027-01-26': 'परसादी', 'prog.day.2027-01-31': 'मेहंदी',
       'prog.day.2027-02-01': 'पहला दिन', 'prog.day.2027-02-02': 'दूसरा दिन', 'prog.day.2027-02-03': 'विदा की सुबह',
       'prog.sun': 'सूर्योदय {a} · सूर्यास्त {b}',
       'prog.seated': 'कृपया {t} तक अपना स्थान ग्रहण कर लें', 'prog.onwards': '{t} बजे से', 'prog.gather': '{t} पर इकट्ठा हों',
@@ -301,6 +311,7 @@ window.W = window.W || {};
     const o = opts || {};
     const day = DAYS[lang][d.getDay()];
     const md = d.getDate() + ' ' + MONTHS[lang][d.getMonth()] + (o.year ? ' ' + d.getFullYear() : '');
+    if (o.onlyDay) return day;
     if (o.day === false) return md;
     return lang === 'hi' ? day + ', ' + md : day + ' ' + md;
   }
