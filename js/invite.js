@@ -11,7 +11,7 @@
   /* Whose card this is (see side.js). The other family's own ceremonies are
      left off, so each card shows only what its guests attend. */
   const SIDE = W.side === 'bride' ? 'bride' : 'groom';
-  const MINE = D.programme.filter(function (e) { return !e.side || e.side === SIDE; });
+  const MINE = D.programme.filter(function (e) { return !e.planner && (!e.side || e.side === SIDE); });
   const RSVP_WHATSAPP = D.sides[SIDE].rsvpWhatsapp;
 
   /* Elements drawn after boot get revealed at once — they are already on

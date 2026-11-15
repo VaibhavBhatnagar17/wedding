@@ -670,6 +670,14 @@ check('the programme is in time order', function () {
   }
 });
 
+check('the rest breaks stay off the card', function () {
+  ['rest1', 'rest2'].forEach(function (id) {
+    var e = ev(id);
+    if (!e.planner) throw new Error(id + ' is still on the invitation');
+    if (e.t[0] !== 'Rest') throw new Error(id + ' is not the rest break');
+  });
+});
+
 check('the hotel opens at 8 on 1 Feb, and the haldi starts at 11', function () {
   var first = P.filter(function (e) { return e.date === '2027-02-01'; })[0];
   if (first.id !== 'rooms' || first.start !== '08:00') throw new Error('first Udaipur beat is ' + first.id + ' at ' + first.start);

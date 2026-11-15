@@ -237,6 +237,7 @@ window.W = window.W || {};
      sheet   for events open to every staying guest (meals, rest), the run sheet
              it is filed under
      who     'stay' hotel guests (planner only, never tagged on the card) · 'bride' the bride's family · 'adults'
+     planner true: on the run sheet only; guests never see it on the card
      key     a moment people are turning up for
      art     painting in assets/art/art-<art>.webp
      seated  "be seated by" / "gather at" time, published to guests
@@ -294,7 +295,7 @@ window.W = window.W || {};
       where: ['Beside the haldi lawn', 'हल्दी वाले लॉन के पास'],
       note: ['Served right there, so nobody has to change first.', 'वहीं परोसा जाएगा — पहले कपड़े बदलने की ज़रूरत नहीं।'],
       ops: 'Towels and a wash station at the lawn edge.' },
-    { id: 'rest1', date: '2027-02-01', start: '15:30', end: '19:00', sheet: 'haldi', who: 'stay',
+    { id: 'rest1', date: '2027-02-01', start: '15:30', end: '19:00', sheet: 'haldi', who: 'stay', planner: true,
       t: ['Rest', 'विश्राम'],
       where: ['Your room · the rooftop pool', 'आपका कमरा · छत का स्विमिंग पूल'],
       note: ['Wash off the haldi, rest, and dress for the evening. Sunset is at 6:19.',
@@ -396,7 +397,7 @@ window.W = window.W || {};
         bride: ['We say goodbye to Mahak at the porch.', 'होटल के पोर्च पर हम महक को विदा करेंगे।']
       },
       ops: 'Decorated car or doli at the porch by 14:15; a thali of rice for the bride; the groom\u2019s mother ready for griha pravesh at the family suite.' },
-    { id: 'rest2', date: '2027-02-02', start: '15:00', end: '19:00', sheet: 'phere', who: 'stay',
+    { id: 'rest2', date: '2027-02-02', start: '15:00', end: '19:00', sheet: 'phere', who: 'stay', planner: true,
       t: ['Rest', 'विश्राम'],
       where: ['Your room', 'आपका कमरा'],
       note: ['Rest before the reception. It turns cold after dark — bring a shawl.',
