@@ -400,7 +400,6 @@ window.W = window.W || {};
         'कन्यादान, सात फेरे और सप्तपदी, सिंदूर और मंगलसूत्र। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण करें।'],
       forBride: { note: ['Kanyadaan, seven pheras, sindoor, and the mangalsutra—witness the sacred rituals that unite them forever. The muhurat waits for none, so please be seated on time.',
         'कन्यादान, सात फेरे, सिंदूर और मंगलसूत्र—वे पवित्र रस्में देखिए जो उन्हें सदा के लिए जोड़ती हैं। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण कर लें।'] },
-      role: { bride: ['Mahak’s parents perform the kanyadaan.', 'महक के माता-पिता कन्यादान करेंगे।'] },
       ops: 'Pandit to confirm the muhurat in writing. Published panchangs list the 2 Feb vivah muhurat from 17:47 (Delhi); Abhijit muhurat in Udaipur is about 12:26–13:10. Time the pheras themselves inside the window he gives.' },
     { id: 'lunch2', fn: 'phere', date: '2027-02-02', start: '13:00', end: '14:30', meal: true,
       t: ['Wedding lunch', 'विवाह का भोज'],

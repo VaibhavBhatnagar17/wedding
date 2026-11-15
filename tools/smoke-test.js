@@ -917,7 +917,7 @@ check('Mahak\'s card names her grandparents and the three days before Udaipur', 
     ['haldi', 'folk', 'sagaai', 'dinner1', 'sangeet', 'afterparty', 'phere', 'vidaai', 'bf3'].forEach(function (id) {
       if (!ev(id).forBride || !ev(id).forBride.note) throw new Error(id + ' has no bride wording');
     });
-    if (ev('haldi').role.bride || ev('sagaai').role.bride || ev('vidaai').role.bride) throw new Error('Mahak\'s card still has a family part on haldi, sagaai or vidaai');
+    if (ev('haldi').role.bride || ev('sagaai').role.bride || ev('vidaai').role.bride || (ev('phere').role && ev('phere').role.bride)) throw new Error('Mahak\'s card still has a family part on haldi, sagaai, phere or vidaai');
     if (!ev('tel').planner || !ev('milni').forBride.hide) throw new Error('tel and milni should be off Mahak\'s card');
     if (ev('ganesh').end !== '09:00') throw new Error('ganesh should run until 9');
     if (ev('baraat').forBride.t[0] !== 'Baraat Swagat' || ev('baraat').forBride.start !== '10:00' || ev('baraat').forBride.end !== '10:30') throw new Error('baraat swagat times');
