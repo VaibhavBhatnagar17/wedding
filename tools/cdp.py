@@ -556,8 +556,8 @@ def task_check(tab):
           b["side"] == "bride" and b["first"] == "Mahak" and b["gate"] == "Mahak & Vaibhav" and b["parent"] == "Daughter of"
           and b["mono"] == "M & V" and b["title"].startswith("Mahak & Vaibhav") and b["ogt"].startswith("Mahak & Vaibhav")
           and "Shaanti Devi Kalra" in b["grand"] and "Gelaram ji Kalra" in b["grand"], b)
-    check("it shows sagda, parsaadi and the mehndi, then the Ganesh puja and tel, not the sehra",
-          b["early"] == "true,true,true" and b["ganesh"] and b["tel"] and not b["sehra"] and not b["duties"] and b["rsvp"] == "Bride"
+    check("it shows sagda, parsaadi and the mehndi, then the Ganesh puja, not the tel or the sehra",
+          b["early"] == "true,true,true" and b["ganesh"] and not b["tel"] and not b["sehra"] and not b["duties"] and b["rsvp"] == "Bride"
           and b["og"].endswith("/og-mahak.jpg"), b)
     tab.eval("W.i18n.set('hi')")
     time.sleep(0.8)

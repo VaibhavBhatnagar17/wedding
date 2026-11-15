@@ -246,6 +246,7 @@ window.W = window.W || {};
      away    not at Hotel Khumani; the calendar uses `where` on its own
      start   omitted when no clock time is published; the card shows the weekday
      role    { groom, bride }: that family's part, shown on its own card
+     forBride  words and times published only on Mahak's card (hide removes it)
      open    no closing time is published ("7 pm onwards"); `end` is the
              planner's estimate only
      alarm   minutes before start for the calendar reminder
@@ -286,9 +287,10 @@ window.W = window.W || {};
       where: ['The lawn', 'लॉन'],
       note: ['A haldi for each of us, then one together — dhol, a shower of flowers and a great deal of yellow.',
         'पहले हम दोनों की अलग-अलग हल्दी, फिर एक साथ — ढोल, फूलों की बौछार और ढेर सारा पीला रंग।'],
+      forBride: { note: ['A splash of yellow, a dash of love, and a morning full of madness.',
+        'पीले रंग की बौछार, थोड़ा प्यार, और पागलपन से भरी एक सुबह।'] },
       role: {
-        groom: ['Our family does Vaibhav’s haldi first, then joins Mahak’s family for one together.', 'पहले हमारा परिवार वैभव को हल्दी लगाएगा, फिर महक के परिवार के साथ मिलकर एक साथ हल्दी।'],
-        bride: ['Our family does Mahak’s haldi first, then joins Vaibhav’s family for one together.', 'पहले हमारा परिवार महक को हल्दी लगाएगा, फिर वैभव के परिवार के साथ मिलकर एक साथ हल्दी।']
+        groom: ['Our family does Vaibhav’s haldi first, then joins Mahak’s family for one together.', 'पहले हमारा परिवार वैभव को हल्दी लगाएगा, फिर महक के परिवार के साथ मिलकर एक साथ हल्दी।']
       } },
     { id: 'lunch1', fn: 'haldi', date: '2027-02-01', start: '13:30', end: '15:30', meal: true,
       t: ['Lunch', 'दोपहर का भोजन'],
@@ -304,27 +306,34 @@ window.W = window.W || {};
       t: ['A Rajasthani folk evening', 'राजस्थानी लोक संध्या'],
       where: ['The lawn', 'लॉन'],
       note: ['Kalbeliya and Ghoomar dancers open the night — and they will pull you in to dance.',
-        'कालबेलिया और घूमर नृत्य से शाम की शुरुआत — और वे आपको भी नचाएँगे।'] },
+        'कालबेलिया और घूमर नृत्य से शाम की शुरुआत — और वे आपको भी नचाएँगे।'],
+      forBride: { note: ['Colors, culture, and celebration—come experience the spirit of Rajasthan.',
+        'रंग, संस्कृति और उत्सव—आइए, राजस्थान की रूह महसूस कीजिए।'] } },
     { id: 'sagaai', fn: 'sangeet', date: '2027-02-01', start: '20:00', end: '21:00', key: true, art: 'sagaai', alarm: 20, seated: '19:50',
       t: ['Sagaai', 'सगाई'],
       where: ['The lawn — the stage', 'लॉन — मंच'],
       note: ['We dance our way to the rings — the two of us with our friends, and a live singer beside the stage.',
         'हम दोनों अपने दोस्तों के साथ नाचते हुए अँगूठी की रस्म तक पहुँचेंगे — मंच के पास लाइव गायक के साथ।'],
+      forBride: { note: ['Love, laughter, and a little bit of sparkle—join us as they make it official.',
+        'प्यार, हँसी और थोड़ी सी चमक—आइए, जब वे इसे पक्का करें।'] },
       role: {
-        groom: ['After the rings, our family blesses Mahak with the shagun.', 'अँगूठी के बाद हमारा परिवार महक को शगुन देकर आशीर्वाद देगा।'],
-        bride: ['After the rings, our family blesses Vaibhav with the shagun.', 'अँगूठी के बाद हमारा परिवार वैभव को शगुन देकर आशीर्वाद देगा।']
+        groom: ['After the rings, our family blesses Mahak with the shagun.', 'अँगूठी के बाद हमारा परिवार महक को शगुन देकर आशीर्वाद देगा।']
       },
       ops: 'The couple\u2019s dance runs about 40 minutes and ends on the rings. Book the singer early and rehearse the last song with them.' },
     { id: 'dinner1', fn: 'sangeet', date: '2027-02-01', start: '20:00', end: '23:00', meal: true,
       t: ['Dinner', 'रात्रि भोज'],
       where: ['The lawn', 'लॉन'],
       note: ['Snacks and a full wedding dinner, open from the sagaai right through the sangeet.',
-        'सगाई से लेकर संगीत तक — स्नैक्स और पूरा शादी का भोजन।'] },
+        'सगाई से लेकर संगीत तक — स्नैक्स और पूरा शादी का भोजन।'],
+      forBride: { note: ['Open from the sagaai right through the sangeet.',
+        'सगाई से लेकर संगीत तक खुला रहेगा।'] } },
     { id: 'sangeet', fn: 'sangeet', date: '2027-02-01', start: '21:00', end: '23:00', key: true, art: 'sangeet', alarm: 10,
       t: ['Sangeet', 'संगीत'],
       where: ['The lawn', 'लॉन'],
       note: ['The families perform, then the cousins. At 11 the dancing moves into the banquet hall.',
         'पहले परिवार, फिर कज़िन्स की प्रस्तुतियाँ। रात 11 बजे से नाच-गाना बैंक्वेट हॉल में।'],
+      forBride: { note: ['A night of rhythm, laughter, and heartfelt performances from both sides of the aisle.',
+        'ताल, हँसी, और दोनों तरफ़ से दिल से दी गई प्रस्तुतियों की एक रात।'] },
       role: {
         groom: ['Our family performs too — if you are in it, tell the choreographer.', 'हमारे परिवार की प्रस्तुति भी है — अगर आप उसमें हैं, तो कोरियोग्राफ़र को बता दीजिए।'],
         bride: ['Our family performs too — if you are in it, tell the choreographer.', 'हमारे परिवार की प्रस्तुति भी है — अगर आप उसमें हैं, तो कोरियोग्राफ़र को बता दीजिए।']
@@ -335,13 +344,15 @@ window.W = window.W || {};
       where: ['The banquet hall', 'बैंक्वेट हॉल'],
       note: ['Once the family performances are done, the dancing moves indoors — a DJ and late-night snacks until 1 am.',
         'परिवारों की प्रस्तुतियों के बाद नाच-गाना अंदर — डीजे और देर रात के स्नैक्स, रात 1 बजे तक।'],
+      forBride: { note: ['The night is still young—head inside for an exclusive after-party till 1 AM.',
+        'रात अभी जवान है—अंदर आइए, एक ख़ास आफ़्टर-पार्टी के लिए, रात 1 बजे तक।'] },
       ops: 'No bar. The DJ moves from the lawn rig to the banquet hall; tea, coffee and late-night snacks from 22:45.' },
 
-    { id: 'ganesh', fn: 'phere', date: '2027-02-02', start: '07:00', end: '07:30', art: 'ganesh', who: 'bride', side: 'bride',
+    { id: 'ganesh', fn: 'phere', date: '2027-02-02', start: '07:00', end: '09:00', art: 'ganesh', who: 'bride', side: 'bride',
       t: ['Ganesh Puja', 'गणेश पूजा'],
       where: ['With the bride’s family', 'वधू पक्ष के साथ'],
-      note: ['The wedding day begins with Ganesh ji’s blessings.', 'विवाह के दिन की शुरुआत गणेश जी के आशीर्वाद से।'] },
-    { id: 'tel', fn: 'phere', date: '2027-02-02', start: '07:30', end: '08:00', who: 'bride', side: 'bride',
+      note: ['Shree Ganeshaya Namah: A sacred start to forever.', 'श्री गणेशाय नमः — हमेशा के लिए एक पवित्र शुरुआत।'] },
+    { id: 'tel', fn: 'phere', date: '2027-02-02', start: '07:30', end: '08:00', who: 'bride', side: 'bride', planner: true,
       t: ['Tel ceremony', 'तेल की रस्म'],
       where: ['With the bride’s family', 'वधू पक्ष के साथ'],
       note: ['Elders bless the bride with oil in her hair before she gets ready.',
@@ -360,11 +371,17 @@ window.W = window.W || {};
       where: ['From the hotel porch to the lawn gate', 'होटल के पोर्च से लॉन के द्वार तक'],
       note: ['The groom’s side gathers at the porch; dhol, band and ghodi set off at 9:30. The bride’s side waits at the gate to welcome them.',
         'वर पक्ष पोर्च पर इकट्ठा होगा; ढोल, बैंड और घोड़ी 9:30 पर रवाना होंगे। वधू पक्ष द्वार पर स्वागत करेगा।'],
+      forBride: {
+        t: ['Baraat Swagat', 'बारात स्वागत'],
+        start: '10:00', end: '10:30',
+        note: ['The dhol is getting louder—join Team Bride as we welcome the Baraat with style, energy, and a whole lot of cheer!',
+          'ढोल की आवाज़ तेज़ हो रही है—वधू पक्ष के साथ जुड़िए, और जोश, ऊर्जा और ख़ूब जयकारों के साथ बारात का स्वागत कीजिए।']
+      },
       role: {
         groom: ['Gather at the hotel porch by 9:15, and dance the baraat all the way to the lawn gate.', 'सुबह 9:15 तक होटल के पोर्च पर पहुँचिए, और लॉन के द्वार तक नाचते हुए बारात लेकर चलिए।'],
         bride: ['Be at the lawn gate by 10 to welcome the baraat.', 'बारात के स्वागत के लिए सुबह 10 बजे तक लॉन के द्वार पर पहुँचिए।']
       } },
-    { id: 'milni', fn: 'phere', date: '2027-02-02', start: '10:15', end: '10:30',
+    { id: 'milni', fn: 'phere', date: '2027-02-02', start: '10:15', end: '10:30', forBride: { hide: true },
       t: ['Milni & dwar puja', 'मिलनी और द्वार पूजा'],
       where: ['The lawn gate', 'लॉन का द्वार'],
       note: ['The two families meet and embrace at the gate.', 'दोनों परिवार द्वार पर एक-दूसरे से गले मिलते हैं।'],
@@ -381,6 +398,8 @@ window.W = window.W || {};
       where: ['The mandap, on the lawn', 'लॉन पर सजा मंडप'],
       note: ['Kanyadaan, the seven pheras and saptapadi, sindoor and mangalsutra. The muhurat does not wait, so please be in your seat on time.',
         'कन्यादान, सात फेरे और सप्तपदी, सिंदूर और मंगलसूत्र। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण करें।'],
+      forBride: { note: ['Kanyadaan, seven pheras, sindoor, and the mangalsutra—witness the sacred rituals that unite them forever. The muhurat waits for none, so please be seated on time.',
+        'कन्यादान, सात फेरे, सिंदूर और मंगलसूत्र—वे पवित्र रस्में देखिए जो उन्हें सदा के लिए जोड़ती हैं। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण कर लें।'] },
       role: { bride: ['Mahak’s parents perform the kanyadaan.', 'महक के माता-पिता कन्यादान करेंगे।'] },
       ops: 'Pandit to confirm the muhurat in writing. Published panchangs list the 2 Feb vivah muhurat from 17:47 (Delhi); Abhijit muhurat in Udaipur is about 12:26–13:10. Time the pheras themselves inside the window he gives.' },
     { id: 'lunch2', fn: 'phere', date: '2027-02-02', start: '13:00', end: '14:30', meal: true,
@@ -392,9 +411,10 @@ window.W = window.W || {};
       where: ['The hotel porch', 'होटल का पोर्च'],
       note: ['Mahak says goodbye to her family — and the Bhatnagars welcome her home.',
         'महक की अपने परिवार से विदाई — और भटनागर परिवार में उसका स्वागत।'],
+      forBride: { note: ['A loving farewell and a million blessings for the journey ahead.',
+        'प्यार भरी विदाई, और आगे की राह के लिए अनगिनत आशीर्वाद।'] },
       role: {
-        groom: ['Vaibhav’s mother welcomes Mahak home with the griha pravesh, at the family suite.', 'वैभव की माँ परिवार के सुइट में गृह प्रवेश कराकर महक का स्वागत करेंगी।'],
-        bride: ['We say goodbye to Mahak at the porch.', 'होटल के पोर्च पर हम महक को विदा करेंगे।']
+        groom: ['Vaibhav’s mother welcomes Mahak home with the griha pravesh, at the family suite.', 'वैभव की माँ परिवार के सुइट में गृह प्रवेश कराकर महक का स्वागत करेंगी।']
       },
       ops: 'Decorated car or doli at the porch by 14:15; a thali of rice for the bride; the groom\u2019s mother ready for griha pravesh at the family suite.' },
     { id: 'rest2', date: '2027-02-02', start: '15:00', end: '19:00', sheet: 'phere', who: 'stay', planner: true,
@@ -407,13 +427,20 @@ window.W = window.W || {};
       where: ['The lawn', 'लॉन'],
       note: ['Everyone we love, in one evening. The couple arrive at 7:45 and dinner opens at 8.',
         'हमारे सभी प्रियजन, एक ही शाम। नवदंपति 7:45 पर आएँगे और भोजन 8 बजे से।'],
+      forBride: {
+        start: '20:00', open: true,
+        note: ['Introducing Mr. & Mrs.—we invite you to dine, mingle, and celebrate their happily ever after.',
+          'मिस्टर और मिसेज़ का परिचय—आइए, भोजन कीजिए, मिलिए, और उनकी सदा की ख़ुशी का जश्न मनाइए।']
+      },
       role: { groom: ['Our family hosts the reception — please come a little early to welcome everyone.', 'रिसेप्शन हमारे परिवार की ओर से है — सबके स्वागत के लिए थोड़ा पहले पहुँचिए।'] } },
 
     { id: 'bf3', date: '2027-02-03', start: '07:30', end: '10:00', sheet: 'reception', who: 'stay', meal: true,
       t: ['Breakfast & checkout', 'नाश्ता और चेक-आउट'],
       where: ['The hotel restaurant', 'होटल का रेस्तराँ'],
       note: ['Checkout is at 10 am. Tell us your train or flight and we will arrange your drop.',
-        'चेक-आउट सुबह 10 बजे। अपनी ट्रेन या फ़्लाइट बता दीजिए, आपको छोड़ने की व्यवस्था हम करेंगे।'] }
+        'चेक-आउट सुबह 10 बजे। अपनी ट्रेन या फ़्लाइट बता दीजिए, आपको छोड़ने की व्यवस्था हम करेंगे।'],
+      forBride: { note: ['Coffee, breakfast, and one final round of hugs before you travel back. Checkout is at 10 AM—drop us your flight or train details, and we’ll take care of your ride.',
+        'कॉफ़ी, नाश्ता, और लौटने से पहले गले मिलने का एक आख़िरी दौर। चेक-आउट सुबह 10 बजे है—अपनी फ़्लाइट या ट्रेन बता दीजिए, आपको छोड़ने का इंतज़ाम हम कर लेंगे।'] } }
   ];
 
   /* ---------------- Budget ---------------- */

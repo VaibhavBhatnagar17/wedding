@@ -11,7 +11,23 @@
   /* Whose card this is (see side.js). The other family's own ceremonies are
      left off, so each card shows only what its guests attend. */
   const SIDE = W.side === 'bride' ? 'bride' : 'groom';
-  const MINE = D.programme.filter(function (e) { return !e.planner && (!e.side || e.side === SIDE); });
+  /* forBride holds the words and times Mahak's card publishes. The event
+     itself stays as Vaibhav's card and the planner read it. */
+  function brideOnly(e) { return SIDE === 'bride' ? e.forBride : null; }
+  function pub(e, key) {
+    const b = brideOnly(e);
+    if (b && Object.prototype.hasOwnProperty.call(b, key)) return b[key];
+    return e[key];
+  }
+  function onCard(e) {
+    return !e.planner && (!e.side || e.side === SIDE) && !(brideOnly(e) && brideOnly(e).hide);
+  }
+  const MINE = D.programme.filter(onCard);
+  function pubStart(e) { return pub(e, 'start'); }
+  function pubOpen(e) { return !!pub(e, 'open'); }
+  function pubEnd(e) { return pubOpen(e) ? '' : pub(e, 'end'); }
+  function pubTitle(e) { return I.pick(pub(e, 't')); }
+  function pubNote(e) { const n = pub(e, 'note'); return n ? I.pick(n) : ''; }
   const RSVP_WHATSAPP = D.sides[SIDE].rsvpWhatsapp;
 
   /* Elements drawn after boot get revealed at once — they are already on
@@ -223,7 +239,7 @@
   function renderEvent(e, flip) {
     const art = e.art ? el('figure', { class: 'ev__art' + (flip ? ' is-flip' : '') }, [
       el('div', { class: 'ev__arch' }, el('img', {
-        src: 'assets/art/art-' + e.art + '.webp', alt: I.pick(e.t), width: '600', height: '800',
+        src: 'assets/art/art-' + e.art + '.webp', alt: pubTitle(e), width: '600', height: '800',
         loading: 'lazy', decoding: 'async'
       }))
     ]) : null;
@@ -232,14 +248,15 @@
     if (seatedHere(e)) chips.push(chip(I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }), 'seat'));
     if (e.who && e.who !== 'stay') chips.push(chip(I.t('who.' + e.who), 'who'));
 
+    const start = pubStart(e), end = pubEnd(e), open = pubOpen(e);
     const body = el('div', { class: 'ev__body' }, [
       el('time', {
-        class: 'ev__time', datetime: e.start ? e.date + 'T' + e.start : e.date,
-        text: !e.start ? I.date(e.date, { onlyDay: true }) : (e.open ? I.t('prog.onwards', { t: I.time(e.start) }) : I.span(e.start, e.end))
+        class: 'ev__time', datetime: start ? e.date + 'T' + start : e.date,
+        text: !start ? I.date(e.date, { onlyDay: true }) : (open ? I.t('prog.onwards', { t: I.time(start) }) : I.span(start, end))
       }),
-      el('h4', { class: 'ev__title', text: I.pick(e.t) }),
+      el('h4', { class: 'ev__title', text: pubTitle(e) }),
       el('p', { class: 'ev__where', html: PIN + '<span>' + I.pick(e.where) + '</span>' }),
-      e.note ? el('p', { class: 'ev__note', text: I.pick(e.note) }) : null,
+      pubNote(e) ? el('p', { class: 'ev__note', text: pubNote(e) }) : null,
       e.role && e.role[SIDE] ? el('p', { class: 'ev__role' }, [
         el('b', { text: I.t('prog.ours') }), el('span', { text: I.pick(e.role[SIDE]) })
       ]) : null,
@@ -268,7 +285,7 @@
         el('h3', { class: 'pday__date', text: I.date(date, { year: true }) }),
         SUN[date] ? el('p', { class: 'pday__sun', text: I.t('prog.sun', { a: I.time(SUN[date][0]), b: I.time(SUN[date][1]) }) }) : null,
         keys.length > 1 ? el('nav', { class: 'pday__jump' }, keys.map(function (e) {
-          return el('a', { href: '#ev-' + e.id, text: I.pick(e.t) });
+          return el('a', { href: '#ev-' + e.id, text: pubTitle(e) });
         })) : null
       ]);
       const list = el('ol', { class: 'ptl' }, events.map(function (e) {
@@ -541,9 +558,10 @@
   }
 
   function windowOf(e) {
-    if (!e.start) return null;
-    const s = at(e.date, e.start);
-    let f = e.end ? at(U.endDateFor(e.date, e.start, e.end), e.end) : new Date(s.getTime() + 30 * 60000);
+    const start = pubStart(e), end = pubEnd(e);
+    if (!start) return null;
+    const s = at(e.date, start);
+    let f = end ? at(U.endDateFor(e.date, start, end), end) : new Date(s.getTime() + 30 * 60000);
     if (f <= s) f = new Date(s.getTime() + 30 * 60000);
     return [s, f];
   }
@@ -577,7 +595,7 @@
         el('i', { class: 'now__dot' }),
         el('small', { text: I.t('now.now') }),
         el('b', { text: I.pick(nn.cur.t) }),
-        el('span', { text: I.pick(nn.cur.where) + (nn.cur.end && !nn.cur.open ? ' · ' + I.t('now.until', { t: I.time(nn.cur.end) }) : '') })
+        el('span', { text: I.pick(nn.cur.where) + (pubEnd(nn.cur) ? ' · ' + I.t('now.until', { t: I.time(pubEnd(nn.cur)) }) : '') })
       ]));
     }
     if (nn.nxt) {
@@ -585,7 +603,7 @@
       host.appendChild(el('a', { class: 'now__cell', href: '#ev-' + nn.nxt.id }, [
         el('small', { text: I.t('now.next') }),
         el('b', { text: I.pick(nn.nxt.t) }),
-        el('span', { text: (mins <= 90 ? I.t('now.in', { n: mins }) : I.t('now.at', { t: I.time(nn.nxt.start) })) + ' · ' + I.pick(nn.nxt.where) })
+        el('span', { text: (mins <= 90 ? I.t('now.in', { n: mins }) : I.t('now.at', { t: I.time(pubStart(nn.nxt)) })) + ' · ' + I.pick(nn.nxt.where) })
       ]));
     }
     host.hidden = !host.children.length;
@@ -763,10 +781,10 @@
   function calendarEvents() {
     return MINE.map(function (e) {
       return {
-        uid: 'vm-' + e.id, date: e.date, start: e.start || '', end: !e.start || e.open ? '' : e.end || '', alarm: e.alarm || 0,
-        title: I.pick(e.t) + ' — ' + I.t('names.pair'),
+        uid: 'vm-' + e.id, date: e.date, start: pubStart(e) || '', end: !pubStart(e) || pubOpen(e) ? '' : pubEnd(e) || '', alarm: e.alarm || 0,
+        title: pubTitle(e) + ' — ' + I.t('names.pair'),
         location: I.pick(e.where) + (e.away ? '' : ', Hotel Khumani, Bhuwana Bypass, Udaipur'),
-        description: [I.pick(e.note),
+        description: [pubNote(e),
           seatedHere(e) ? I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }) : '',
           e.role && e.role[SIDE] ? I.pick(e.role[SIDE]) : ''].filter(Boolean).join('\n')
       };

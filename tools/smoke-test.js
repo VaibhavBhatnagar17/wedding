@@ -752,6 +752,7 @@ check('planner-only notes never reach guest-facing programme text', function () 
     Object.keys(e.role || {}).forEach(function (side) {
       e.role[side].forEach(function (s) { if (noise.test(s)) throw new Error(e.id + '.role reads like a vendor note: ' + s); });
     });
+    if (e.forBride && e.forBride.note) e.forBride.note.forEach(function (s) { if (noise.test(s)) throw new Error(e.id + '.forBride reads like a vendor note: ' + s); });
   });
 });
 
@@ -770,6 +771,10 @@ check('every programme event is written in both languages', function () {
     pairCheck(e.id + '.t', e.t);
     pairCheck(e.id + '.where', e.where);
     if (e.note) pairCheck(e.id + '.note', e.note);
+    if (e.forBride) {
+      if (e.forBride.note) pairCheck(e.id + '.forBride.note', e.forBride.note);
+      if (e.forBride.t) pairCheck(e.id + '.forBride.t', e.forBride.t);
+    }
     Object.keys(e.role || {}).forEach(function (side) { pairCheck(e.id + '.role.' + side, e.role[side]); });
   });
 });
@@ -908,6 +913,16 @@ check('Mahak\'s card names her grandparents and the three days before Udaipur', 
     if (!/Late\. Shaanti Devi Kalra/.test(I.t('card.brideGrandparents')) || !/Late\. Gelaram ji Kalra/.test(I.t('card.brideGrandparents'))) throw new Error(I.t('card.brideGrandparents'));
     if (!/Sagda/.test(I.t('prog.lead'))) throw new Error('the bride programme lead still starts at the hotel');
     if (I.t('prog.day.2027-01-18') !== 'Day one' || I.t('prog.day.2027-02-01') !== 'Day four') throw new Error('1 February is still day one on Mahak\'s card');
+    if (!/see you on time/.test(I.t('prog.cal'))) throw new Error('calendar line: ' + I.t('prog.cal'));
+    ['haldi', 'folk', 'sagaai', 'dinner1', 'sangeet', 'afterparty', 'phere', 'vidaai', 'bf3'].forEach(function (id) {
+      if (!ev(id).forBride || !ev(id).forBride.note) throw new Error(id + ' has no bride wording');
+    });
+    if (ev('haldi').role.bride || ev('sagaai').role.bride || ev('vidaai').role.bride) throw new Error('Mahak\'s card still has a family part on haldi, sagaai or vidaai');
+    if (!ev('tel').planner || !ev('milni').forBride.hide) throw new Error('tel and milni should be off Mahak\'s card');
+    if (ev('ganesh').end !== '09:00') throw new Error('ganesh should run until 9');
+    if (ev('baraat').forBride.t[0] !== 'Baraat Swagat' || ev('baraat').forBride.start !== '10:00' || ev('baraat').forBride.end !== '10:30') throw new Error('baraat swagat times');
+    if (ev('reception').forBride.start !== '20:00' || !ev('reception').forBride.open) throw new Error('reception should be 8 pm onwards on Mahak\'s card');
+    if (ev('reception').start !== '19:00') throw new Error('Vaibhav\'s reception time moved');
     W.side = 'groom';
     if (I.t('prog.day.2027-02-01') !== 'Day one') throw new Error('Vaibhav\'s 1 February should stay day one');
     if (/Sagda/.test(I.t('prog.lead'))) throw new Error('Vaibhav\'s card mentions the Kalra ceremonies');

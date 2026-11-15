@@ -57,6 +57,7 @@ window.W = window.W || {};
       'prog.seated': 'Please be seated by {t}', 'prog.onwards': '{t} onwards', 'prog.gather': 'Gather at {t}',
       'prog.where': 'Where', 'prog.ours': 'Our family’s part',
       'prog.cal': 'Put every event in your phone, with a reminder before each one',
+      'prog.cal@bride': 'Every event in your phone, a reminder before each—see you on time!',
       'who.bride': 'The bride’s family', 'who.groom': 'The groom’s family',
 
       'venue.eyebrow': 'The venue',
@@ -171,6 +172,7 @@ window.W = window.W || {};
       'prog.seated': 'कृपया {t} तक अपना स्थान ग्रहण कर लें', 'prog.onwards': '{t} बजे से', 'prog.gather': '{t} पर इकट्ठा हों',
       'prog.where': 'कहाँ', 'prog.ours': 'हमारे परिवार की भूमिका',
       'prog.cal': 'हर कार्यक्रम अपने फ़ोन में जोड़ें — हर एक से पहले याद दिलाने वाली सूचना के साथ',
+      'prog.cal@bride': 'हर कार्यक्रम आपके फ़ोन में, हर एक से पहले एक याद — समय पर मिलते हैं!',
       'who.bride': 'वधू पक्ष', 'who.groom': 'वर पक्ष',
 
       'venue.eyebrow': 'विवाह स्थल',
