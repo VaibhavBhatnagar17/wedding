@@ -137,6 +137,10 @@ window.W = window.W || {};
             if (g) {
               g.rsvp = patch.rsvp; g.adults = patch.adults;
               g.kids = patch.kids; g.diet = patch.diet;
+              if (patch.inv) g.inv = patch.inv;
+              if (patch.arrival !== undefined) g.arrival = patch.arrival;
+              if (patch.mode !== undefined) g.mode = patch.mode;
+              if (patch.travelDetail !== undefined) g.travelDetail = patch.travelDetail;
             }
           });
         }

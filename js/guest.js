@@ -178,10 +178,6 @@
       key('Your room', 'Coming soon', 'We are allocating rooms in January. You will see it here.', true);
     }
 
-    if (g.table && g.invited.reception) {
-      key('Reception table', g.table, 'Look for the marigold table number');
-    }
-
     if (g.pickup) {
       key('Your pickup', 'Arranged', g.pickup, true);
     } else if (g.arrival) {
@@ -192,7 +188,7 @@
 
     if (!host.children.length) {
       key('Your details', 'On the way',
-        'Rooms, tables and pickups are arranged in January. Check back here.', true);
+        'Rooms and pickups are arranged in January. Check back here.', true);
     }
   }
 
@@ -202,27 +198,22 @@
       .map(function (f) { return f.id; });
   }
 
-  /* Only the guest's own functions. Listing the rest greyed out just tells
-     someone what they are missing, so we leave them out entirely. */
+  /* Every celebration, marked attending or not, so a guest can see the whole
+     weekend and correct it in the reply form below. */
   function renderFunctions(g) {
     const host = U.clear($('#me-fns'));
     const all = D.functions.filter(function (f) { return f.publicInvite; });
     const mine = all.filter(function (f) { return g.invited[f.id]; });
 
     $('#me-fn-note').textContent = mine.length === all.length
-      ? 'You are invited to everything — we would not have it any other way.'
-      : mine.length === 1
-        ? 'Here is your function, with the timing and where to be.'
-        : 'Your ' + mine.length + ' functions, in order.';
+      ? 'Every celebration, in order.'
+      : mine.length
+        ? 'The ones you are attending, and the ones you are not.'
+        : 'Nothing is marked yet. Tell us below which ones you will attend.';
 
-    if (!mine.length) {
-      host.appendChild(el('p', { class: 'myfn__none', text:
-        'We are still finalising your functions. Call us and we will sort it out right away.' }));
-      return;
-    }
-
-    mine.forEach(function (f) {
-      host.appendChild(el('div', { class: 'myfn__row', 'data-reveal': 'up' }, [
+    all.forEach(function (f) {
+      const on = !!g.invited[f.id];
+      host.appendChild(el('div', { class: 'myfn__row' + (on ? '' : ' myfn__row--off'), 'data-reveal': 'up' }, [
         el('div', { class: 'myfn__when' }, [
           el('b', { text: U.fmtDate(f.date, false).replace(/,.*/, '') }),
           el('span', { text: f.muhurat ? f.muhurat : f.start })
@@ -231,7 +222,7 @@
           el('h3', { text: f.name }),
           el('p', { text: f.area })
         ]),
-        el('div', { class: 'myfn__badge', text: 'You’re invited' })
+        el('div', { class: 'myfn__badge' + (on ? '' : ' myfn__badge--no'), text: on ? 'Attending' : 'not-attending' })
       ]));
     });
   }
@@ -382,6 +373,22 @@
     const diet = el('select', {}, D.DIETS.map(function (d) {
       return el('option', { value: d, text: d, selected: d === g.diet ? 'selected' : null });
     }));
+    const fns = D.functions.filter(function (f) { return f.publicInvite; });
+    const fnBoxes = el('div', { class: 'rsvp-fns' }, fns.map(function (f) {
+      return el('label', { class: 'check' }, [
+        el('input', { type: 'checkbox', name: 'fn', value: f.id, checked: g.invited[f.id] ? 'checked' : null }),
+        el('span', { text: f.name })
+      ]);
+    }));
+    const arrival = el('input', {
+      type: 'date', value: (g.arrival || '2027-02-01').slice(0, 10),
+      min: '2027-01-29', max: '2027-02-03'
+    });
+    const modes = ['Flight', 'Train', 'Car', 'Bus', 'Not decided'];
+    const mode = el('select', {}, modes.map(function (m) {
+      return el('option', { value: m, text: m, selected: m === (g.mode || 'Not decided') ? 'selected' : null });
+    }));
+    const detail = el('input', { type: 'text', value: g.travelDetail || '', placeholder: 'e.g. 6E 6521, 14:30' });
     const note = el('textarea', { placeholder: 'Anything else we should know?' });
 
     const save = el('button', { class: 'btn', type: 'submit' }, el('span', { text: 'Save my reply' }));
@@ -391,6 +398,12 @@
       el('div', { class: 'grid-2' }, [
         field('Adults', adults), field('Children', kids)
       ]),
+      field('Which functions will you attend?', fnBoxes),
+      el('div', { class: 'grid-2' }, [
+        field('Arriving in Udaipur on', arrival),
+        field('Travelling by', mode)
+      ]),
+      field('Flight / train number & arrival time', detail),
       field('Food preference', diet),
       field('A note for us', note),
       el('div', { style: 'margin-top:8px' }, save)
@@ -401,18 +414,32 @@
       save.disabled = true;
       save.querySelector('span').innerHTML = '<span class="spinner"></span> Saving…';
 
+      const picked = {};
+      fns.forEach(function (f) { picked[f.id] = false; });
+      U.$$('input[name=fn]:checked', form).forEach(function (i) { picked[i.value] = true; });
       const patch = {
         rsvp: choice,
         adults: Math.max(0, Number(adults.value) || 0),
         kids: Math.max(0, Number(kids.value) || 0),
         diet: diet.value,
-        notes: note.value.trim()
+        notes: note.value.trim(),
+        inv: {
+          haldi: !!picked.haldi, sangeet: !!picked.sangeet,
+          phere: !!picked.phere, reception: !!picked.reception
+        },
+        arrival: arrival.value,
+        mode: mode.value === 'Not decided' ? '' : mode.value,
+        travelDetail: detail.value.trim()
       };
 
       DB.updateRsvp(g.phone, patch).then(function (ok) {
         if (!ok) throw new Error('We could not save that.');
         Object.assign(g, patch);
+        g.invited = Object.assign({}, g.invited, patch.inv);
         renderHeader(g);
+        renderKeys(g);
+        renderFunctions(g);
+        renderTravel(g);
         U.toast('Thank you — your reply is saved.');
         U.clear(host).appendChild(el('div', { class: 'done' }, [
           el('div', { class: 'done__tick', text: '✓' }),
@@ -450,8 +477,7 @@
         title: f.name + ' — Vaibhav & Mahak',
         location: D.venue.booked.short + ', ' + D.venue.booked.address,
         description: f.tagline +
-          (g.room ? '\nYour room: ' + g.room : '') +
-          (g.table && f.id === 'reception' ? '\nYour table: ' + g.table : '')
+          (g.room ? '\nYour room: ' + g.room : '')
       };
     });
     U.download('my-wedding-schedule.ics', U.buildICS(events, 'Vaibhav & Mahak'), 'text/calendar');

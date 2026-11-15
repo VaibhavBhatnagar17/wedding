@@ -198,6 +198,10 @@ body.portal {
   padding: 6px 13px; border-radius: 999px; white-space: nowrap;
   background: rgba(31, 122, 77, .1); color: var(--ok); border: 1px solid rgba(31, 122, 77, .28);
 }
+.myfn__badge--no {
+  background: transparent; color: var(--muted); border-color: var(--line);
+}
+.myfn__row--off { border-left-color: var(--line); }
 @media (max-width: 640px) {
   .myfn__row { grid-template-columns: 1fr; }
   .myfn__badge { justify-self: start; }
