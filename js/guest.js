@@ -360,6 +360,7 @@
             choice = o[0];
             U.$$('.seg button', seg).forEach(function (b) { b.classList.remove('is-on'); });
             this.classList.add('is-on');
+            lockDetails(choice !== 'Yes');
           }
         });
       }));
@@ -393,8 +394,7 @@
 
     const save = el('button', { class: 'btn', type: 'submit' }, el('span', { text: 'Save my reply' }));
 
-    const form = el('form', {}, [
-      field('Will you join us?', seg),
+    const details = el('div', { class: 'rsvp-details' }, [
       el('div', { class: 'grid-2' }, [
         field('Adults', adults), field('Children', kids)
       ]),
@@ -405,7 +405,18 @@
       ]),
       field('Flight / train number & arrival time', detail),
       field('Food preference', diet),
-      field('A note for us', note),
+      field('A note for us', note)
+    ]);
+
+    function lockDetails(locked) {
+      details.classList.toggle('is-locked', locked);
+      U.$$('input, select, textarea', details).forEach(function (i) { i.disabled = locked; });
+    }
+    lockDetails(choice !== 'Yes');
+
+    const form = el('form', {}, [
+      field('Will you join us?', seg),
+      details,
       el('div', { style: 'margin-top:8px' }, save)
     ]);
 

@@ -551,7 +551,7 @@ check('guests without a mobile number are left out of the Supabase export', func
 });
 
 check('the guide and albums have content for every section', function () {
-  if (W.data.guide.length < 3) throw new Error('guide too thin');
+  if (W.data.guide.length < 2) throw new Error('guide too thin');
   W.data.guide.forEach(function (g) {
     if (!g.title || !g.items.length) throw new Error('empty guide section');
     g.items.forEach(function (row) {

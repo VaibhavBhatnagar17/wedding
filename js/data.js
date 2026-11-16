@@ -736,31 +736,12 @@ window.W = window.W || {};
      the full bilingual version in content.js; this is the short English one. */
   const guide = [
     {
-      title: 'Arriving on 1 February',
-      icon: 'kalash',
-      items: [
-        ['The hotel opens at 8 am', 'Come straight to Hotel Khumani whenever you land or arrive. You can check in, shower and change before anything starts.'],
-        ['Breakfast until 10:30', 'In the hotel restaurant. Eat first, unpack later.'],
-        ['Haldi at 11', 'That is deliberate: three hours between the hotel opening and anyone being needed anywhere.'],
-        ['If you arrive the night before', 'Ten rooms are held from the night of 31 January for family arriving early. Tell us in your RSVP — do not book anything yourself.']
-      ]
-    },
-    {
       title: 'Weather & packing',
       icon: 'kalash',
       items: [
         ['Days', '24–27°C and sunny. Sunglasses, and sunscreen for the haldi lawn.'],
         ['Nights', '9–12°C. The evening functions are outdoors. A shawl or jacket is genuinely necessary.'],
         ['Also bring', 'Comfortable shoes for the lawn, any medication you need, and a power bank.']
-      ]
-    },
-    {
-      title: 'Good to know',
-      icon: 'mandala',
-      items: [
-        ['Everything is at one venue', 'Hotel Khumani, Bhuwana Bypass. No travelling between functions.'],
-        ['The folk evening', 'Kalbeliya and Ghoomar dancers open the evening of 1 February and will pull you up to dance.'],
-        ['Help', 'Hotel Khumani reception: +91 76651 78660 or +91 90018 30714.']
       ]
     },
     {

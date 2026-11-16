@@ -712,7 +712,10 @@ def task_check(tab):
     check("guest name shown", tab.eval("document.getElementById('me-name').textContent") == "Ved Prakash Bhatnagar")
     check("key cards render", tab.eval("document.querySelectorAll('#me-keys .key').length") >= 2)
     check("my functions render", tab.eval("document.querySelectorAll('#me-fns .myfn__row').length") == 4)
-    check("guide sections render", tab.eval("document.querySelectorAll('#me-guide .gitem').length") == tab.eval("W.data.guide.length") == 4)
+    check("guide sections render", tab.eval("document.querySelectorAll('#me-guide .gitem').length") == tab.eval("W.data.guide.length") == 2)
+    check("arriving and good-to-know are gone",
+          "Arriving on 1" not in (tab.eval("document.getElementById('me-guide').innerText") or "") and
+          "Good to know" not in (tab.eval("document.getElementById('me-guide').innerText") or ""))
     check("albums render", tab.eval("document.querySelectorAll('#me-albums .album').length") == 5)
     check("rsvp editor renders", tab.eval("document.querySelectorAll('#me-rsvp .seg button').length") == 3)
     check("number remembered", tab.eval("localStorage.getItem('vm-guest-phone')") == "9876500001")
@@ -727,6 +730,22 @@ def task_check(tab):
           tab.eval("document.querySelectorAll('#me-fns .myfn__row.is-skip').length") == 0)
     check("the one row shown is the reception",
           "Reception" in (tab.eval("document.getElementById('me-fns').innerText") or ""))
+
+    # Not sure / cannot come locks every other field; joining opens them again.
+    tab.eval("document.querySelectorAll('#me-rsvp .seg button')[1].click()")
+    time.sleep(0.2)
+    check("not sure greys out the other details",
+          tab.eval("document.querySelector('#me-rsvp .rsvp-details').classList.contains('is-locked')") and
+          tab.eval("document.querySelectorAll('#me-rsvp .rsvp-details input, #me-rsvp .rsvp-details select, #me-rsvp .rsvp-details textarea').length") ==
+          tab.eval("document.querySelectorAll('#me-rsvp .rsvp-details :disabled').length"))
+    tab.eval("document.querySelectorAll('#me-rsvp .seg button')[2].click()")
+    time.sleep(0.2)
+    check("cannot make it keeps the other details grey",
+          tab.eval("document.querySelector('#me-rsvp .rsvp-details input').disabled"))
+    tab.eval("document.querySelectorAll('#me-rsvp .seg button')[0].click()")
+    time.sleep(0.2)
+    check("joining opens the other details",
+          not tab.eval("document.querySelector('#me-rsvp .rsvp-details input').disabled"))
 
     # guest updates their own reply
     tab.eval("""(function(){

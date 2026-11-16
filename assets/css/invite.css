@@ -461,6 +461,15 @@ textarea { min-height: 88px; resize: vertical; }
   padding: 11px 13px; background: #fff; transition: border-color .25s, background .25s;
 }
 .rsvp-fns .check:hover { border-color: var(--gold); background: #fffdf4; }
+.rsvp-details { display: grid; gap: 16px; margin-top: 16px; }
+.rsvp-details.is-locked .field > span { color: #b7aea3; }
+.rsvp-details.is-locked input,
+.rsvp-details.is-locked select,
+.rsvp-details.is-locked textarea,
+.rsvp-details.is-locked .check {
+  background: #e7e3db; color: #9c958c; border-color: #ddd6cc; cursor: not-allowed;
+}
+.rsvp-details.is-locked .check:hover { border-color: #ddd6cc; background: #e7e3db; }
 
 .done { text-align: center; padding: 22px 6px; }
 .done__tick {
