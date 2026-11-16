@@ -41,8 +41,8 @@ window.W = window.W || {};
   ];
 
   const spaces = [
-    { where: ['The lawn', 'लॉन'], what: ['Haldi, folk evening, sagaai, sangeet, phere and the reception', 'हल्दी, लोक संध्या, सगाई, संगीत, फेरे और रिसेप्शन'] },
-    { where: ['The banquet hall', 'बैंक्वेट हॉल'], what: ['The after-party on 1 February, from 11 pm', '1 फ़रवरी की आफ़्टर-पार्टी, रात 11 बजे से'] },
+    { where: ['The lawn', 'लॉन'], what: ['Haldi, ring ceremony, sangeet, phere and the reception', 'हल्दी, रिंग सेरेमनी, संगीत, फेरे और रिसेप्शन'] },
+    { where: ['The banquet hall', 'बैंक्वेट हॉल'], what: ['The after-party on 1 February, from 10 pm', '1 फ़रवरी की आफ़्टर-पार्टी, रात 10 बजे से'] },
     { where: ['The hotel porch', 'होटल का पोर्च'], what: ['Where the baraat sets off, and the vidaai', 'जहाँ से बारात निकलेगी, और विदाई'] },
     { where: ['The restaurant', 'रेस्तराँ'], what: ['Breakfast every morning', 'हर सुबह का नाश्ता'] },
     { where: ['The rooftop pool', 'छत का स्विमिंग पूल'], what: ['For the afternoon rests', 'दोपहर के आराम के लिए'] }

@@ -685,14 +685,20 @@ check('the hotel opens at 8 on 1 Feb, and the haldi starts at 11', function () {
   if (ev('haldi').start !== '11:00') throw new Error('haldi starts at ' + ev('haldi').start);
 });
 
-check('1 Feb evening runs folk, sagaai, sangeet, then the after-party indoors', function () {
-  var order = ['folk', 'sagaai', 'sangeet', 'afterparty'].map(function (id) { return abs(ev(id).date, ev(id).start); });
+check('1 Feb evening runs the ring ceremony, sangeet, dinner, then the after-party', function () {
+  if (P.some(function (e) { return e.id === 'folk' || /rajasthani folk/i.test(e.t[0]); })) throw new Error('the folk evening is back');
+  var order = ['sagaai', 'sangeet', 'dinner1', 'afterparty'].map(function (id) { return abs(ev(id).date, ev(id).start); });
   for (var i = 1; i < order.length; i++) if (!(order[i] > order[i - 1])) throw new Error('evening out of order');
-  if (ev('sagaai').start !== '20:00' || ev('sangeet').start !== '21:00' || ev('afterparty').start !== '23:00') {
-    throw new Error('evening times moved');
+  if (ev('sagaai').t[0] !== 'Ring Ceremony' || ev('sagaai').start !== '18:00' || ev('sagaai').end !== '19:00') {
+    throw new Error('ring ceremony times');
   }
+  if (ev('sangeet').start !== '19:00' || ev('sangeet').end !== '22:00') throw new Error('sangeet should be 7 to 10');
+  if (!(abs(ev('dinner1').date, ev('dinner1').start) > abs(ev('sangeet').date, ev('sangeet').start))) {
+    throw new Error('dinner should be listed below the sangeet');
+  }
+  if (ev('afterparty').start !== '22:00' || ev('afterparty').end !== '00:00') throw new Error('after-party should be 10 to midnight');
+  if (!/12 AM/.test(ev('afterparty').note[0]) || /1 AM/.test(ev('afterparty').note[0])) throw new Error(ev('afterparty').note[0]);
   if (!/banquet hall/i.test(ev('afterparty').where[0])) throw new Error('the after-party must be indoors');
-  if (ev('dinner1').start !== ev('sagaai').start) throw new Error('dinner should open with the sagaai');
 });
 
 check('published times never overlap the moments guests must attend', function () {
@@ -850,7 +856,7 @@ check('every question a guest will ask has an answer on the site', function () {
     ['Is there a hospital nearby?', C.help.some(function (h) { return h.kind === 'hospital' && h.tel; })],
     ['Emergency number', C.help.some(function (h) { return h.tel === '112'; })],
     ['Wi-Fi and parking', faq(/wi-fi/i)],
-    ['By when do I RSVP?', /20 January 2027/.test(dict['rsvp.lead'])],
+    ['By when do I RSVP?', /15 January 2027/.test(dict['rsvp.lead'])],
     ['Can I put it in my calendar?', P.filter(function (e) { return e.alarm; }).length >= 8],
     ['Things to do in Udaipur', C.whileHere.length >= 3],
     ['What does our family do?', ['groom', 'bride'].every(function (s) {
@@ -881,9 +887,9 @@ check('there is no bar, and nothing a guest reads mentions drinks', function () 
   if (W.data.budget.some(function (b) { return /\bbar\b/i.test(b.head); })) throw new Error('a bar line survives in the budget');
 });
 
-check('the sagaai is our dance into the rings, with a live singer', function () {
+check('the ring ceremony is the moment they make it official, with a live singer booked', function () {
   var s = ev('sagaai');
-  if (!/dance/i.test(s.note[0]) || !/singer/i.test(s.note[0])) throw new Error('sagaai note: ' + s.note[0]);
+  if (s.t[0] !== 'Ring Ceremony' || !/make it official/i.test(s.note[0])) throw new Error('ring ceremony: ' + s.note[0]);
   if (!W.data.budget.some(function (b) { return /singer/i.test(b.head); })) throw new Error('no budget line for the singer');
 });
 
@@ -902,7 +908,7 @@ check('each family has its own card, address and own ceremonies', function () {
   ['ganesh', 'tel', 'sagda', 'parsaadi', 'mehndi'].forEach(function (id) { if (ev(id).side !== 'bride') throw new Error(id + ' belongs on the bride\u2019s card only'); });
   if (ev('sehra').side !== 'groom') throw new Error('the sehra belongs on the groom\u2019s card only');
   var shared = P.filter(function (e) { return e.key && !e.side; }).length;
-  if (shared < 10) throw new Error('only ' + shared + ' shared key moments');
+  if (shared < 9) throw new Error('only ' + shared + ' shared key moments');
 });
 
 check('Mahak\'s card names her grandparents and the three days before Udaipur', function () {
@@ -914,8 +920,19 @@ check('Mahak\'s card names her grandparents and the three days before Udaipur', 
     if (!/Sagda/.test(I.t('prog.lead'))) throw new Error('the bride programme lead still starts at the hotel');
     if (I.t('prog.day.2027-01-18') !== 'Day one' || I.t('prog.day.2027-02-01') !== 'Day four') throw new Error('1 February is still day one on Mahak\'s card');
     if (!/see you on time/.test(I.t('prog.cal'))) throw new Error('calendar line: ' + I.t('prog.cal'));
-    ['haldi', 'folk', 'sagaai', 'dinner1', 'sangeet', 'afterparty', 'phere', 'vidaai', 'bf3'].forEach(function (id) {
-      if (!ev(id).forBride || !ev(id).forBride.note) throw new Error(id + ' has no bride wording');
+    var sharedLine = {
+      haldi: /splash of yellow/i,
+      sagaai: /make it official/i,
+      dinner1: /ring ceremony/i,
+      sangeet: /both sides of the aisle/i,
+      afterparty: /till 12 AM/,
+      phere: /muhurat waits for none/i,
+      vidaai: /loving farewell/i,
+      bf3: /final round of hugs/i,
+      reception: /Introducing Mr/
+    };
+    Object.keys(sharedLine).forEach(function (id) {
+      if (!sharedLine[id].test(ev(id).note[0])) throw new Error(id + ' is not using the shared description: ' + ev(id).note[0]);
     });
     if (ev('haldi').role.bride || ev('sagaai').role.bride || ev('vidaai').role.bride || (ev('phere').role && ev('phere').role.bride)) throw new Error('Mahak\'s card still has a family part on haldi, sagaai, phere or vidaai');
     if (!ev('tel').planner || !ev('milni').forBride.hide) throw new Error('tel and milni should be off Mahak\'s card');
@@ -1048,7 +1065,7 @@ check('the calendar reminds before key events and ends the after-party next day'
     { uid: 'a', date: a.date, start: a.start, end: a.end, title: 'After-party', alarm: 15 },
     { uid: 'b', date: '2027-02-01', start: '11:00', end: '13:30', title: 'Haldi' }
   ], 'test');
-  if (ics.indexOf('DTEND:20270202T010000') < 0) throw new Error('after-party end is not 1 am on 2 Feb');
+  if (ics.indexOf('DTEND:20270202T000000') < 0) throw new Error('after-party end is not midnight on 2 Feb');
   if ((ics.match(/BEGIN:VALARM/g) || []).length !== 1) throw new Error('alarm count wrong');
   if (ics.indexOf('TRIGGER:-PT15M') < 0) throw new Error('alarm trigger missing');
 });

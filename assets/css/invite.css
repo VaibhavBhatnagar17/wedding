@@ -487,7 +487,11 @@ textarea { min-height: 88px; resize: vertical; }
   position: relative; text-align: center; padding: 68px 28px 54px;
   background: var(--night); color: rgba(247, 236, 201, .7); overflow: hidden;
 }
-.foot__names { font-family: var(--script); font-size: 52px; line-height: 1; margin-bottom: 8px; }
+.foot__together {
+  font-family: var(--serif); font-style: italic; font-size: 18px; letter-spacing: .03em;
+  color: rgba(247, 236, 201, .78); margin: 0 0 12px;
+}
+.foot__names { font-family: var(--script); font-size: 52px; line-height: 1; margin-bottom: 0; }
 .foot p { font-size: 13px; margin: 6px 0 0; }
 .foot a { color: var(--gold-lit); }
 .foot__mandala {
@@ -535,6 +539,7 @@ textarea { min-height: 88px; resize: vertical; }
   .cd b { font-size: 32px; }
 
   .rsvp-card { padding: 24px 18px; }
+  .foot__together { font-size: 16px; }
   .foot__names { font-size: 40px; }
 }
 

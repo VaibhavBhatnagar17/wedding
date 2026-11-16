@@ -380,13 +380,13 @@ def task_check(tab):
     check("every programme event renders", tab.eval("document.querySelectorAll('.ev').length") == n_prog,
           (tab.eval("document.querySelectorAll('.ev').length"), n_prog))
     check("every painted moment on this card", tab.eval("document.querySelectorAll('.ev--art img').length")
-          == tab.eval("W.invite.programme.filter(function(e){return e.art}).length") == 10)
+          == tab.eval("W.invite.programme.filter(function(e){return e.art}).length") == 9)
     tab.wait_for("Array.from(document.querySelectorAll('.ev--art img')).every(function(i){return i.complete && i.naturalWidth>0})", timeout=12)
     check("every painting loads", tab.eval(
         "Array.from(document.querySelectorAll('.ev--art img')).every(function(i){return i.complete && i.naturalWidth>0})"))
     day1 = tab.eval("Array.from(document.querySelectorAll('#day-2027-02-01 .ev__time')).map(function(t){return t.textContent})")
     check("day 1 opens with the 8 am room opening", day1[0] == "8:00 am", day1[:2])
-    check("the after-party runs past midnight and sorts last", day1[-1] == "11:00 pm – 1:00 am", day1[-2:])
+    check("the after-party ends at midnight and sorts last", day1[-1] == "10:00 pm – 12:00 am", day1[-2:])
     check("both sets of parents on the card", tab.eval(
         "document.querySelectorAll('.parents__side').length === 2"
         " && !!document.querySelector('[data-i18n=\"card.groomParents\"]')"
@@ -399,12 +399,8 @@ def task_check(tab):
     check("travel, weather and Udaipur cards render", tab.eval("document.querySelectorAll('#travel-grid .card').length") == 6)
     check("nothing tells guests what to wear",
           tab.eval("!document.getElementById('dress') && !document.querySelector('.ev__dress, a[href=\"#dress\"]') && !/what to wear/i.test(document.body.innerText)"))
-    check("the questions render", tab.eval("document.querySelectorAll('#faq-list .qa').length") == tab.eval("W.content.faq.length") == 9)
+    check("the questions section is gone", tab.eval("!document.getElementById('faq') && !document.querySelector('a[href=\"#faq\"]')"))
     check("the help desk renders", tab.eval("document.querySelectorAll('#help-grid .helpc').length") == 4)
-    tab.eval("var q=document.getElementById('faq-q'); q.value='parking'; q.dispatchEvent(new Event('input'));")
-    shown = tab.eval("Array.from(document.querySelectorAll('#faq-list .qa')).filter(function(d){return !d.hidden}).length")
-    check("question search narrows the list", 0 < shown < 4, shown)
-    tab.eval("var q=document.getElementById('faq-q'); q.value=''; q.dispatchEvent(new Event('input'));")
 
     # ── layout and typography ──
     off = tab.eval("""(function(){
@@ -548,8 +544,8 @@ def task_check(tab):
     check("Vaibhav's family's card names him first and shows the sehra",
           g["side"] == "groom" and g["first"] == "Vaibhav" and g["parent"] == "Son of" and g["mono"] == "V & M"
           and g["sehra"] and not g["ganesh"] and not g["tel"] and g["grand"] == "" and g["early"] == "false,false,false", g)
-    check("our family's part sits on its events, with no separate list, and replies default to the groom's side",
-          not g["duties"] and g["roles"] >= 5 and g["rsvp"] == "Groom" and g["og"].endswith("/og.jpg"), g)
+    check("our family's part is off the card, and replies default to the groom's side",
+          not g["duties"] and g["roles"] == 0 and g["rsvp"] == "Groom" and g["og"].endswith("/og.jpg"), g)
     tab.goto(base() + "/mahak.html?open=1", settle=2.6)
     b = tab.eval(card_js)
     check("Mahak's family's card names her first, everywhere",
@@ -561,8 +557,8 @@ def task_check(tab):
           and b["og"].endswith("/og-mahak.jpg"), b)
     tab.eval("W.i18n.set('hi')")
     time.sleep(0.8)
-    bh = tab.eval("({first: document.querySelector('.names .names__n').textContent, foot: document.querySelector('.foot__names').textContent, role: document.querySelector('#prog .ev__role b').textContent})")
-    check("and in Hindi too", "महक" in bh["first"] and bh["foot"] == "महक और वैभव" and "परिवार" in bh["role"], bh)
+    bh = tab.eval("({first: document.querySelector('.names .names__n').textContent, foot: document.querySelector('.foot__names').textContent, together: document.querySelector('.foot__together').textContent, roles: document.querySelectorAll('#prog .ev__role').length, after: document.querySelector('.foot__names').nextElementSibling})")
+    check("and in Hindi too", "महक" in bh["first"] and bh["foot"] == "महक और वैभव" and bh["together"] == "अपने परिवारों के साथ," and bh["roles"] == 0 and not bh["after"], bh)
     tab.eval("W.i18n.set('en')")
     tab.goto(base() + "/index.html?side=bride&open=1", settle=2.2)
     check("?side=bride shows Mahak's card on any address", tab.eval("W.side") == "bride"
@@ -571,10 +567,10 @@ def task_check(tab):
     check("the two cards have no console errors", len(errs) == 0, errs[:3])
 
     print("live day")
-    tab.goto(base() + "/index.html?open=1&now=2027-02-01T20:10", settle=2.6)
+    tab.goto(base() + "/index.html?open=1&now=2027-02-01T18:10", settle=2.6)
     live = tab.eval("""(function(){var n=document.getElementById('now');
       return {hidden: n.hidden, text: n.innerText, cur: !!document.querySelector('#ev-sagaai.is-now')};})()""")
-    check("the ribbon shows what is happening now", not live["hidden"] and "Sagaai" in live["text"], live)
+    check("the ribbon shows what is happening now", not live["hidden"] and "Ring Ceremony" in live["text"], live)
     check("and what is next", "Sangeet" in live["text"], live)
     check("the current event is highlighted in the programme", live["cur"], live)
     tab.goto(base() + "/index.html?open=1&now=2026-12-01T10:00", settle=2.0)

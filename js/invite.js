@@ -257,9 +257,6 @@
       el('h4', { class: 'ev__title', text: pubTitle(e) }),
       el('p', { class: 'ev__where', html: PIN + '<span>' + I.pick(e.where) + '</span>' }),
       pubNote(e) ? el('p', { class: 'ev__note', text: pubNote(e) }) : null,
-      e.role && e.role[SIDE] ? el('p', { class: 'ev__role' }, [
-        el('b', { text: I.t('prog.ours') }), el('span', { text: I.pick(e.role[SIDE]) })
-      ]) : null,
       chips.length ? el('div', { class: 'ev__chips' }, chips) : null
     ]);
 
@@ -640,20 +637,17 @@
       return el('input', a);
     }
 
-    const form = el('form', { id: 'rsvp-form', novalidate: 'novalidate' }, [
+    const attending = sel('attending', [
+      ['Yes, joyfully', 'rsvp.yes'], ['Yes, but only for some functions', 'rsvp.some'], ['Sadly, cannot make it', 'rsvp.no']
+    ]);
+    const rest = el('div', { class: 'rsvp-details' }, [
       el('div', { class: 'grid-2' }, [
-        field('rsvp.name', inp({ type: 'text', name: 'name' }, 'rsvp.namePh')),
-        field('rsvp.phone', inp({ type: 'tel', name: 'phone', inputmode: 'numeric' }, 'rsvp.phonePh'))
+        field('rsvp.phone', inp({ type: 'tel', name: 'phone', inputmode: 'numeric' }, 'rsvp.phonePh')),
+        field('rsvp.city', inp({ type: 'text', name: 'city' }, 'rsvp.cityPh'))
       ]),
-      el('div', { class: 'grid-2' }, [
-        field('rsvp.city', inp({ type: 'text', name: 'city' }, 'rsvp.cityPh')),
-        field('rsvp.side', sel('side', SIDE === 'bride'
-          ? [['Bride', 'rsvp.sideBride'], ['Groom', 'rsvp.sideGroom']]
-          : [['Groom', 'rsvp.sideGroom'], ['Bride', 'rsvp.sideBride']]))
-      ]),
-      field('rsvp.attending', sel('attending', [
-        ['Yes, joyfully', 'rsvp.yes'], ['Yes, but only for some functions', 'rsvp.some'], ['Sadly cannot make it', 'rsvp.no']
-      ])),
+      field('rsvp.side', sel('side', SIDE === 'bride'
+        ? [['Bride', 'rsvp.sideBride'], ['Groom', 'rsvp.sideGroom']]
+        : [['Groom', 'rsvp.sideGroom'], ['Bride', 'rsvp.sideBride']])),
       el('div', { class: 'grid-2' }, [
         field('rsvp.adults', el('input', { type: 'number', name: 'adults', min: '0', value: '1' })),
         field('rsvp.kids', el('input', { type: 'number', name: 'kids', min: '0', value: '0' }))
@@ -667,7 +661,18 @@
         field('rsvp.mode', sel('mode', [['Flight', 'rsvp.flight'], ['Train', 'rsvp.train'], ['Car', 'rsvp.car'], ['Bus', 'rsvp.bus'], ['Not decided', 'rsvp.undecided']])),
         field('rsvp.detail', inp({ type: 'text', name: 'travelDetail' }, 'rsvp.detailPh'))
       ]),
-      field('rsvp.notes', el('textarea', { name: 'notes', 'data-i18n-attr': 'placeholder:rsvp.notesPh', placeholder: I.t('rsvp.notesPh') })),
+      field('rsvp.notes', el('textarea', { name: 'notes', 'data-i18n-attr': 'placeholder:rsvp.notesPh', placeholder: I.t('rsvp.notesPh') }))
+    ]);
+    function lockRest(locked) {
+      rest.classList.toggle('is-locked', locked);
+      U.$$('input, select, textarea', rest).forEach(function (i) { i.disabled = locked; });
+    }
+    attending.addEventListener('change', function () { lockRest(/cannot/i.test(attending.value)); });
+
+    const form = el('form', { id: 'rsvp-form', novalidate: 'novalidate' }, [
+      field('rsvp.name', inp({ type: 'text', name: 'name' }, 'rsvp.namePh')),
+      field('rsvp.attending', attending),
+      rest,
       el('div', { class: 'rsvp-actions' }, [
         el('button', { class: 'btn', type: 'submit' }, el('span', { 'data-i18n': 'rsvp.send', text: I.t('rsvp.send') })),
         RSVP_WHATSAPP ? el('button', { class: 'btn btn--ghost', type: 'button', id: 'rsvp-wa' }, el('span', { 'data-i18n': 'rsvp.wa', text: I.t('rsvp.wa') })) : null
@@ -691,21 +696,27 @@
   }
 
   function collect(form) {
-    const fd = new FormData(form);
+    /* Disabled fields are left out of FormData, and a "cannot make it" reply
+       greys those fields out. Read the controls themselves so the reply still
+       keeps whatever was already filled in. */
+    function val(name) {
+      const node = form.querySelector('[name="' + name + '"]');
+      return node ? String(node.value || '').trim() : '';
+    }
     return {
-      name: (fd.get('name') || '').trim(),
-      phone: (fd.get('phone') || '').trim(),
-      city: (fd.get('city') || '').trim(),
-      side: fd.get('side') === 'Groom' ? 'Groom' : 'Bride',
-      attending: fd.get('attending'),
-      adults: Number(fd.get('adults')) || 0,
-      kids: Number(fd.get('kids')) || 0,
+      name: val('name'),
+      phone: val('phone'),
+      city: val('city'),
+      side: val('side') === 'Groom' ? 'Groom' : 'Bride',
+      attending: val('attending'),
+      adults: Number(val('adults')) || 0,
+      kids: Number(val('kids')) || 0,
       functions: $$('input[name=fn]:checked', form).map(function (i) { return i.value; }),
-      diet: fd.get('diet'),
-      arrival: fd.get('arrival'),
-      mode: fd.get('mode'),
-      travelDetail: (fd.get('travelDetail') || '').trim(),
-      notes: (fd.get('notes') || '').trim(),
+      diet: val('diet'),
+      arrival: val('arrival'),
+      mode: val('mode'),
+      travelDetail: val('travelDetail'),
+      notes: val('notes'),
       lang: I.lang
     };
   }
@@ -785,8 +796,7 @@
         title: pubTitle(e) + ' — ' + I.t('names.pair'),
         location: I.pick(e.where) + (e.away ? '' : ', Hotel Khumani, Bhuwana Bypass, Udaipur'),
         description: [pubNote(e),
-          seatedHere(e) ? I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }) : '',
-          e.role && e.role[SIDE] ? I.pick(e.role[SIDE]) : ''].filter(Boolean).join('\n')
+          seatedHere(e) ? I.t(e.gather ? 'prog.gather' : 'prog.seated', { t: I.time(e.seated) }) : ''].filter(Boolean).join('\n')
       };
     });
   }

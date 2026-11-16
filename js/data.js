@@ -94,26 +94,26 @@ window.W = window.W || {};
     },
     {
       id: 'sangeet',
-      name: 'Sagaai, Sangeet & After-party', nameHi: 'सगाई, संगीत और आफ़्टर-पार्टी',
+      name: 'Ring Ceremony, Sangeet & After-party', nameHi: 'रिंग सेरेमनी, संगीत और आफ़्टर-पार्टी',
       tagline: 'One long, glorious night', taglineHi: 'एक लंबी, शानदार रात',
-      blurb: 'Kalbeliya and Ghoomar dancers open the evening, at eight we dance our way into the rings, the families take the floor at nine, and at eleven the party moves into the banquet hall until one.',
-      blurbHi: 'कालबेलिया और घूमर से शाम की शुरुआत, आठ बजे नाचते हुए हमारी सगाई, नौ बजे परिवारों का संगीत — और रात 11 से 1 बजे तक बैंक्वेट हॉल में पार्टी।',
+      blurb: 'At six we dance our way into the rings, the families take the floor at seven, and at ten the party moves into the banquet hall until midnight.',
+      blurbHi: 'शाम 6 बजे नाचते हुए रिंग सेरेमनी, 7 बजे परिवारों का संगीत — और रात 10 से 12 बजे तक बैंक्वेट हॉल में पार्टी।',
       date: '2027-02-01',
-      start: '19:00',
-      end: '01:00',
+      start: '18:00',
+      end: '00:00',
       area: 'The lawn · banquet hall', areaHi: 'लॉन · बैंक्वेट हॉल',
       guests: 180,
-      dressCode: 'Fuchsia, marigold & gold · party wear after 11', dressHi: 'फ़ुशिया, गेंदा और सुनहरा · रात 11 के बाद पार्टी वियर',
+      dressCode: 'Fuchsia, marigold & gold · party wear after 10', dressHi: 'फ़ुशिया, गेंदा और सुनहरा · रात 10 के बाद पार्टी वियर',
       publicInvite: true,
       decorBudget: 45000,
       perPlate: 700,
       guarantee: 180,
       summary:
-        'The folk act runs first, as a warm-up and as the buffer for anyone arriving late: a Kalbeliya troupe that pulls people out of their chairs makes the family performances far easier to follow. At 20:00 the sagaai is the couple\u2019s own performance with their friends, ending in the rings, with a live singer beside the stage; dinner opens alongside. The families perform from 21:00, and at 23:00 the party moves indoors to the banquet hall until 01:00. There is no bar: the evening is dry.',
+        'The ring ceremony is at 18:00: the couple\u2019s own performance with their friends, ending in the rings, with a live singer beside the stage. The families perform from 19:00, dinner is open through the sangeet, and at 22:00 the party moves indoors to the banquet hall until midnight. There is no bar: the evening is dry.',
       ops: [
         ['17:00', 'Lighting test at 17:00 — sunset is 18:19, and you cannot aim a fixture in the dark.'],
-        ['19:30', 'Live singer\u2019s sound check beside the stage; the couple\u2019s dance group in place by 19:50, rings and shagun trays on stage.'],
-        ['22:45', 'DJ and late-night snacks ready in the banquet hall. Outdoor sound off at 23:00, when the last family performance ends.']
+        ['17:30', 'Live singer\u2019s sound check beside the stage; the couple\u2019s dance group in place by 17:50, rings and shagun trays on stage.'],
+        ['21:45', 'DJ and late-night snacks ready in the banquet hall. Outdoor sound off at 22:00, when the sangeet ends.']
       ],
       decor: [
         'A lighting function, not a flower function',
@@ -285,10 +285,8 @@ window.W = window.W || {};
     { id: 'haldi', fn: 'haldi', date: '2027-02-01', start: '11:00', end: '13:30', key: true, art: 'haldi', alarm: 30,
       t: ['Haldi', 'हल्दी'],
       where: ['The lawn', 'लॉन'],
-      note: ['A haldi for each of us, then one together — dhol, a shower of flowers and a great deal of yellow.',
-        'पहले हम दोनों की अलग-अलग हल्दी, फिर एक साथ — ढोल, फूलों की बौछार और ढेर सारा पीला रंग।'],
-      forBride: { note: ['A splash of yellow, a dash of love, and a morning full of madness.',
-        'पीले रंग की बौछार, थोड़ा प्यार, और पागलपन से भरी एक सुबह।'] },
+      note: ['A splash of yellow, a dash of love, and a morning full of madness.',
+        'पीले रंग की बौछार, थोड़ा प्यार, और पागलपन से भरी एक सुबह।'],
       role: {
         groom: ['Our family does Vaibhav’s haldi first, then joins Mahak’s family for one together.', 'पहले हमारा परिवार वैभव को हल्दी लगाएगा, फिर महक के परिवार के साथ मिलकर एक साथ हल्दी।']
       } },
@@ -302,51 +300,36 @@ window.W = window.W || {};
       where: ['Your room · the rooftop pool', 'आपका कमरा · छत का स्विमिंग पूल'],
       note: ['Wash off the haldi, rest, and dress for the evening. Sunset is at 6:19.',
         'हल्दी धोइए, आराम कीजिए और शाम के लिए तैयार हो जाइए। सूर्यास्त 6:19 बजे।'] },
-    { id: 'folk', fn: 'sangeet', date: '2027-02-01', start: '19:00', end: '20:00', key: true, art: 'folk', alarm: 15,
-      t: ['A Rajasthani folk evening', 'राजस्थानी लोक संध्या'],
-      where: ['The lawn', 'लॉन'],
-      note: ['Kalbeliya and Ghoomar dancers open the night — and they will pull you in to dance.',
-        'कालबेलिया और घूमर नृत्य से शाम की शुरुआत — और वे आपको भी नचाएँगे।'],
-      forBride: { note: ['Colors, culture, and celebration—come experience the spirit of Rajasthan.',
-        'रंग, संस्कृति और उत्सव—आइए, राजस्थान की रूह महसूस कीजिए।'] } },
-    { id: 'sagaai', fn: 'sangeet', date: '2027-02-01', start: '20:00', end: '21:00', key: true, art: 'sagaai', alarm: 20, seated: '19:50',
-      t: ['Sagaai', 'सगाई'],
+    { id: 'sagaai', fn: 'sangeet', date: '2027-02-01', start: '18:00', end: '19:00', key: true, art: 'sagaai', alarm: 20, seated: '17:50',
+      t: ['Ring Ceremony', 'रिंग सेरेमनी'],
       where: ['The lawn — the stage', 'लॉन — मंच'],
-      note: ['We dance our way to the rings — the two of us with our friends, and a live singer beside the stage.',
-        'हम दोनों अपने दोस्तों के साथ नाचते हुए अँगूठी की रस्म तक पहुँचेंगे — मंच के पास लाइव गायक के साथ।'],
-      forBride: { note: ['Love, laughter, and a little bit of sparkle—join us as they make it official.',
-        'प्यार, हँसी और थोड़ी सी चमक—आइए, जब वे इसे पक्का करें।'] },
+      note: ['Love, laughter, and a little bit of sparkle—join us as they make it official.',
+        'प्यार, हँसी और थोड़ी सी चमक—आइए, जब वे इसे पक्का करें।'],
       role: {
         groom: ['After the rings, our family blesses Mahak with the shagun.', 'अँगूठी के बाद हमारा परिवार महक को शगुन देकर आशीर्वाद देगा।']
       },
       ops: 'The couple\u2019s dance runs about 40 minutes and ends on the rings. Book the singer early and rehearse the last song with them.' },
-    { id: 'dinner1', fn: 'sangeet', date: '2027-02-01', start: '20:00', end: '23:00', meal: true,
-      t: ['Dinner', 'रात्रि भोज'],
-      where: ['The lawn', 'लॉन'],
-      note: ['Snacks and a full wedding dinner, open from the sagaai right through the sangeet.',
-        'सगाई से लेकर संगीत तक — स्नैक्स और पूरा शादी का भोजन।'],
-      forBride: { note: ['Open from the sagaai right through the sangeet.',
-        'सगाई से लेकर संगीत तक खुला रहेगा।'] } },
-    { id: 'sangeet', fn: 'sangeet', date: '2027-02-01', start: '21:00', end: '23:00', key: true, art: 'sangeet', alarm: 10,
+    { id: 'sangeet', fn: 'sangeet', date: '2027-02-01', start: '19:00', end: '22:00', key: true, art: 'sangeet', alarm: 10,
       t: ['Sangeet', 'संगीत'],
       where: ['The lawn', 'लॉन'],
-      note: ['The families perform, then the cousins. At 11 the dancing moves into the banquet hall.',
-        'पहले परिवार, फिर कज़िन्स की प्रस्तुतियाँ। रात 11 बजे से नाच-गाना बैंक्वेट हॉल में।'],
-      forBride: { note: ['A night of rhythm, laughter, and heartfelt performances from both sides of the aisle.',
-        'ताल, हँसी, और दोनों तरफ़ से दिल से दी गई प्रस्तुतियों की एक रात।'] },
+      note: ['A night of rhythm, laughter, and heartfelt performances from both sides of the aisle.',
+        'ताल, हँसी, और दोनों तरफ़ से दिल से दी गई प्रस्तुतियों की एक रात।'],
       role: {
         groom: ['Our family performs too — if you are in it, tell the choreographer.', 'हमारे परिवार की प्रस्तुति भी है — अगर आप उसमें हैं, तो कोरियोग्राफ़र को बता दीजिए।'],
         bride: ['Our family performs too — if you are in it, tell the choreographer.', 'हमारे परिवार की प्रस्तुति भी है — अगर आप उसमें हैं, तो कोरियोग्राफ़र को बता दीजिए।']
       },
-      ops: 'You are running the sangeet outdoors to about 23:00. The legal cut-off for outdoor sound is 22:00 (Noise Rules 2000, rule 5(2)) and Udaipur police have seized equipment at weddings — keep the volume down after 22:00 and the indoor rig ready.' },
-    { id: 'afterparty', fn: 'sangeet', date: '2027-02-01', start: '23:00', end: '01:00', key: true, art: 'afterparty',
+      ops: 'You are running the sangeet outdoors until 22:00. The legal cut-off for outdoor sound is 22:00 (Noise Rules 2000, rule 5(2)) and Udaipur police have seized equipment at weddings — move inside on time and keep the indoor rig ready.' },
+    { id: 'dinner1', fn: 'sangeet', date: '2027-02-01', start: '20:00', end: '22:00', meal: true,
+      t: ['Dinner', 'रात्रि भोज'],
+      where: ['The lawn', 'लॉन'],
+      note: ['Open from the ring ceremony right through the sangeet.',
+        'रिंग सेरेमनी से लेकर संगीत तक खुला रहेगा।'] },
+    { id: 'afterparty', fn: 'sangeet', date: '2027-02-01', start: '22:00', end: '00:00', key: true, art: 'afterparty',
       t: ['After-party', 'आफ़्टर-पार्टी'],
       where: ['The banquet hall', 'बैंक्वेट हॉल'],
-      note: ['Once the family performances are done, the dancing moves indoors — a DJ and late-night snacks until 1 am.',
-        'परिवारों की प्रस्तुतियों के बाद नाच-गाना अंदर — डीजे और देर रात के स्नैक्स, रात 1 बजे तक।'],
-      forBride: { note: ['The night is still young—head inside for an exclusive after-party till 1 AM.',
-        'रात अभी जवान है—अंदर आइए, एक ख़ास आफ़्टर-पार्टी के लिए, रात 1 बजे तक।'] },
-      ops: 'No bar. The DJ moves from the lawn rig to the banquet hall; tea, coffee and late-night snacks from 22:45.' },
+      note: ['The night is still young—head inside for an exclusive after-party till 12 AM.',
+        'रात अभी जवान है—अंदर आइए, एक ख़ास आफ़्टर-पार्टी के लिए, रात 12 बजे तक।'],
+      ops: 'No bar. The DJ moves from the lawn rig to the banquet hall; tea, coffee and late-night snacks from 21:45.' },
 
     { id: 'ganesh', fn: 'phere', date: '2027-02-02', start: '07:00', end: '09:00', art: 'ganesh', who: 'bride', side: 'bride',
       t: ['Ganesh Puja', 'गणेश पूजा'],
@@ -396,10 +379,8 @@ window.W = window.W || {};
     { id: 'phere', fn: 'phere', date: '2027-02-02', start: '11:00', end: '13:00', key: true, art: 'phere', alarm: 20, seated: '10:55',
       t: ['Phere', 'फेरे'],
       where: ['The mandap, on the lawn', 'लॉन पर सजा मंडप'],
-      note: ['Kanyadaan, the seven pheras and saptapadi, sindoor and mangalsutra. The muhurat does not wait, so please be in your seat on time.',
-        'कन्यादान, सात फेरे और सप्तपदी, सिंदूर और मंगलसूत्र। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण करें।'],
-      forBride: { note: ['Kanyadaan, seven pheras, sindoor, and the mangalsutra—witness the sacred rituals that unite them forever. The muhurat waits for none, so please be seated on time.',
-        'कन्यादान, सात फेरे, सिंदूर और मंगलसूत्र—वे पवित्र रस्में देखिए जो उन्हें सदा के लिए जोड़ती हैं। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण कर लें।'] },
+      note: ['Kanyadaan, seven pheras, sindoor, and the mangalsutra—witness the sacred rituals that unite them forever. The muhurat waits for none, so please be seated on time.',
+        'कन्यादान, सात फेरे, सिंदूर और मंगलसूत्र—वे पवित्र रस्में देखिए जो उन्हें सदा के लिए जोड़ती हैं। मुहूर्त किसी की प्रतीक्षा नहीं करता, इसलिए कृपया समय पर अपना स्थान ग्रहण कर लें।'],
       ops: 'Pandit to confirm the muhurat in writing. Published panchangs list the 2 Feb vivah muhurat from 17:47 (Delhi); Abhijit muhurat in Udaipur is about 12:26–13:10. Time the pheras themselves inside the window he gives.' },
     { id: 'lunch2', fn: 'phere', date: '2027-02-02', start: '13:00', end: '14:30', meal: true,
       t: ['Wedding lunch', 'विवाह का भोज'],
@@ -408,10 +389,8 @@ window.W = window.W || {};
     { id: 'vidaai', fn: 'phere', date: '2027-02-02', start: '14:30', end: '15:00', key: true, art: 'vidaai', alarm: 15,
       t: ['Vidaai', 'विदाई'],
       where: ['The hotel porch', 'होटल का पोर्च'],
-      note: ['Mahak says goodbye to her family — and the Bhatnagars welcome her home.',
-        'महक की अपने परिवार से विदाई — और भटनागर परिवार में उसका स्वागत।'],
-      forBride: { note: ['A loving farewell and a million blessings for the journey ahead.',
-        'प्यार भरी विदाई, और आगे की राह के लिए अनगिनत आशीर्वाद।'] },
+      note: ['A loving farewell and a million blessings for the journey ahead.',
+        'प्यार भरी विदाई, और आगे की राह के लिए अनगिनत आशीर्वाद।'],
       role: {
         groom: ['Vaibhav’s mother welcomes Mahak home with the griha pravesh, at the family suite.', 'वैभव की माँ परिवार के सुइट में गृह प्रवेश कराकर महक का स्वागत करेंगी।']
       },
@@ -424,22 +403,16 @@ window.W = window.W || {};
     { id: 'reception', fn: 'reception', date: '2027-02-02', start: '19:00', end: '23:00', open: true, key: true, art: 'reception', alarm: 30,
       t: ['Reception', 'रिसेप्शन'],
       where: ['The lawn', 'लॉन'],
-      note: ['Everyone we love, in one evening. The couple arrive at 7:45 and dinner opens at 8.',
-        'हमारे सभी प्रियजन, एक ही शाम। नवदंपति 7:45 पर आएँगे और भोजन 8 बजे से।'],
-      forBride: {
-        start: '20:00', open: true,
-        note: ['Introducing Mr. & Mrs.—we invite you to dine, mingle, and celebrate their happily ever after.',
-          'मिस्टर और मिसेज़ का परिचय—आइए, भोजन कीजिए, मिलिए, और उनकी सदा की ख़ुशी का जश्न मनाइए।']
-      },
+      note: ['Introducing Mr. & Mrs.—we invite you to dine, mingle, and celebrate their happily ever after.',
+        'मिस्टर और मिसेज़ का परिचय—आइए, भोजन कीजिए, मिलिए, और उनकी सदा की ख़ुशी का जश्न मनाइए।'],
+      forBride: { start: '20:00', open: true },
       role: { groom: ['Our family hosts the reception — please come a little early to welcome everyone.', 'रिसेप्शन हमारे परिवार की ओर से है — सबके स्वागत के लिए थोड़ा पहले पहुँचिए।'] } },
 
     { id: 'bf3', date: '2027-02-03', start: '07:30', end: '10:00', sheet: 'reception', who: 'stay', meal: true,
       t: ['Breakfast & checkout', 'नाश्ता और चेक-आउट'],
       where: ['The hotel restaurant', 'होटल का रेस्तराँ'],
-      note: ['Checkout is at 10 am. Tell us your train or flight and we will arrange your drop.',
-        'चेक-आउट सुबह 10 बजे। अपनी ट्रेन या फ़्लाइट बता दीजिए, आपको छोड़ने की व्यवस्था हम करेंगे।'],
-      forBride: { note: ['Coffee, breakfast, and one final round of hugs before you travel back. Checkout is at 10 AM—drop us your flight or train details, and we’ll take care of your ride.',
-        'कॉफ़ी, नाश्ता, और लौटने से पहले गले मिलने का एक आख़िरी दौर। चेक-आउट सुबह 10 बजे है—अपनी फ़्लाइट या ट्रेन बता दीजिए, आपको छोड़ने का इंतज़ाम हम कर लेंगे।'] } }
+      note: ['Coffee, breakfast, and one final round of hugs before you travel back. Checkout is at 10 AM—drop us your flight or train details, and we’ll take care of your ride.',
+        'कॉफ़ी, नाश्ता, और लौटने से पहले गले मिलने का एक आख़िरी दौर। चेक-आउट सुबह 10 बजे है—अपनी फ़्लाइट या ट्रेन बता दीजिए, आपको छोड़ने का इंतज़ाम हम कर लेंगे।'] }
   ];
 
   /* ---------------- Budget ---------------- */
@@ -728,7 +701,7 @@ window.W = window.W || {};
 
   const announcements = [
     { title: 'The venue is Hotel Khumani', created_at: '2026-10-25',
-      body: 'Everything happens at Hotel Khumani on the Bhuwana Bypass, Udaipur. Haldi, sagaai, sangeet ' +
+      body: 'Everything happens at Hotel Khumani on the Bhuwana Bypass, Udaipur. Haldi, the ring ceremony, sangeet ' +
             'and the after-party on 1 February; baraat, varmala, phere, vidaai and the reception on 2 February.' }
   ];
 
