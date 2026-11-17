@@ -262,8 +262,8 @@ body::after {
   font-family: var(--deva); font-size: 15px; color: var(--brand); letter-spacing: .04em;
 }
 .card-invite__pre {
-  font-size: 10.5px; letter-spacing: .3em; text-transform: uppercase;
-  color: var(--muted); margin: 22px 0 4px;
+  font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--muted); margin: 16px auto 34px; max-width: 470px; line-height: 1.9;
 }
 .names { position: relative; }
 .names__n {
@@ -282,7 +282,7 @@ body::after {
   display: flex; justify-content: center; gap: 12px 34px; flex-wrap: wrap;
   margin-top: 22px;
 }
-.parents__side { flex: 0 1 214px; }
+.parents__side { flex: 0 1 250px; }
 /* On Mahak's card, her grandparents sit in her column, directly above
    "Daughter of". Son of stays level with Daughter of, not in the middle. */
 .parents__grand { display: none; margin-bottom: 16px; }
@@ -294,9 +294,9 @@ html[data-side="bride"] .parents { align-items: flex-end; }
 }
 .parents__side b, .parents__grand b {
   display: block; font-family: var(--serif); font-weight: 500;
-  font-size: 15px; line-height: 1.4; color: var(--brand);
-  /* The two names are different lengths; balance keeps the wrap tidy. */
-  text-wrap: balance;
+  font-size: 15px; line-height: 1.45; color: var(--brand);
+  /* Each line is one name, with the & staying beside the woman's name. */
+  white-space: nowrap;
 }
 
 .card-invite__meta { margin-top: 26px; }
@@ -532,7 +532,7 @@ textarea { min-height: 88px; resize: vertical; }
   .card-invite__corner { width: 38px; height: 38px; }
   .card-invite__corner--bl { left: 14px; bottom: 14px; }
   .card-invite__corner--br { right: 14px; bottom: 14px; }
-  .card-invite__pre { letter-spacing: .2em; font-size: 9.5px; }
+  .card-invite__pre { letter-spacing: .1em; font-size: 9px; max-width: 248px; margin-bottom: 26px; }
   .card-invite__cta { flex-direction: column; align-items: stretch; }
   .card-invite__cta .btn { width: 100%; }
 

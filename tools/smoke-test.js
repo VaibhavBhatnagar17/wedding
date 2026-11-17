@@ -916,7 +916,8 @@ check('Mahak\'s card names her grandparents and the three days before Udaipur', 
   try {
     W.side = 'bride'; I.set('en');
     if (I.t('card.granddaughter') !== 'Grand Daughter of') throw new Error('label: ' + I.t('card.granddaughter'));
-    if (!/Late\. Shaanti Devi Kalra/.test(I.t('card.brideGrandparents')) || !/Late\. Gelaram ji Kalra/.test(I.t('card.brideGrandparents'))) throw new Error(I.t('card.brideGrandparents'));
+    if (!/Late Shaanti Devi Kalra/.test(I.t('card.brideGrandparents')) || !/Late Gelaram ji Kalra/.test(I.t('card.brideGrandparents'))) throw new Error(I.t('card.brideGrandparents'));
+    if (/Late\./.test(I.t('card.brideGrandparents'))) throw new Error('the stop after Late is back');
     if (!/Sagda/.test(I.t('prog.lead'))) throw new Error('the bride programme lead still starts at the hotel');
     if (I.t('prog.day.2027-01-18') !== 'Day one' || I.t('prog.day.2027-02-01') !== 'Day four') throw new Error('1 February is still day one on Mahak\'s card');
     if (!/see you on time/.test(I.t('prog.cal'))) throw new Error('calendar line: ' + I.t('prog.cal'));
